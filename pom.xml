@@ -15,13 +15,15 @@
         <module>vk-liker</module>
     </modules>
 
-    <properties>
-
-    </properties>
-
-    <dependencies>
-
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-cassandra</artifactId>
+                <version>1.4.2.RELEASE</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
