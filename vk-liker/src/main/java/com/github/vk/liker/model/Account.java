@@ -1,0 +1,50 @@
+package com.github.vk.liker.model;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+/**
+ * Created at 16.08.2016 19:57
+ *
+ * @author Andrey
+ */
+@Document(collection = Account.ACCOUNTS_COLLECTION_NAME)
+public class Account {
+
+    static final String ACCOUNTS_COLLECTION_NAME = "accounts";
+
+    @Id
+    private ObjectId _id;
+
+    @Field
+    private String login;
+
+    @Field
+    private String password;
+
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
