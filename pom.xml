@@ -5,8 +5,7 @@
     <groupId>com.github.vk</groupId>
     <artifactId>root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>VK Post Liker</name>
-    <description>Bot for vk groups</description>
+    <name>VK bot parent</name>
 
     <packaging>pom</packaging>
 
@@ -17,16 +16,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-mongodb</artifactId>
-                <version>1.9.2.RELEASE</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mongodb</groupId>
-                <artifactId>mongo-java-driver</artifactId>
-                <version>3.3.0</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>

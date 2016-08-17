@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Andrey
  */
-public class Authorize {
+public class AuthorizeData {
 
     private String clientId;
     private URL redirectUrl;
@@ -66,7 +66,7 @@ public class Authorize {
         if (responseType != null) {
             sb.append("response_type=").append(responseType.getValue()).append("&");
         }
-        sb.append("v=").append(v).append("&");
+//        sb.append("v=").append(v).append("&");
         sb.append("state=").append(state);
         return sb.toString();
     }
