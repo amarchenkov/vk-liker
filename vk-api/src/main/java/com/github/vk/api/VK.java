@@ -71,11 +71,15 @@ public class VK {
                 throw new AuthorizeException("Cannot find form for submitting login and password");
             }
             LoginFormModel loginForm = prepareFormData(forms.get(0), login, password);
+
             HttpPost post = new HttpPost(String.valueOf(loginForm.getAction()));
+            post.setHeaders(HttpUtils.prepareAuthorizeHeaders());
+            post.addHeader("Referer", AUTHORIZE_URL + "?" + authorizeData.toString());
             HttpEntity entity = new ByteArrayEntity(loginForm.toString().getBytes());
             post.setEntity(entity);
-            LOG.debug("Post auth data. URL=" + loginForm.getAction() + " data = " + loginForm.toString());
+            LOG.debug(post.toString());
             response = httpClient.execute(post);
+
             String location = "";
             while (response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
                 Header locationHeader = getHeaderByName(response.getAllHeaders(), "Location");
