@@ -28,9 +28,15 @@ public class HttpUtils {
                 new BasicHeader("Content-Type", "application/x-www-form-urlencoded"),
                 new BasicHeader("Host", "login.vk.com"),
                 new BasicHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586"),
-
-                new BasicHeader("Cookie", "text/html, application/xhtml+xml, image/jxr, */*)"),
         };
     }
 
+    public static Header getHeaderByName(Header[] headers, String name) {
+        for (Header header : headers) {
+            if (header.getName().equals(name)) {
+                return header;
+            }
+        }
+        return null;
+    }
 }

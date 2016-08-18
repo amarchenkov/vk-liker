@@ -3,7 +3,9 @@ package com.github.vk.api.models;
 import com.github.vk.api.enums.Display;
 import com.github.vk.api.enums.ResponseType;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,7 +59,11 @@ public class AuthorizeData {
         StringBuilder sb = new StringBuilder("");
         sb.append("client_id=").append(clientId).append("&");
         if (redirectUrl != null) {
-            sb.append("redirect_url=").append(redirectUrl.toString()).append("&");
+            try {
+                sb.append("redirect_url=").append(URLEncoder.encode(redirectUrl.toString(), "UTF-8")).append("&");
+            } catch (UnsupportedEncodingException e) {
+                sb.append("redirect_url=").append("").append("&");
+            }
         }
         if (display != null) {
             sb.append("display=").append(display.getValue()).append("&");
