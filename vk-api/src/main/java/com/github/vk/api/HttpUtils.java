@@ -10,6 +10,16 @@ import org.apache.http.message.BasicHeader;
  */
 public class HttpUtils {
 
+    public static final String HOST = "oauth.vk.com";
+    public static final String HOST_LOGIN = "login.vk.com";
+    public static final String CONNECTION = "Keep-Alive";
+    public static final String ACCEPT_ENCODING = "gzip, deflate";
+    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586";
+    public static final String ACCEPT_LANGUAGE = "ru-RU";
+    public static final String ACCEPT = "text/html, application/xhtml+xml, image/jxr, */*";
+    public static final String CACHE_CONTROL = "no-cache";
+    public static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
+
 //    remixlang=777;
 //    remixflash=22.0.0;
 //    remixscreen_depth=24;
@@ -19,15 +29,35 @@ public class HttpUtils {
 //    remixstid=1620128121_aa25b83009aa4e990c;
 //    remixmdevice=1920/1080/1/!!-!!!!
 
+    /**
+     * Заголовки для запроса на открытие диалога авторизации
+     *
+     * @return массив заголовков
+     */
+    public static Header[] openAuthorizeHeaders() {
+        return new BasicHeader[]{
+                new BasicHeader("Accept", ACCEPT),
+                new BasicHeader("Accept-Encoding", ACCEPT_ENCODING),
+                new BasicHeader("Accept-Language", ACCEPT_LANGUAGE),
+                new BasicHeader("Host", HOST),
+                new BasicHeader("User-Agent", USER_AGENT),
+                new BasicHeader("Connection", CONNECTION),
+        };
+    }
+
+    /**
+     * @return
+     */
     public static Header[] prepareAuthorizeHeaders() {
-        return new BasicHeader[] {
-                new BasicHeader("Accept", "text/html, application/xhtml+xml, image/jxr, */*)"),
-                new BasicHeader("Accept-Encoding", "gzip, deflate"),
-                new BasicHeader("Accept-Language", "ru-RU"),
-                new BasicHeader("Cache-Control", "no-cache"),
-                new BasicHeader("Content-Type", "application/x-www-form-urlencoded"),
-                new BasicHeader("Host", "login.vk.com"),
-                new BasicHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586"),
+        return new BasicHeader[]{
+                new BasicHeader("Accept", ACCEPT),
+                new BasicHeader("Accept-Encoding", ACCEPT_ENCODING),
+                new BasicHeader("Accept-Language", ACCEPT_LANGUAGE),
+                new BasicHeader("Cache-Control", CACHE_CONTROL),
+                new BasicHeader("Content-Type", FORM_CONTENT_TYPE),
+                new BasicHeader("Host", HOST_LOGIN),
+                new BasicHeader("Connection", CONNECTION),
+                new BasicHeader("User-Agent", USER_AGENT),
         };
     }
 

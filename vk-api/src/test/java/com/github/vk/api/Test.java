@@ -2,9 +2,11 @@ package com.github.vk.api;
 
 import com.github.vk.api.enums.Display;
 import com.github.vk.api.enums.ResponseType;
+import com.github.vk.api.exceptions.AuthorizeException;
 import com.github.vk.api.models.AuthorizeData;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -15,7 +17,7 @@ import java.net.URL;
 public class Test {
 
     @org.junit.Test
-    public void test() throws MalformedURLException {
+    public void test() throws Exception {
         AuthorizeData authorizeData = new AuthorizeData();
         authorizeData.setClientId("5591327");
         authorizeData.setDisplay(Display.MOBILE);
@@ -24,5 +26,6 @@ public class Test {
         authorizeData.setScope("0");
         VK vk = new VK(authorizeData);
         vk.authorize("andrej.marchenkov@gmail.com", "!zsifhgv^FGysehgf7v6");
+        System.out.println("");
     }
 }
