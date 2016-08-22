@@ -10,6 +10,7 @@ import java.net.URLEncoder;
  * @author AMarchenkov
  */
 public class LoginFormModel {
+
     public URL action;
     private String email;
     private String password;

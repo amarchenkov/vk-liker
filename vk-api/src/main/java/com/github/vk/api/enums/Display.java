@@ -6,6 +6,7 @@ package com.github.vk.api.enums;
  * @author Andrey
  */
 public enum Display {
+
     PAGE("page"),
     POPUP("popup"),
     MOBILE("mobile");

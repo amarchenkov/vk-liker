@@ -54,4 +54,8 @@ public class AccessToken {
         this.userId = userId;
     }
 
+    @Override
+    public String toString() {
+        return accessToken;
+    }
 }

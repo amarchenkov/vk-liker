@@ -6,6 +6,7 @@ package com.github.vk.api.enums;
  * @author Andrey
  */
 public enum ResponseType {
+
     TOKEN("token"),
     CODE("code");
 
