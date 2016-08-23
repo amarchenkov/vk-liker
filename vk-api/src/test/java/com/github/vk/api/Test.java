@@ -14,18 +14,16 @@ import java.net.URL;
  * @author Andrey
  */
 public class Test {
-
     @org.junit.Test
     public void test() throws Exception {
+        System.setProperty("webdriver.gecko.driver", "D:\\geckodriver.exe");
         AuthorizeData authorizeData = new AuthorizeData();
         authorizeData.setClientId("5591327");
         authorizeData.setDisplay(Display.MOBILE);
-        authorizeData.setRedirectUrl(new URL(VK.BLANK_URL));
         authorizeData.setResponseType(ResponseType.TOKEN);
         authorizeData.setScope("wall");
         VK vk = new VK(authorizeData);
         vk.updateToken("andrej.marchenkov@gmail.com", "!zsifhgv^FGysehgf7v6");
-        System.out.println("");
-        LikesAddResponse response = vk.like(ObjectType.POST, 36128013, 556);
+        vk.like(ObjectType.POST, 36128013, 556).ifPresent(System.out::println);
     }
 }

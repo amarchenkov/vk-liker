@@ -18,8 +18,9 @@ import java.util.List;
  */
 public class AuthorizeData {
 
+    private static final String BLANK_URL = "https://oauth.vk.com/blank.html";
+
     private String clientId;
-    private URL redirectUrl;
     private Display display;
     private String scope;
     private ResponseType responseType;
@@ -28,10 +29,6 @@ public class AuthorizeData {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
-    }
-
-    public void setRedirectUrl(URL redirectUrl) {
-        this.redirectUrl = redirectUrl;
     }
 
     public void setDisplay(Display display) {
@@ -58,12 +55,10 @@ public class AuthorizeData {
     public String toString() {
         StringBuilder sb = new StringBuilder("");
         sb.append("client_id=").append(clientId).append("&");
-        if (redirectUrl != null) {
-            try {
-                sb.append("redirect_url=").append(URLEncoder.encode(redirectUrl.toString(), "UTF-8")).append("&");
-            } catch (UnsupportedEncodingException e) {
-                sb.append("redirect_url=").append("").append("&");
-            }
+        try {
+            sb.append("redirect_url=").append(URLEncoder.encode(BLANK_URL, "UTF-8")).append("&");
+        } catch (UnsupportedEncodingException e) {
+            sb.append("redirect_url=").append("").append("&");
         }
         if (display != null) {
             sb.append("display=").append(display.getValue()).append("&");
@@ -72,7 +67,7 @@ public class AuthorizeData {
         if (responseType != null) {
             sb.append("response_type=").append(responseType.getValue()).append("&");
         }
-//        sb.append("v=").append(v).append("&");
+        sb.append("v=").append(v).append("&");
         sb.append("state=").append(state);
         return sb.toString();
     }

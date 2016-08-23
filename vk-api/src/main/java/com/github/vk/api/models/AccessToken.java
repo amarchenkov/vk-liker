@@ -1,5 +1,7 @@
 package com.github.vk.api.models;
 
+import java.time.LocalDateTime;
+
 /**
  * Created at 21.08.2016 23:11
  *
@@ -8,7 +10,7 @@ package com.github.vk.api.models;
 public class AccessToken {
 
     private String accessToken;
-    private long expiresIn;
+    private LocalDateTime expiresIn;
     private String userId;
 
     public AccessToken(String queryString) {
@@ -24,7 +26,7 @@ public class AccessToken {
                     this.userId = value;
                     break;
                 case "expires_in":
-                    this.expiresIn = Long.valueOf(value);
+                    this.expiresIn = LocalDateTime.now().plusSeconds(Long.valueOf(value));
                     break;
             }
         }
@@ -38,11 +40,11 @@ public class AccessToken {
         this.accessToken = accessToken;
     }
 
-    public long getExpiresIn() {
+    public LocalDateTime getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(long expiresIn) {
+    public void setExpiresIn(LocalDateTime expiresIn) {
         this.expiresIn = expiresIn;
     }
 

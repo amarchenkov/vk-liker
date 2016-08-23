@@ -2,14 +2,11 @@ package com.github.vk.api;
 
 import com.github.vk.api.enums.ObjectType;
 import com.github.vk.api.exceptions.AuthorizeException;
-import com.github.vk.api.exceptions.ForbiddenException;
 import com.github.vk.api.models.AccessToken;
 import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.api.models.json.LikesAddResponse;
 import com.google.gson.Gson;
-import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -27,6 +24,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -39,7 +37,6 @@ public class VK {
     private static final Logger LOG = LogManager.getLogger(VK.class);
     private static final String AUTHORIZE_URL = "https://oauth.vk.com/authorize";
     private static final String API_URL = "https://api.vk.com/method/";
-    public static final String BLANK_URL = "https://oauth.vk.com/blank.html";
 
     private AccessToken accessToken;
     private AuthorizeData authorizeData;
@@ -54,11 +51,10 @@ public class VK {
                 .setRedirectStrategy(new DefaultRedirectStrategy())
                 .build();
         LOG.debug("HTTP client initialized");
-        System.setProperty("webdriver.gecko.driver", "D:\\geckodriver.exe");
     }
 
     private boolean checkAccessToken() {
-        return !(accessToken == null || accessToken.getAccessToken().isEmpty()) && accessToken.getExpiresIn() >= System.currentTimeMillis();
+        return !(accessToken == null || accessToken.getAccessToken().isEmpty()) && accessToken.getExpiresIn().isBefore(LocalDateTime.now());
     }
 
     private void extractTokenFromUrl(String url) throws AuthorizeException {
@@ -86,7 +82,8 @@ public class VK {
         email.sendKeys(login);
         pass.sendKeys(password);
         driver.findElement(By.cssSelector("[value=\"Войти\"]")).click();
-        (new WebDriverWait(driver, 5)).until(new ExpectedCondition<Boolean>() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getTitle().toLowerCase().startsWith("получение доступа")
                         || d.getTitle().toLowerCase().startsWith("oauth blank");
@@ -95,7 +92,7 @@ public class VK {
         if (driver.findElements(By.cssSelector("[value=\"Разрешить\"]")).size() > 0) {
             driver.findElement(By.cssSelector("[value=\"Разрешить\"]")).click();
         }
-        (new WebDriverWait(driver, 10)).until(new ExpectedCondition<Boolean>() {
+        wait.until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getTitle().toLowerCase().startsWith("oauth blank");
             }
@@ -111,11 +108,9 @@ public class VK {
      * @param ownerId Object owner
      * @param itemId  Item ID
      * @return Likes count
-     * @throws ForbiddenException If access denied
      */
-    public Optional<LikesAddResponse> like(ObjectType type, long ownerId, long itemId) throws ForbiddenException {
-        StringBuilder sb = new StringBuilder("");
-        sb.append(API_URL).append("likes.add?")
+    public Optional<LikesAddResponse> like(ObjectType type, long ownerId, long itemId) {
+        StringBuilder sb = new StringBuilder(API_URL).append("likes.add?")
                 .append("access_token=").append(accessToken).append("&")
                 .append("type=").append(type.getValue()).append("&")
                 .append("owner_id=").append(ownerId).append("&")
@@ -130,8 +125,28 @@ public class VK {
         return null;
     }
 
-    public boolean isLiked() {
-        return false;
+    /**
+     * Check if object is liked by current user
+     *
+     * @param type    Object type
+     * @param ownerId Object owner
+     * @param itemId  Item ID
+     * @return resource liked flag
+     */
+    public boolean isLiked(ObjectType type, long ownerId, long itemId) {
+        StringBuilder sb = new StringBuilder(API_URL).append("likes.isLiked?")
+                .append("access_token=").append(accessToken).append("&")
+                .append("type=").append(type.getValue()).append("&")
+                .append("owner_id=").append(ownerId).append("&")
+                .append("item_id=").append(itemId);
+        HttpGet get = new HttpGet(sb.toString());
+        try {
+            HttpResponse response = httpClient.execute(get);
+            return false;
+        } catch (IOException e) {
+            LOG.error("Cannot send request [likes.add]", e);
+        }
+        return true;
     }
 
     public void getWallPosts() {

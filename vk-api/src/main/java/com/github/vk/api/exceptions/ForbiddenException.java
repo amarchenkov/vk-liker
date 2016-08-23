@@ -5,5 +5,5 @@ package com.github.vk.api.exceptions;
  *
  * @author AMarchenkov
  */
-public class ForbiddenException extends Exception {
+public class ForbiddenException extends RuntimeException {
 }
