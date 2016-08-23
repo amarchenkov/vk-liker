@@ -5,7 +5,9 @@ import com.github.vk.api.exceptions.AuthorizeException;
 import com.github.vk.api.models.AccessToken;
 import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.api.models.json.LikesAddResponse;
+import com.github.vk.api.models.json.Response;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -24,6 +26,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -118,11 +121,13 @@ public class VK {
         HttpGet get = new HttpGet(sb.toString());
         try {
             HttpResponse response = httpClient.execute(get);
-            return Optional.of(gson.fromJson(EntityUtils.toString(response.getEntity()), LikesAddResponse.class));
+            Type listType = new TypeToken<Response<LikesAddResponse>>() {}.getType();
+            Response<LikesAddResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), listType);
+            return Optional.of(responseJson.getResponse());
         } catch (IOException e) {
             LOG.error("Cannot send request [likes.add]", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
