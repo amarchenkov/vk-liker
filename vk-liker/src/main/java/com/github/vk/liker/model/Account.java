@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDateTime;
+
 /**
  * Created at 16.08.2016 19:57
  *
@@ -24,11 +26,18 @@ public class Account {
     @Field
     private String password;
 
-    public ObjectId get_id() {
+    @Field("access_token")
+    private String accessToken;
+
+    @Field("expires_in")
+    private LocalDateTime expiresIn;
+
+
+    public ObjectId getId() {
         return _id;
     }
 
-    public void set_id(ObjectId _id) {
+    public void setId(ObjectId _id) {
         this._id = _id;
     }
 
@@ -46,5 +55,21 @@ public class Account {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public LocalDateTime getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(LocalDateTime expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }

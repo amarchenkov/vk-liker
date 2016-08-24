@@ -1,0 +1,8 @@
+[
+  {
+    "_id": "id",
+    "_class": "class",
+    "owner_id": "owner",
+    "item_id": "item"
+  }
+]
