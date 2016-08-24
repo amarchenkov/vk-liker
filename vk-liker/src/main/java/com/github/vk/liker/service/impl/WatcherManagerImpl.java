@@ -1,6 +1,5 @@
 package com.github.vk.liker.service.impl;
 
-import com.github.vk.liker.enums.WatcherStatus;
 import com.github.vk.liker.service.LikeWatcher;
 import com.github.vk.liker.service.WatcherManager;
 import org.apache.logging.log4j.LogManager;
