@@ -51,6 +51,10 @@ public class AuthorizeData {
         this.state = state;
     }
 
+    public float getV() {
+        return v;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("");
@@ -67,7 +71,7 @@ public class AuthorizeData {
         if (responseType != null) {
             sb.append("response_type=").append(responseType.getValue()).append("&");
         }
-        sb.append("v=").append(v).append("&");
+//        sb.append("v=").append(v).append("&");
         sb.append("state=").append(state);
         return sb.toString();
     }

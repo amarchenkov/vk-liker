@@ -5,6 +5,8 @@ import com.github.vk.api.enums.ObjectType;
 import com.github.vk.api.enums.ResponseType;
 import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.api.models.json.LikesAddResponse;
+import com.github.vk.api.models.json.PhotosGetAllResponse;
+import com.github.vk.api.models.json.WallGetResponse;
 
 import java.net.URL;
 
@@ -21,9 +23,14 @@ public class Test {
         authorizeData.setClientId("5591327");
         authorizeData.setDisplay(Display.MOBILE);
         authorizeData.setResponseType(ResponseType.TOKEN);
-        authorizeData.setScope("wall");
+        authorizeData.setScope("wall,photos");
+        authorizeData.setV(5.53F);
         VK vk = new VK(authorizeData);
         vk.updateToken("andrej.marchenkov@gmail.com", "!zsifhgv^FGysehgf7v6");
+        System.out.println(vk.isLiked(ObjectType.POST, 36128013, 556));
         LikesAddResponse a = vk.like(ObjectType.POST, 36128013, 556).get();
+        WallGetResponse b = vk.getWallPosts(36128013, 0, 5).get();
+        PhotosGetAllResponse c = vk.getUserPhotos(36128013, 0, 5).get();
+        System.out.println(vk.isLiked(ObjectType.POST, 36128013, 556));
     }
 }

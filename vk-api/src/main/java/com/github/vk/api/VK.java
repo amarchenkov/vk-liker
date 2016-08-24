@@ -5,8 +5,11 @@ import com.github.vk.api.exceptions.AuthorizeException;
 import com.github.vk.api.models.AccessToken;
 import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.api.models.json.LikesAddResponse;
+import com.github.vk.api.models.json.PhotosGetAllResponse;
 import com.github.vk.api.models.json.Response;
+import com.github.vk.api.models.json.WallGetResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.CookieSpecs;
@@ -28,6 +31,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -117,12 +121,14 @@ public class VK {
                 .append("access_token=").append(accessToken).append("&")
                 .append("type=").append(type.getValue()).append("&")
                 .append("owner_id=").append(ownerId).append("&")
+                .append("v=").append(authorizeData.getV()).append("&")
                 .append("item_id=").append(itemId);
         HttpGet get = new HttpGet(sb.toString());
         try {
             HttpResponse response = httpClient.execute(get);
-            Type listType = new TypeToken<Response<LikesAddResponse>>() {}.getType();
-            Response<LikesAddResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), listType);
+            Type responseType = new TypeToken<Response<LikesAddResponse>>() {
+            }.getType();
+            Response<LikesAddResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
             return Optional.of(responseJson.getResponse());
         } catch (IOException e) {
             LOG.error("Cannot send request [likes.add]", e);
@@ -143,23 +149,73 @@ public class VK {
                 .append("access_token=").append(accessToken).append("&")
                 .append("type=").append(type.getValue()).append("&")
                 .append("owner_id=").append(ownerId).append("&")
+                .append("v=").append(authorizeData.getV()).append("&")
                 .append("item_id=").append(itemId);
         HttpGet get = new HttpGet(sb.toString());
         try {
             HttpResponse response = httpClient.execute(get);
-            return false;
+            JsonElement json = gson.fromJson(EntityUtils.toString(response.getEntity()), JsonElement.class);
+            return json.getAsJsonObject().get("response").getAsJsonObject().get("liked").getAsInt() > 0;
         } catch (IOException e) {
-            LOG.error("Cannot send request [likes.add]", e);
+            LOG.error("Cannot send request [likes.isLiked]", e);
         }
         return true;
     }
 
-    public void getWallPosts() {
-
+    /**
+     * Get count of items from wall of owner start with offset
+     *
+     * @param ownerId Owner of wall
+     * @param offset  start index of items
+     * @param count   Quantity of items on the wall
+     * @return Items from the wall
+     */
+    public Optional<WallGetResponse> getWallPosts(long ownerId, int offset, int count) {
+        StringBuilder sb = new StringBuilder(API_URL).append("wall.get?")
+                .append("access_token=").append(accessToken).append("&")
+                .append("owner_id=").append(ownerId).append("&")
+                .append("offset=").append(offset).append("&")
+                .append("v=").append(authorizeData.getV()).append("&")
+                .append("count=").append(count);
+        HttpGet get = new HttpGet(sb.toString());
+        try {
+            HttpResponse response = httpClient.execute(get);
+            Type responseType = new TypeToken<Response<WallGetResponse>>() {
+            }.getType();
+            Response<WallGetResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
+            return Optional.of(responseJson.getResponse());
+        } catch (IOException e) {
+            LOG.error("Cannot send request [likes.add]", e);
+        }
+        return Optional.empty();
     }
 
-    public void getUserPhotos() {
-
+    /**
+     * Get count of photo of owner start with offset
+     *
+     * @param ownerId Photo owner
+     * @param offset  start index of photo
+     * @param count   photo count
+     * @return Photos of owner
+     */
+    public Optional<PhotosGetAllResponse> getUserPhotos(long ownerId, int offset, int count) {
+        StringBuilder sb = new StringBuilder(API_URL).append("photos.getAll?")
+                .append("access_token=").append(accessToken).append("&")
+                .append("owner_id=").append(ownerId).append("&")
+                .append("offset=").append(offset).append("&")
+                .append("v=").append(authorizeData.getV()).append("&")
+                .append("count=").append(count);
+        HttpGet get = new HttpGet(sb.toString());
+        try {
+            HttpResponse response = httpClient.execute(get);
+            Type responseType = new TypeToken<Response<PhotosGetAllResponse>>() {
+            }.getType();
+            Response<PhotosGetAllResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
+            return Optional.of(responseJson.getResponse());
+        } catch (IOException e) {
+            LOG.error("Cannot send request [likes.add]", e);
+        }
+        return Optional.empty();
     }
 
 }
