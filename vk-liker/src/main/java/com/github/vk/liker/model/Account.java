@@ -26,6 +26,9 @@ public class Account {
     @Field
     private String password;
 
+    @Field("user_id")
+    private long userId;
+
     @Field("access_token")
     private String accessToken;
 
@@ -55,6 +58,14 @@ public class Account {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getAccessToken() {
