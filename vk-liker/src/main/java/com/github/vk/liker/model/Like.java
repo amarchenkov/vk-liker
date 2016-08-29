@@ -24,6 +24,9 @@ public class Like {
     @Field("item_id")
     private long itemId;
 
+    @Field("account_id")
+    private ObjectId accountId;
+
     public ObjectId getId() {
         return _id;
     }
