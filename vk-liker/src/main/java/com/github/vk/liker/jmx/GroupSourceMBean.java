@@ -5,5 +5,5 @@ package com.github.vk.liker.jmx;
  *
  * @author Andrey
  */
-public interface GroupTaskMBean {
+public interface GroupSourceMBean {
 }

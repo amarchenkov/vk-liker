@@ -5,5 +5,5 @@ package com.github.vk.liker.jmx;
  *
  * @author Andrey
  */
-public interface SearchTaskMBean {
+public interface SearchSourceMBean {
 }
