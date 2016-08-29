@@ -4,10 +4,7 @@ import com.github.vk.api.enums.ObjectType;
 import com.github.vk.api.exceptions.AuthorizeException;
 import com.github.vk.api.models.AccessToken;
 import com.github.vk.api.models.AuthorizeData;
-import com.github.vk.api.models.json.LikesAddResponse;
-import com.github.vk.api.models.json.PhotosGetAllResponse;
-import com.github.vk.api.models.json.Response;
-import com.github.vk.api.models.json.WallGetResponse;
+import com.github.vk.api.models.json.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
@@ -50,14 +47,23 @@ public class VK {
     private CloseableHttpClient httpClient;
     private Gson gson = new Gson();
 
-    public VK(AuthorizeData authorizeData) {
-        this.authorizeData = authorizeData;
+    public VK() {
         RequestConfig globalConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
         this.httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(globalConfig)
                 .setRedirectStrategy(new DefaultRedirectStrategy())
                 .build();
         LOG.debug("HTTP client initialized");
+    }
+
+    public VK(AccessToken accessToken) {
+        this();
+        this.accessToken = accessToken;
+    }
+
+    public VK(AuthorizeData authorizeData) {
+        this();
+        this.authorizeData = authorizeData;
     }
 
     private boolean checkAccessToken() {
@@ -185,7 +191,7 @@ public class VK {
             Response<WallGetResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
             return Optional.of(responseJson.getResponse());
         } catch (IOException e) {
-            LOG.error("Cannot send request [likes.add]", e);
+            LOG.error("Cannot send request [wall.get]", e);
         }
         return Optional.empty();
     }
@@ -213,7 +219,31 @@ public class VK {
             Response<PhotosGetAllResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
             return Optional.of(responseJson.getResponse());
         } catch (IOException e) {
-            LOG.error("Cannot send request [likes.add]", e);
+            LOG.error("Cannot send request [photos.getAll]", e);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Get list of group's members
+     *
+     * @param groupId ID of group
+     * @return list of members
+     */
+    public Optional<GroupMembersResponse> getGroupMembers(long groupId) {
+        StringBuilder sb = new StringBuilder(API_URL).append("groups.getMembers?").append("group_id=").append(groupId);
+        if (accessToken != null) {
+            sb.append("access_token=").append(accessToken).append("&");
+        }
+        HttpGet get = new HttpGet(sb.toString());
+        try {
+            HttpResponse response = httpClient.execute(get);
+            Type responseType = new TypeToken<Response<GroupMembersResponse>>() {
+            }.getType();
+            Response<GroupMembersResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
+            return Optional.of(responseJson.getResponse());
+        } catch (IOException e) {
+            LOG.error("Cannot send request [groups.getMembers]", e);
         }
         return Optional.empty();
     }

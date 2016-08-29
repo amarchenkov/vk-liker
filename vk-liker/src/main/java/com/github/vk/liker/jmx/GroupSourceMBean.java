@@ -6,4 +6,10 @@ package com.github.vk.liker.jmx;
  * @author Andrey
  */
 public interface GroupSourceMBean {
+    /**
+     * Start like processing for group members
+     *
+     * @param groupId Group ID
+     */
+    void start(long groupId);
 }

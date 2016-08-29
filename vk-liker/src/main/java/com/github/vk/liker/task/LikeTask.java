@@ -9,6 +9,8 @@ import com.github.vk.liker.model.Account;
  */
 public class LikeTask implements Runnable {
 
+    private static final int COUNT_ITEMS_TO_LIKE = 3;
+
     private long ownerId;
     private Account account;
 

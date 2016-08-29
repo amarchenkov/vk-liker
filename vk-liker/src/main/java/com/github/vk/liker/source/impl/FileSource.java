@@ -50,7 +50,7 @@ public class FileSource implements Source, Runnable {
         List<Long> result = new ArrayList<>();
         try {
             Stream<String> lines = Files.lines(Paths.get("data.txt"));
-            lines.filter(e -> e != null).mapToLong(Long::valueOf).forEach(result::add);
+            lines.filter(e -> e != null && !e.isEmpty()).mapToLong(Long::valueOf).forEach(result::add);
         } catch (IOException e) {
             LOG.error("Cannot read data file", e);
         }
