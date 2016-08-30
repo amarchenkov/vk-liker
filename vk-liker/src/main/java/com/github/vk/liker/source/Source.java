@@ -1,5 +1,7 @@
 package com.github.vk.liker.source;
 
+import com.github.vk.liker.task.SourceTask;
+
 import java.util.List;
 
 /**
@@ -13,5 +15,5 @@ public interface Source {
      *
      * @return list of owner id
      */
-    List<Long> getList();
+    SourceTask getList();
 }

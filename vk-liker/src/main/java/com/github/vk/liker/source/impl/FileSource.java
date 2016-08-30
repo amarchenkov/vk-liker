@@ -2,6 +2,7 @@ package com.github.vk.liker.source.impl;
 
 import com.github.vk.liker.service.LikeService;
 import com.github.vk.liker.source.Source;
+import com.github.vk.liker.task.SourceTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,11 +44,11 @@ public class FileSource implements Source, Runnable {
     }
 
     @Override
-    public List<Long> getList() {
-        List<Long> result = new ArrayList<>();
+    public SourceTask getList() {
+        SourceTask result = new SourceTask(UUID.randomUUID());
         try {
             Stream<String> lines = Files.lines(Paths.get("data.txt"));
-            lines.filter(e -> e != null && !e.isEmpty()).mapToLong(Long::valueOf).forEach(result::add);
+            lines.filter(e -> e != null && !e.isEmpty()).mapToLong(Long::valueOf).forEach(result.getIdList()::add);
         } catch (IOException e) {
             LOG.error("Cannot read data file", e);
         }

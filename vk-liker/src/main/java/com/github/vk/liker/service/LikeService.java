@@ -1,5 +1,7 @@
 package com.github.vk.liker.service;
 
+import com.github.vk.liker.task.SourceTask;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,7 @@ public interface LikeService extends Runnable {
     /**
      * Add account id list to queue for processing
      *
-     * @param list list of owner id
+     * @param task Pair UUID => ID List
      */
-    void addListToProcess(List<Long> list);
+    void addListToProcess(SourceTask task);
 }
