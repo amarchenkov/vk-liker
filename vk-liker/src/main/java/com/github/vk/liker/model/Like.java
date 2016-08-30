@@ -21,9 +21,6 @@ public class Like {
     @Field("owner_id")
     private long ownerId;
 
-    @Field("item_id")
-    private long itemId;
-
     @Field("account_id")
     private ObjectId accountId;
 
@@ -41,13 +38,5 @@ public class Like {
 
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
     }
 }
