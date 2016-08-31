@@ -18,7 +18,7 @@ public class Account {
     static final String ACCOUNTS_COLLECTION_NAME = "accounts";
 
     @Id
-    private ObjectId _id;
+    private ObjectId id;
 
     @Field
     private String login;
@@ -37,11 +37,11 @@ public class Account {
 
 
     public ObjectId getId() {
-        return _id;
+        return id;
     }
 
     public void setId(ObjectId _id) {
-        this._id = _id;
+        this.id = _id;
     }
 
     public String getLogin() {

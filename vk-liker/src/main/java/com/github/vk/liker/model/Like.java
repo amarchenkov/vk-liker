@@ -16,7 +16,7 @@ public class Like {
     static final String LIKES_COLLECTION_NAME = "likes";
 
     @Id
-    private ObjectId _id;
+    private ObjectId id;
 
     @Field("owner_id")
     private long ownerId;
@@ -25,11 +25,11 @@ public class Like {
     private ObjectId accountId;
 
     public ObjectId getId() {
-        return _id;
+        return id;
     }
 
     public void setId(ObjectId _id) {
-        this._id = _id;
+        this.id = _id;
     }
 
     public long getOwnerId() {

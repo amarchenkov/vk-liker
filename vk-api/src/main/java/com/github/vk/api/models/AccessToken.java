@@ -13,6 +13,12 @@ public class AccessToken {
     private LocalDateTime expiresIn;
     private String userId;
 
+    public AccessToken(String accessToken, LocalDateTime expiresIn, String userId) {
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
+        this.userId = userId;
+    }
+
     public AccessToken(String queryString) {
         String[] parts = queryString.split("&");
         for (String part : parts) {

@@ -18,19 +18,17 @@ public class SourceTask {
         this.uuid = uuid;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public SourceTask(UUID uuid, List<Long> items) {
+        this(uuid);
+        this.idList = items;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public List<Long> getIdList() {
         return idList;
     }
 
-    public void setIdList(List<Long> idList) {
-        this.idList = idList;
-    }
 }

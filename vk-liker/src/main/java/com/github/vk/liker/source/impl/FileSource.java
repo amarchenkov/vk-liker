@@ -10,13 +10,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
@@ -28,6 +25,7 @@ import java.util.stream.Stream;
 @ConfigurationProperties(prefix = "liker.file-watcher")
 public class FileSource implements Source, Runnable {
 
+    private static final String FILE_NAME = "data.txt";
     private static final Logger LOG = LogManager.getLogger(Source.class);
 
     private Integer delay;
@@ -47,7 +45,7 @@ public class FileSource implements Source, Runnable {
     public SourceTask getList() {
         SourceTask result = new SourceTask(UUID.randomUUID());
         try {
-            Stream<String> lines = Files.lines(Paths.get("data.txt"));
+            Stream<String> lines = Files.lines(Paths.get(FILE_NAME));
             lines.filter(e -> e != null && !e.isEmpty()).mapToLong(Long::valueOf).forEach(result.getIdList()::add);
         } catch (IOException e) {
             LOG.error("Cannot read data file", e);
@@ -59,7 +57,7 @@ public class FileSource implements Source, Runnable {
     public void run() {
         while (!Thread.interrupted()) {
             try {
-                Path sourceFilePath = Paths.get("data.txt");
+                Path sourceFilePath = Paths.get(FILE_NAME);
                 if (Files.exists(sourceFilePath)) {
                     likeService.addListToProcess(getList());
                     Files.delete(sourceFilePath);

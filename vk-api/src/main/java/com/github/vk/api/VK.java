@@ -248,4 +248,7 @@ public class VK {
         return Optional.empty();
     }
 
+    public AccessToken getAccessToken() {
+        return accessToken;
+    }
 }
