@@ -45,6 +45,9 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        if (System.getProperty("webdriver.gecko.driver") == null) {
+            throw new Exception("Web drive path not define");
+        }
         Thread likerThread = new Thread(likeService, "LikeServiceThread");
         Thread fileSourceThread = new Thread((FileSource) fileSource, "FileSourceThread");
 

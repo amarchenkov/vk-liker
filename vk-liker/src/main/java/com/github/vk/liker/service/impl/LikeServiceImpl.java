@@ -43,15 +43,11 @@ public class LikeServiceImpl implements LikeService {
 
     @PostConstruct
     protected void init() {
-//        authorizeData.setClientId();
+        authorizeData.setClientId("5591327");
         authorizeData.setResponseType(ResponseType.TOKEN);
         authorizeData.setDisplay(Display.MOBILE);
         authorizeData.setScope("wall,photos");
         authorizeData.setV(5.33F);
-    }
-
-    @PreDestroy
-    private void finish() {
     }
 
     @Override
@@ -65,20 +61,11 @@ public class LikeServiceImpl implements LikeService {
         while (!Thread.interrupted()) {
             try {
                 SourceTask task = queue.take();
-                List<Account> accounts = accountRepository.findAll();
-                ForkJoinPool pool = new ForkJoinPool(accounts.size());
-//                int partitionSize = task.getIdList().size() / accountQuantity;
-//                for (int i = 0; i < task.getIdList().size(); i += partitionSize) {
-//                    pool.execute(
-//                            new LikeTask(authorizeData, null, task.getIdList().subList(i, Math.min(i + partitionSize, task.getIdList().size())))
-//                    );
-//                }
-                pool.shutdown();
+                ForkJoinPool pool = ForkJoinPool.commonPool();
+                pool.invoke(new LikeTask(accountRepository, authorizeData, task.getIdList()));
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 LOG.error("Like service thread has been interrupted", e);
-//            } catch (AuthorizeException e) {
-//                LOG.error("VK auth failed", e);
             }
         }
 
