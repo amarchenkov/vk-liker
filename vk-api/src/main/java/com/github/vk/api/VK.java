@@ -28,7 +28,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -244,6 +244,32 @@ public class VK {
             return Optional.of(responseJson.getResponse());
         } catch (IOException e) {
             LOG.error("Cannot send request [groups.getMembers]", e);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Get user list by criteria list
+     *
+     * @param params criteria => value
+     * @return user list
+     */
+    public Optional<UserGetResponse> getUser(Map<String, String> params) {
+        StringBuilder sb = new StringBuilder(API_URL).append("user.get?");
+        if (accessToken != null) {
+            sb.append("access_token=").append(accessToken).append("&");
+        }
+        params.forEach((k, v) -> sb.append(k).append("=").append(v).append("&"));
+        sb.deleteCharAt(sb.length() - 1);
+        HttpGet get = new HttpGet(sb.toString());
+        try {
+            HttpResponse response = httpClient.execute(get);
+            Type responseType = new TypeToken<Response<UserGetResponse>>() {
+            }.getType();
+            Response<UserGetResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
+            return Optional.of(responseJson.getResponse());
+        } catch (IOException e) {
+            LOG.error("Cannot send request [user.get]", e);
         }
         return Optional.empty();
     }

@@ -7,6 +7,7 @@ import com.github.vk.api.models.AccessToken;
 import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.api.models.json.PhotosGetAllResponse;
 import com.github.vk.api.models.json.WallGetResponse;
+import com.github.vk.liker.Application;
 import com.github.vk.liker.model.Account;
 import com.github.vk.liker.repository.AccountRepository;
 import org.apache.logging.log4j.LogManager;
@@ -27,23 +28,21 @@ import java.util.concurrent.RecursiveAction;
 public class LikeTask extends RecursiveAction {
 
     private static final Logger LOG = LogManager.getLogger(RecursiveAction.class);
-    public static final int ITEM_TO_LIKE_COUNT = 3;
+    private static final int ITEM_TO_LIKE_COUNT = 3;
 
-    private AuthorizeData authorizeData;
     private AccountRepository accountRepository;
     private List<Long> idList;
     private int accountIndex;
     private VK vk;
 
-    public LikeTask(AccountRepository accountRepository, AuthorizeData authorizeData, List<Long> idList) {
-        this.authorizeData = authorizeData;
+    public LikeTask(AccountRepository accountRepository, List<Long> idList) {
         this.accountRepository = accountRepository;
         this.idList = idList;
         this.accountIndex = 1;
     }
 
-    public LikeTask(AccountRepository accountRepository, AuthorizeData authorizeData, List<Long> idList, int accountIndex) {
-        this(accountRepository, authorizeData, idList);
+    public LikeTask(AccountRepository accountRepository, List<Long> idList, int accountIndex) {
+        this(accountRepository, idList);
         this.accountIndex = accountIndex;
     }
 
@@ -62,7 +61,7 @@ public class LikeTask extends RecursiveAction {
                         account.getAccessToken(), account.getExpiresIn(), String.valueOf(account.getUserId()));
                 this.vk = new VK(accessToken);
             } else {
-                this.vk = new VK(authorizeData);
+                this.vk = new VK(Application.authorizeData());
                 try {
                     this.vk.updateToken(account.getLogin(), account.getPassword());
                 } catch (AuthorizeException e) {
@@ -72,6 +71,7 @@ public class LikeTask extends RecursiveAction {
             }
             this.idList.parallelStream().forEach(this::setLike);
         } else {
+
         }
     }
 

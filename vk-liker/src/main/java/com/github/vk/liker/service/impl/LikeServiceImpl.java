@@ -34,20 +34,10 @@ public class LikeServiceImpl implements LikeService {
 
     private BlockingQueue<SourceTask> queue = new LinkedBlockingQueue<>();
     private AccountRepository accountRepository;
-    private AuthorizeData authorizeData = new AuthorizeData();
 
     @Autowired
     public void setRepository(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-    }
-
-    @PostConstruct
-    protected void init() {
-        authorizeData.setClientId("5591327");
-        authorizeData.setResponseType(ResponseType.TOKEN);
-        authorizeData.setDisplay(Display.MOBILE);
-        authorizeData.setScope("wall,photos");
-        authorizeData.setV(5.33F);
     }
 
     @Override
@@ -62,7 +52,7 @@ public class LikeServiceImpl implements LikeService {
             try {
                 SourceTask task = queue.take();
                 ForkJoinPool pool = ForkJoinPool.commonPool();
-                pool.invoke(new LikeTask(accountRepository, authorizeData, task.getIdList()));
+                pool.invoke(new LikeTask(accountRepository, task.getIdList()));
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 LOG.error("Like service thread has been interrupted", e);

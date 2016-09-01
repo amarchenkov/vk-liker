@@ -1,5 +1,8 @@
 package com.github.vk.liker;
 
+import com.github.vk.api.enums.Display;
+import com.github.vk.api.enums.ResponseType;
+import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.liker.service.LikeService;
 import com.github.vk.liker.source.Source;
 import com.github.vk.liker.source.impl.FileSource;
@@ -56,6 +59,16 @@ public class Application implements CommandLineRunner {
 
         LOG.info("Starting like service");
         likerThread.start();
+    }
+
+    public static AuthorizeData authorizeData() {
+        AuthorizeData authorizeData = new AuthorizeData();
+        authorizeData.setClientId("5591327");
+        authorizeData.setResponseType(ResponseType.TOKEN);
+        authorizeData.setDisplay(Display.MOBILE);
+        authorizeData.setScope("wall,photos");
+        authorizeData.setV(5.33F);
+        return authorizeData;
     }
 
 }
