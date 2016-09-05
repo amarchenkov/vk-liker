@@ -22,6 +22,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -86,6 +87,8 @@ public class VK {
      * @throws AuthorizeException If wrong login or password
      */
     public void updateToken(String login, String password) throws AuthorizeException {
+        DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+        capabilities.setCapability("marionette", true);
         WebDriver driver = new FirefoxDriver();
         LOG.info("Start authorization. URL = [{}]", AUTHORIZE_URL + "?" + authorizeData.toString());
         LOG.info("Login = [{}] Password = [{}]", login, password);

@@ -24,6 +24,11 @@ public class Like {
     @Field("account_id")
     private ObjectId accountId;
 
+    public Like(long ownerId, ObjectId id) {
+        this.ownerId = ownerId;
+        this.accountId = id;
+    }
+
     public ObjectId getId() {
         return id;
     }

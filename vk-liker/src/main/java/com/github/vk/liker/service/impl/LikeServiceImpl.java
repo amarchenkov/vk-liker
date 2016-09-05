@@ -6,6 +6,7 @@ import com.github.vk.api.exceptions.AuthorizeException;
 import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.liker.model.Account;
 import com.github.vk.liker.repository.AccountRepository;
+import com.github.vk.liker.repository.LikeRepository;
 import com.github.vk.liker.service.LikeService;
 import com.github.vk.liker.task.LikeTask;
 import com.github.vk.liker.task.SourceTask;
@@ -33,6 +34,12 @@ public class LikeServiceImpl implements LikeService {
     private static final Logger LOG = LogManager.getLogger(LikeService.class);
 
     private AccountRepository accountRepository;
+    private LikeRepository likeRepository;
+
+    @Autowired
+    public void setLikeRepository(LikeRepository likeRepository) {
+        this.likeRepository = likeRepository;
+    }
 
     @Autowired
     public void setRepository(AccountRepository accountRepository) {
@@ -42,6 +49,10 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public void addListToProcess(SourceTask task) {
         LOG.info("Add tasks[{}] to process. Size = {}", task.getUuid(), task.getIdList().size());
+        if (task.getIdList().isEmpty()) {
+            LOG.error("Task is empty");
+            throw new RuntimeException("Task is empty");
+        }
         ForkJoinPool pool = ForkJoinPool.commonPool();
         long accountSize = accountRepository.count();
         if (accountSize == 0) {
@@ -55,8 +66,15 @@ public class LikeServiceImpl implements LikeService {
         LOG.info("Size of part to process = [{}]", partSize);
         int initialItemIndex = 0;
         for (Account account : accountRepository.findAll()) {
-            pool.execute(new LikeTask(accountRepository, account, null));
-            initialItemIndex += partSize;
+            int begin, end;
+            begin = initialItemIndex;
+            if ((accountSize - (initialItemIndex + partSize) < partSize)) {
+                end = (int) accountSize;
+            } else {
+                end = initialItemIndex + partSize;
+            }
+            pool.execute(new LikeTask(likeRepository, account, task.getIdList().subList(begin, end)));
+            initialItemIndex += (end - begin);
         }
     }
 

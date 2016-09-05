@@ -49,7 +49,6 @@ public class Application implements CommandLineRunner {
 
         LOG.info("Starting file source service");
         fileSourceThread.start();
-
     }
 
     public static AuthorizeData authorizeData() {
