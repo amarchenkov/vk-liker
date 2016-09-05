@@ -17,6 +17,24 @@
         <version>1.4.0.RELEASE</version>
     </parent>
 
+    <profiles>
+        <profile>
+            <id>develop</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>develop</build.profile.id>
+            </properties>
+        </profile>
+        <profile>
+            <id>release</id>
+            <properties>
+                <build.profile.id>release</build.profile.id>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,6 +64,18 @@
 
     <build>
         <finalName>liker</finalName>
+        <filters>
+            <filter>profiles/${build.profile.id}/application.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
