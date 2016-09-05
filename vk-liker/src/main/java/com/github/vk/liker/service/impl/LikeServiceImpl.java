@@ -73,7 +73,7 @@ public class LikeServiceImpl implements LikeService {
             } else {
                 end = initialItemIndex + partSize;
             }
-            pool.execute(new LikeTask(likeRepository, account, task.getIdList().subList(begin, end)));
+            pool.execute(new LikeTask(accountRepository, likeRepository, account, task.getIdList().subList(begin, end)));
             initialItemIndex += (end - begin);
         }
     }

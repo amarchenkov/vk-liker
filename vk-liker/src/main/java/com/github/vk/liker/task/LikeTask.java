@@ -33,11 +33,13 @@ public class LikeTask extends RecursiveAction {
     private static final int ITEM_TO_LIKE_COUNT = 3;
 
     private LikeRepository likeRepository;
+    private AccountRepository accountRepository;
     private Account account;
     private List<Long> idList;
     private VK vk;
 
-    public LikeTask(LikeRepository likeRepository, Account account, List<Long> idList) {
+    public LikeTask(AccountRepository accountRepository, LikeRepository likeRepository, Account account, List<Long> idList) {
+        this.accountRepository = accountRepository;
         this.likeRepository = likeRepository;
         this.idList = idList;
         this.account = account;
@@ -53,6 +55,10 @@ public class LikeTask extends RecursiveAction {
             this.vk = new VK(Application.authorizeData());
             try {
                 this.vk.updateToken(account.getLogin(), account.getPassword());
+                account.setAccessToken(vk.getAccessToken().getAccessToken());
+                account.setExpiresIn(vk.getAccessToken().getExpiresIn());
+                account.setUserId(Long.valueOf(vk.getAccessToken().getUserId()));
+                accountRepository.save(account);
             } catch (AuthorizeException e) {
                 LOG.error("Authorization failed!", e);
                 return;
@@ -68,15 +74,19 @@ public class LikeTask extends RecursiveAction {
 
     private void likePost(WallGetResponse wall) {
         wall.getItems().forEach(p -> {
-            vk.like(ObjectType.POST, p.getOwnerId(), p.getId());
-            likeRepository.save(new Like(p.getOwnerId(), account.getId()));
+            if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
+                vk.like(ObjectType.POST, p.getOwnerId(), p.getId());
+                likeRepository.save(new Like(p.getOwnerId(), account.getId()));
+            }
         });
     }
 
     private void likePhoto(PhotosGetAllResponse photos) {
         photos.getItems().forEach(p -> {
-            vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId());
-            likeRepository.save(new Like(p.getOwnerId(), account.getId()));
+            if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
+                vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId());
+                likeRepository.save(new Like(p.getOwnerId(), account.getId()));
+            }
         });
     }
 
