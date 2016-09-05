@@ -32,7 +32,6 @@ public class LikeServiceImpl implements LikeService {
 
     private static final Logger LOG = LogManager.getLogger(LikeService.class);
 
-    private BlockingQueue<SourceTask> queue = new LinkedBlockingQueue<>();
     private AccountRepository accountRepository;
 
     @Autowired
@@ -43,22 +42,22 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public void addListToProcess(SourceTask task) {
         LOG.info("Add tasks[{}] to process. Size = {}", task.getUuid(), task.getIdList().size());
-        queue.add(task);
-    }
-
-    @Override
-    public void run() {
-        while (!Thread.interrupted()) {
-            try {
-                SourceTask task = queue.take();
-                ForkJoinPool pool = ForkJoinPool.commonPool();
-                pool.invoke(new LikeTask(accountRepository, task.getIdList()));
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                LOG.error("Like service thread has been interrupted", e);
-            }
+        ForkJoinPool pool = ForkJoinPool.commonPool();
+        long accountSize = accountRepository.count();
+        if (accountSize == 0) {
+            LOG.error("Account list is empty");
+            throw new RuntimeException("Account list is empty");
         }
-
+        int partSize = (int) (task.getIdList().size() / accountRepository.count());
+        if (partSize < 1) {
+            partSize = 1;
+        }
+        LOG.info("Size of part to process = [{}]", partSize);
+        int initialItemIndex = 0;
+        for (Account account : accountRepository.findAll()) {
+            pool.execute(new LikeTask(accountRepository, account, null));
+            initialItemIndex += partSize;
+        }
     }
 
 }

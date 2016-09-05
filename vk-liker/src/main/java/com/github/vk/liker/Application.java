@@ -28,13 +28,7 @@ public class Application implements CommandLineRunner {
 
     private static final Logger LOG = LogManager.getLogger(Application.class);
 
-    private LikeService likeService;
     private Source fileSource;
-
-    @Autowired
-    public void setLikeService(LikeService likeService) {
-        this.likeService = likeService;
-    }
 
     @Autowired
     @Qualifier("fileSource")
@@ -51,14 +45,11 @@ public class Application implements CommandLineRunner {
         if (System.getProperty("webdriver.gecko.driver") == null) {
             throw new Exception("Web drive path not define");
         }
-        Thread likerThread = new Thread(likeService, "LikeServiceThread");
         Thread fileSourceThread = new Thread((FileSource) fileSource, "FileSourceThread");
 
         LOG.info("Starting file source service");
         fileSourceThread.start();
 
-        LOG.info("Starting like service");
-        likerThread.start();
     }
 
     public static AuthorizeData authorizeData() {

@@ -20,8 +20,7 @@ public class SearchSource implements SearchSourceMBean {
 
     @Override
     @ManagedOperation(description = "Start liking search result")
-    @ManagedOperationParameter(name = "searchParams", description = "Params for searching")
-    public void start(Map<String, String> searchParams) {
+    public void start() {
 
     }
 

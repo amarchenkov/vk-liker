@@ -31,48 +31,44 @@ public class LikeTask extends RecursiveAction {
     private static final int ITEM_TO_LIKE_COUNT = 3;
 
     private AccountRepository accountRepository;
+    private Account account;
     private List<Long> idList;
-    private int accountIndex;
     private VK vk;
 
-    public LikeTask(AccountRepository accountRepository, List<Long> idList) {
+    public LikeTask(AccountRepository accountRepository, Account account, List<Long> idList) {
         this.accountRepository = accountRepository;
         this.idList = idList;
-        this.accountIndex = 1;
-    }
-
-    public LikeTask(AccountRepository accountRepository, List<Long> idList, int accountIndex) {
-        this(accountRepository, idList);
-        this.accountIndex = accountIndex;
+        this.account = account;
     }
 
     @Override
     protected void compute() {
-        long count = accountRepository.count();
-        if (idList.size() <= count) {
-            Page<Account> accounts = accountRepository.findAll(new PageRequest(accountIndex, 1, new Sort(Sort.Direction.ASC, "_id")));
-            if (accounts.getNumberOfElements() == 0) {
-                LOG.error("Account list is empty!");
-                return;
-            }
-            Account account = accounts.getContent().get(0);
-            if (account.getExpiresIn().isAfter(LocalDateTime.now())) {
-                AccessToken accessToken = new AccessToken(
-                        account.getAccessToken(), account.getExpiresIn(), String.valueOf(account.getUserId()));
-                this.vk = new VK(accessToken);
-            } else {
-                this.vk = new VK(Application.authorizeData());
-                try {
-                    this.vk.updateToken(account.getLogin(), account.getPassword());
-                } catch (AuthorizeException e) {
-                    LOG.error("Authorization failed!", e);
-                    return;
-                }
-            }
-            this.idList.parallelStream().forEach(this::setLike);
-        } else {
 
-        }
+//        long count = accountRepository.count();
+//        if (idList.size() <= count) {
+//            Page<Account> accounts = accountRepository.findAll(new PageRequest(accountIndex, 1, new Sort(Sort.Direction.ASC, "_id")));
+//            if (accounts.getNumberOfElements() == 0) {
+//                LOG.error("Account list is empty!");
+//                return;
+//            }
+//            Account account = accounts.getContent().get(0);
+//            if (account.getExpiresIn().isAfter(LocalDateTime.now())) {
+//                AccessToken accessToken = new AccessToken(
+//                        account.getAccessToken(), account.getExpiresIn(), String.valueOf(account.getUserId()));
+//                this.vk = new VK(accessToken);
+//            } else {
+//                this.vk = new VK(Application.authorizeData());
+//                try {
+//                    this.vk.updateToken(account.getLogin(), account.getPassword());
+//                } catch (AuthorizeException e) {
+//                    LOG.error("Authorization failed!", e);
+//                    return;
+//                }
+//            }
+//            this.idList.parallelStream().forEach(this::setLike);
+//        } else {
+//
+//        }
     }
 
     private void setLike(Long id) {

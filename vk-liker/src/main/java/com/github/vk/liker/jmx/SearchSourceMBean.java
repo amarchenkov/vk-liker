@@ -8,5 +8,5 @@ import java.util.Map;
  * @author Andrey
  */
 public interface SearchSourceMBean {
-    void start(Map<String, String> searchParams);
+    void start();
 }

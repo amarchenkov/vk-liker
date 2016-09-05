@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author AMarchenkov
  */
-public interface LikeService extends Runnable {
+public interface LikeService {
     /**
      * Add account id list to queue for processing
      *
