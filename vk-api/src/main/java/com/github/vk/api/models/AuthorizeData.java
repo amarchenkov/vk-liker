@@ -2,14 +2,11 @@ package com.github.vk.api.models;
 
 import com.github.vk.api.enums.Display;
 import com.github.vk.api.enums.ResponseType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created at 16.08.2016 23:13
@@ -18,6 +15,7 @@ import java.util.List;
  */
 public class AuthorizeData {
 
+    private static final Logger LOG = LogManager.getLogger(AuthorizeData.class);
     private static final String BLANK_URL = "https://oauth.vk.com/blank.html";
 
     private String clientId;
@@ -62,6 +60,7 @@ public class AuthorizeData {
         try {
             sb.append("redirect_url=").append(URLEncoder.encode(BLANK_URL, "UTF-8")).append("&");
         } catch (UnsupportedEncodingException e) {
+            LOG.error("URL encoding failed", e);
             sb.append("redirect_url=").append("").append("&");
         }
         if (display != null) {
@@ -71,7 +70,6 @@ public class AuthorizeData {
         if (responseType != null) {
             sb.append("response_type=").append(responseType.getValue()).append("&");
         }
-//        sb.append("v=").append(v).append("&");
         sb.append("state=").append(state);
         return sb.toString();
     }

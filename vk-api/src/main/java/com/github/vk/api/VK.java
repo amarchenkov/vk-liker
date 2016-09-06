@@ -23,12 +23,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -42,12 +40,17 @@ public class VK {
     private static final Logger LOG = LogManager.getLogger(VK.class);
     private static final String AUTHORIZE_URL = "https://oauth.vk.com/authorize";
     private static final String API_URL = "https://api.vk.com/method/";
+    public static final String ACCESS_TOKEN_PARAM = "access_token=";
+    public static final String OWNER_ID_PARAM = "owner_id=";
 
     private AccessToken accessToken;
     private AuthorizeData authorizeData;
     private CloseableHttpClient httpClient;
     private Gson gson = new Gson();
 
+    /**
+     * Create dummy instance for public methods
+     */
     public VK() {
         RequestConfig globalConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
         this.httpClient = HttpClients.custom()
@@ -57,23 +60,29 @@ public class VK {
         LOG.debug("HTTP client initialized");
     }
 
+    /**
+     * Instance with saved access token
+     *
+     * @param accessToken access token
+     */
     public VK(AccessToken accessToken) {
         this();
         this.accessToken = accessToken;
     }
 
+    /**
+     * Instance with app data
+     *
+     * @param authorizeData app data
+     */
     public VK(AuthorizeData authorizeData) {
         this();
         this.authorizeData = authorizeData;
     }
 
-    private boolean checkAccessToken() {
-        return !(accessToken == null || accessToken.getAccessToken().isEmpty()) && accessToken.getExpiresIn().isBefore(LocalDateTime.now());
-    }
-
     private void extractTokenFromUrl(String url) throws AuthorizeException {
         LOG.debug("Token URL = [{}]", url);
-        if (!url.contains("access_token=")) {
+        if (!url.contains(ACCESS_TOKEN_PARAM)) {
             throw new AuthorizeException("Cannot get access token");
         }
         this.accessToken = new AccessToken(url.split("#")[1]);
@@ -99,19 +108,21 @@ public class VK {
         pass.sendKeys(password);
         driver.findElement(By.cssSelector("[value=\"Войти\"]")).click();
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver d) {
+        wait.until((WebDriver d) -> {
+            if (d != null) {
                 return d.getTitle().toLowerCase().startsWith("получение доступа")
                         || d.getTitle().toLowerCase().startsWith("oauth blank");
             }
+            return null;
         });
-        if (driver.findElements(By.cssSelector("[value=\"Разрешить\"]")).size() > 0) {
+        if (!driver.findElements(By.cssSelector("[value=\"Разрешить\"]")).isEmpty()) {
             driver.findElement(By.cssSelector("[value=\"Разрешить\"]")).click();
         }
-        wait.until(new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver d) {
+        wait.until((WebDriver d) -> {
+            if (d != null) {
                 return d.getTitle().toLowerCase().startsWith("oauth blank");
             }
+            return null;
         });
         extractTokenFromUrl(driver.getCurrentUrl());
         driver.quit();
@@ -127,9 +138,9 @@ public class VK {
      */
     public Optional<LikesAddResponse> like(ObjectType type, long ownerId, long itemId) {
         StringBuilder sb = new StringBuilder(API_URL).append("likes.add?")
-                .append("access_token=").append(accessToken).append("&")
+                .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
                 .append("type=").append(type.getValue()).append("&")
-                .append("owner_id=").append(ownerId).append("&")
+                .append(OWNER_ID_PARAM).append(ownerId).append("&")
                 .append("v=").append(authorizeData.getV()).append("&")
                 .append("item_id=").append(itemId);
         HttpGet get = new HttpGet(sb.toString());
@@ -138,7 +149,7 @@ public class VK {
             Type responseType = new TypeToken<Response<LikesAddResponse>>() {
             }.getType();
             Response<LikesAddResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
-            return Optional.of(responseJson.getResponse());
+            return Optional.of(responseJson.getResponseKey());
         } catch (IOException e) {
             LOG.error("Cannot send request [likes.add]", e);
         }
@@ -155,9 +166,9 @@ public class VK {
      */
     public boolean isLiked(ObjectType type, long ownerId, long itemId) {
         StringBuilder sb = new StringBuilder(API_URL).append("likes.isLiked?")
-                .append("access_token=").append(accessToken).append("&")
+                .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
                 .append("type=").append(type.getValue()).append("&")
-                .append("owner_id=").append(ownerId).append("&")
+                .append(OWNER_ID_PARAM).append(ownerId).append("&")
                 .append("v=").append(authorizeData.getV()).append("&")
                 .append("item_id=").append(itemId);
         HttpGet get = new HttpGet(sb.toString());
@@ -181,8 +192,8 @@ public class VK {
      */
     public Optional<WallGetResponse> getWallPosts(long ownerId, int offset, int count) {
         StringBuilder sb = new StringBuilder(API_URL).append("wall.get?")
-                .append("access_token=").append(accessToken).append("&")
-                .append("owner_id=").append(ownerId).append("&")
+                .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
+                .append(OWNER_ID_PARAM).append(ownerId).append("&")
                 .append("offset=").append(offset).append("&")
                 .append("v=").append(authorizeData.getV()).append("&")
                 .append("count=").append(count);
@@ -192,7 +203,7 @@ public class VK {
             Type responseType = new TypeToken<Response<WallGetResponse>>() {
             }.getType();
             Response<WallGetResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
-            return Optional.of(responseJson.getResponse());
+            return Optional.of(responseJson.getResponseKey());
         } catch (IOException e) {
             LOG.error("Cannot send request [wall.get]", e);
         }
@@ -209,8 +220,8 @@ public class VK {
      */
     public Optional<PhotosGetAllResponse> getUserPhotos(long ownerId, int offset, int count) {
         StringBuilder sb = new StringBuilder(API_URL).append("photos.getAll?")
-                .append("access_token=").append(accessToken).append("&")
-                .append("owner_id=").append(ownerId).append("&")
+                .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
+                .append(OWNER_ID_PARAM).append(ownerId).append("&")
                 .append("offset=").append(offset).append("&")
                 .append("v=").append(authorizeData.getV()).append("&")
                 .append("count=").append(count);
@@ -220,7 +231,7 @@ public class VK {
             Type responseType = new TypeToken<Response<PhotosGetAllResponse>>() {
             }.getType();
             Response<PhotosGetAllResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
-            return Optional.of(responseJson.getResponse());
+            return Optional.of(responseJson.getResponseKey());
         } catch (IOException e) {
             LOG.error("Cannot send request [photos.getAll]", e);
         }
@@ -236,7 +247,7 @@ public class VK {
     public Optional<GroupMembersResponse> getGroupMembers(long groupId) {
         StringBuilder sb = new StringBuilder(API_URL).append("groups.getMembers?").append("group_id=").append(groupId);
         if (accessToken != null) {
-            sb.append("access_token=").append(accessToken).append("&");
+            sb.append(ACCESS_TOKEN_PARAM).append(accessToken).append("&");
         }
         HttpGet get = new HttpGet(sb.toString());
         try {
@@ -244,7 +255,7 @@ public class VK {
             Type responseType = new TypeToken<Response<GroupMembersResponse>>() {
             }.getType();
             Response<GroupMembersResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
-            return Optional.of(responseJson.getResponse());
+            return Optional.of(responseJson.getResponseKey());
         } catch (IOException e) {
             LOG.error("Cannot send request [groups.getMembers]", e);
         }
@@ -260,7 +271,7 @@ public class VK {
     public Optional<UserGetResponse> getUser(Map<String, String> params) {
         StringBuilder sb = new StringBuilder(API_URL).append("user.get?");
         if (accessToken != null) {
-            sb.append("access_token=").append(accessToken).append("&");
+            sb.append(ACCESS_TOKEN_PARAM).append(accessToken).append("&");
         }
         params.forEach((k, v) -> sb.append(k).append("=").append(v).append("&"));
         sb.deleteCharAt(sb.length() - 1);
@@ -270,7 +281,7 @@ public class VK {
             Type responseType = new TypeToken<Response<UserGetResponse>>() {
             }.getType();
             Response<UserGetResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
-            return Optional.of(responseJson.getResponse());
+            return Optional.of(responseJson.getResponseKey());
         } catch (IOException e) {
             LOG.error("Cannot send request [user.get]", e);
         }

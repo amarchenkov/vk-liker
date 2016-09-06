@@ -9,6 +9,7 @@ import java.util.List;
  *
  * @author AMarchenkov
  */
+@FunctionalInterface
 public interface LikeService {
     /**
      * Add account id list to queue for processing

@@ -29,12 +29,11 @@ public class FileSource implements Source, Runnable {
     private static final Logger LOG = LogManager.getLogger(Source.class);
 
     private Integer delay;
+    private LikeService likeService;
 
     public void setDelay(Integer delay) {
         this.delay = delay;
     }
-
-    private LikeService likeService;
 
     @Autowired
     public void setLikeService(LikeService likeService) {
@@ -44,8 +43,7 @@ public class FileSource implements Source, Runnable {
     @Override
     public SourceTask getList() {
         SourceTask result = new SourceTask(UUID.randomUUID());
-        try {
-            Stream<String> lines = Files.lines(Paths.get(FILE_NAME));
+        try (Stream<String> lines = Files.lines(Paths.get(FILE_NAME))) {
             lines.filter(e -> e != null && !e.isEmpty()).mapToLong(Long::valueOf).forEach(result.getIdList()::add);
         } catch (IOException e) {
             LOG.error("Cannot read data file", e);
@@ -65,6 +63,7 @@ public class FileSource implements Source, Runnable {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
                 LOG.error("File watcher thread has been interrupted", e);
+                Thread.currentThread().interrupt();
             } catch (IOException e) {
                 LOG.error("File remove failed", e);
             }

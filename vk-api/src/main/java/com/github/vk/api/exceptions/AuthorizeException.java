@@ -6,7 +6,11 @@ package com.github.vk.api.exceptions;
  * @author AMarchenkov
  */
 public class AuthorizeException extends Exception {
-
+    /**
+     * Inherited constructor
+     *
+     * @param message exception message
+     */
     public AuthorizeException(String message) {
         super(message);
     }

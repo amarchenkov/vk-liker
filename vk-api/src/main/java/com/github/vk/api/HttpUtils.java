@@ -20,14 +20,9 @@ public class HttpUtils {
     public static final String CACHE_CONTROL = "no-cache";
     public static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-//    remixlang=777;
-//    remixflash=22.0.0;
-//    remixscreen_depth=24;
-//    remixdt=0;
-//    remixseenads=2;
-//    remixlhk=ed26d62b9c387e8f72;
-//    remixstid=1620128121_aa25b83009aa4e990c;
-//    remixmdevice=1920/1080/1/!!-!!!!
+    private HttpUtils() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Заголовки для запроса на открытие диалога авторизации
@@ -46,7 +41,9 @@ public class HttpUtils {
     }
 
     /**
-     * @return
+     * Headers for auth
+     *
+     * @return headers
      */
     public static Header[] prepareAuthorizeHeaders() {
         return new BasicHeader[]{
@@ -61,6 +58,13 @@ public class HttpUtils {
         };
     }
 
+    /**
+     * Return value of specified header
+     *
+     * @param headers all headers
+     * @param name    target header name
+     * @return target header value
+     */
     public static Header getHeaderByName(Header[] headers, String name) {
         for (Header header : headers) {
             if (header.getName().equals(name)) {

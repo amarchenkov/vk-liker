@@ -1,19 +1,23 @@
 package com.github.vk.api.models.json;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created at 22.08.2016 11:28
  *
+ * @param <T> Type of value for <i>response</i> key
  * @author AMarchenkov
  */
 public class Response<T> {
 
-    private T response;
+    @SerializedName("response")
+    private T responseKey;
 
-    public T getResponse() {
-        return response;
+    public T getResponseKey() {
+        return responseKey;
     }
 
-    public void setResponse(T response) {
-        this.response = response;
+    public void setResponseKey(T responseKey) {
+        this.responseKey = responseKey;
     }
 }

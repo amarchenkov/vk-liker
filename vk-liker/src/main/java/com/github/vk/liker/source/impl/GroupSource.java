@@ -4,7 +4,6 @@ import com.github.vk.api.VK;
 import com.github.vk.api.models.json.GroupMembersResponse;
 import com.github.vk.liker.jmx.GroupSourceMBean;
 import com.github.vk.liker.service.LikeService;
-import com.github.vk.liker.source.Source;
 import com.github.vk.liker.task.SourceTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.jmx.export.annotation.ManagedOperationParameter;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 /**

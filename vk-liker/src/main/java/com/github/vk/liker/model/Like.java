@@ -24,6 +24,12 @@ public class Like {
     @Field("account_id")
     private ObjectId accountId;
 
+    /**
+     * Quick initialization of entity
+     *
+     * @param ownerId Object owner id
+     * @param id      Liked account ID
+     */
     public Like(long ownerId, ObjectId id) {
         this.ownerId = ownerId;
         this.accountId = id;
@@ -33,15 +39,11 @@ public class Like {
         return id;
     }
 
-    public void setId(ObjectId _id) {
-        this.id = _id;
-    }
-
     public long getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
+    public ObjectId getAccountId() {
+        return accountId;
     }
 }

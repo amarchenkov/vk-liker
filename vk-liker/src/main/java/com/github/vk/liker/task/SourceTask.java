@@ -14,10 +14,19 @@ public class SourceTask {
     private UUID uuid;
     private List<Long> idList = new ArrayList<>();
 
+    /**
+     *
+     * @param uuid
+     */
     public SourceTask(UUID uuid) {
         this.uuid = uuid;
     }
 
+    /**
+     *
+     * @param uuid
+     * @param items
+     */
     public SourceTask(UUID uuid, List<Long> items) {
         this(uuid);
         this.idList = items;

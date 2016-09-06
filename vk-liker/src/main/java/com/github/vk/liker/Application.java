@@ -3,7 +3,7 @@ package com.github.vk.liker;
 import com.github.vk.api.enums.Display;
 import com.github.vk.api.enums.ResponseType;
 import com.github.vk.api.models.AuthorizeData;
-import com.github.vk.liker.service.LikeService;
+import com.github.vk.liker.exception.DriverNotFoundException;
 import com.github.vk.liker.source.Source;
 import com.github.vk.liker.source.impl.FileSource;
 import org.apache.logging.log4j.LogManager;
@@ -36,14 +36,25 @@ public class Application implements CommandLineRunner {
         this.fileSource = fileSource;
     }
 
+    /**
+     * Main method
+     *
+     * @param args command line args
+     */
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);//NOSONAR
     }
 
+    /**
+     * Run method
+     *
+     * @param args command line args
+     * @throws Exception generic exception
+     */
     @Override
     public void run(String... args) throws Exception {
         if (System.getProperty("webdriver.gecko.driver") == null) {
-            throw new Exception("Web drive path not define");
+            throw new DriverNotFoundException("Web drive path not define");
         }
         Thread fileSourceThread = new Thread((FileSource) fileSource, "FileSourceThread");
 
@@ -51,6 +62,11 @@ public class Application implements CommandLineRunner {
         fileSourceThread.start();
     }
 
+    /**
+     * Authorize data for vk app
+     *
+     * @return auth data
+     */
     public static AuthorizeData authorizeData() {
         AuthorizeData authorizeData = new AuthorizeData();
         authorizeData.setClientId("5591327");
