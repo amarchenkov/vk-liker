@@ -2,8 +2,6 @@ package com.github.vk.liker.service;
 
 import com.github.vk.liker.task.SourceTask;
 
-import java.util.List;
-
 /**
  * Created at 29.08.2016 13:09
  *

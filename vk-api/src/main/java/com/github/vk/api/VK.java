@@ -268,22 +268,23 @@ public class VK {
      * @param params criteria => value
      * @return user list
      */
-    public Optional<UserGetResponse> getUser(Map<String, String> params) {
-        StringBuilder sb = new StringBuilder(API_URL).append("user.get?");
+    public Optional<UsersSearchResponse> getUser(Map<String, String> params) {
+        StringBuilder sb = new StringBuilder(API_URL).append("users.search?");
         if (accessToken != null) {
             sb.append(ACCESS_TOKEN_PARAM).append(accessToken).append("&");
         }
+        sb.append("v=").append(5.33).append("&");
         params.forEach((k, v) -> sb.append(k).append("=").append(v).append("&"));
         sb.deleteCharAt(sb.length() - 1);
         HttpGet get = new HttpGet(sb.toString());
         try {
             HttpResponse response = httpClient.execute(get);
-            Type responseType = new TypeToken<Response<UserGetResponse>>() {
+            Type responseType = new TypeToken<Response<UsersSearchResponse>>() {
             }.getType();
-            Response<UserGetResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
+            Response<UsersSearchResponse> responseJson = gson.fromJson(EntityUtils.toString(response.getEntity()), responseType);
             return Optional.of(responseJson.getResponseKey());
         } catch (IOException e) {
-            LOG.error("Cannot send request [user.get]", e);
+            LOG.error("Cannot send request [user.search]", e);
         }
         return Optional.empty();
     }

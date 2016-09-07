@@ -76,7 +76,7 @@ public class LikeTask extends RecursiveAction {
     }
 
     private void setLike(Long id) {
-        if (likeRepository.findByOwnerIdAndAccountId(id, account.getId()) != null) {
+        if (likeRepository.findByOwnerIdAndAccountId(id, account.getId()) == null) {
             likeRepository.save(new Like(id, account.getId()));
             vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
             vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);

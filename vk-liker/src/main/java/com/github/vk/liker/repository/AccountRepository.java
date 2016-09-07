@@ -5,6 +5,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 /**
  * Created at 17.08.2016 10:52
  *
@@ -19,4 +21,12 @@ public interface AccountRepository extends MongoRepository<Account, ObjectId> {
      * @return new account
      */
     Account findOneByIdNot(ObjectId id);
+
+    /**
+     * Get first account with not empty non-exired access token
+     *
+     * @param now Current timestamp
+     * @return Account with not expired access token
+     */
+    Account findOneByAccessTokenNotNullAndExpiresInGreaterThan(LocalDateTime now);
 }

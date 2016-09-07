@@ -1,6 +1,5 @@
 package com.github.vk.liker.service.impl;
 
-import com.github.vk.api.VK;
 import com.github.vk.liker.model.Account;
 import com.github.vk.liker.repository.AccountRepository;
 import com.github.vk.liker.repository.LikeRepository;
