@@ -5,6 +5,7 @@ package com.github.vk.liker.jmx;
  *
  * @author Andrey
  */
+@FunctionalInterface
 public interface GroupSourceMBean {
     /**
      * Start like processing for group members

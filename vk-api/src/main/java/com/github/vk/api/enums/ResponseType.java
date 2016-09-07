@@ -10,11 +10,11 @@ public enum ResponseType {
     TOKEN("token"),
     CODE("code");
 
+    private String value;
+
     ResponseType(String value) {
         this.value = value;
     }
-
-    private String value;
 
     public String getValue() {
         return value;

@@ -9,16 +9,28 @@ import java.time.LocalDateTime;
  */
 public class AccessToken {
 
-    private String accessToken;
+    private String accessTokenProperty;
     private LocalDateTime expiresIn;
     private String userId;
 
-    public AccessToken(String accessToken, LocalDateTime expiresIn, String userId) {
-        this.accessToken = accessToken;
+    /**
+     * Initialize properties with saved value
+     *
+     * @param accessTokenProperty token
+     * @param expiresIn   expiration time
+     * @param userId      ID
+     */
+    public AccessToken(String accessTokenProperty, LocalDateTime expiresIn, String userId) {
+        this.accessTokenProperty = accessTokenProperty;
         this.expiresIn = expiresIn;
         this.userId = userId;
     }
 
+    /**
+     * Parse query string to initialize properties
+     *
+     * @param queryString query string
+     */
     public AccessToken(String queryString) {
         String[] parts = queryString.split("&");
         for (String part : parts) {
@@ -26,7 +38,7 @@ public class AccessToken {
             String value = part.split("=")[1];
             switch (key) {
                 case "access_token":
-                    this.accessToken = value;
+                    this.accessTokenProperty = value;
                     break;
                 case "user_id":
                     this.userId = value;
@@ -34,16 +46,18 @@ public class AccessToken {
                 case "expires_in":
                     this.expiresIn = LocalDateTime.now().plusSeconds(Long.valueOf(value));
                     break;
+                default:
+                    break;
             }
         }
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getAccessTokenProperty() {
+        return accessTokenProperty;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setAccessTokenProperty(String accessTokenProperty) {
+        this.accessTokenProperty = accessTokenProperty;
     }
 
     public LocalDateTime getExpiresIn() {
@@ -64,6 +78,6 @@ public class AccessToken {
 
     @Override
     public String toString() {
-        return accessToken;
+        return accessTokenProperty;
     }
 }

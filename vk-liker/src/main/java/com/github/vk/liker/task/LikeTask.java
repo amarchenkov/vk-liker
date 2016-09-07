@@ -4,7 +4,6 @@ import com.github.vk.api.VK;
 import com.github.vk.api.enums.ObjectType;
 import com.github.vk.api.exceptions.AuthorizeException;
 import com.github.vk.api.models.AccessToken;
-import com.github.vk.api.models.AuthorizeData;
 import com.github.vk.api.models.json.PhotosGetAllResponse;
 import com.github.vk.api.models.json.WallGetResponse;
 import com.github.vk.liker.Application;
@@ -14,9 +13,6 @@ import com.github.vk.liker.repository.AccountRepository;
 import com.github.vk.liker.repository.LikeRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,12 +28,20 @@ public class LikeTask extends RecursiveAction {
     private static final Logger LOG = LogManager.getLogger(RecursiveAction.class);
     private static final int ITEM_TO_LIKE_COUNT = 3;
 
-    private LikeRepository likeRepository;
-    private AccountRepository accountRepository;
-    private Account account;
+    private transient LikeRepository likeRepository;
+    private transient AccountRepository accountRepository;
+    private transient Account account;
     private List<Long> idList;
-    private VK vk;
+    private transient VK vk;
 
+    /**
+     * Task initialization
+     *
+     * @param accountRepository Account DAO
+     * @param likeRepository    Like DAO
+     * @param account           VK account data
+     * @param idList            id list for processing
+     */
     public LikeTask(AccountRepository accountRepository, LikeRepository likeRepository, Account account, List<Long> idList) {
         this.accountRepository = accountRepository;
         this.likeRepository = likeRepository;
@@ -55,7 +59,7 @@ public class LikeTask extends RecursiveAction {
             this.vk = new VK(Application.authorizeData());
             try {
                 this.vk.updateToken(account.getLogin(), account.getPassword());
-                account.setAccessToken(vk.getAccessToken().getAccessToken());
+                account.setAccessToken(vk.getAccessToken().getAccessTokenProperty());
                 account.setExpiresIn(vk.getAccessToken().getExpiresIn());
                 account.setUserId(Long.valueOf(vk.getAccessToken().getUserId()));
                 accountRepository.save(account);
