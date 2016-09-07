@@ -64,18 +64,6 @@
 
     <build>
         <finalName>liker</finalName>
-        <filters>
-            <filter>profiles/${build.profile.id}/application.properties</filter>
-        </filters>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -68,15 +68,19 @@ public class LikeTask extends RecursiveAction {
     }
 
     private void setLike(Long id) {
-        vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
-        vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
+        if (likeRepository.findByOwnerIdAndAccountId(id, account.getId()) != null) {
+            likeRepository.save(new Like(id, account.getId()));
+            vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
+            vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
+        } else {
+            //Already liked
+        }
     }
 
     private void likePost(WallGetResponse wall) {
         wall.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
                 vk.like(ObjectType.POST, p.getOwnerId(), p.getId());
-                likeRepository.save(new Like(p.getOwnerId(), account.getId()));
             }
         });
     }
@@ -85,7 +89,6 @@ public class LikeTask extends RecursiveAction {
         photos.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
                 vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId());
-                likeRepository.save(new Like(p.getOwnerId(), account.getId()));
             }
         });
     }

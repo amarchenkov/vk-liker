@@ -19,5 +19,5 @@ public interface LikeRepository extends MongoRepository<Like, ObjectId> {
      * @param accountId  item
      * @return Pair of owner => item
      */
-    Like findByOwnerIdAndAccountId(long ownerId, long accountId);
+    Like findByOwnerIdAndAccountId(long ownerId, ObjectId accountId);
 }
