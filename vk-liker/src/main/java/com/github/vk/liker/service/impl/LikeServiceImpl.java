@@ -4,6 +4,7 @@ import com.github.vk.liker.exception.TaskException;
 import com.github.vk.liker.model.Account;
 import com.github.vk.liker.repository.AccountRepository;
 import com.github.vk.liker.repository.LikeRepository;
+import com.github.vk.liker.service.AlreadyLikedService;
 import com.github.vk.liker.service.LikeService;
 import com.github.vk.liker.task.LikeTask;
 import com.github.vk.liker.task.SourceTask;
@@ -26,6 +27,7 @@ public class LikeServiceImpl implements LikeService {
 
     private AccountRepository accountRepository;
     private LikeRepository likeRepository;
+    private AlreadyLikedService alreadyLikedService;
 
     @Autowired
     public void setLikeRepository(LikeRepository likeRepository) {
@@ -33,8 +35,13 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Autowired
-    public void setRepository(AccountRepository accountRepository) {
+    public void setAccountRepository(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
+    }
+
+    @Autowired
+    public void setAlreadyLikedService(AlreadyLikedService alreadyLikedService) {
+        this.alreadyLikedService = alreadyLikedService;
     }
 
     @Override
@@ -65,7 +72,8 @@ public class LikeServiceImpl implements LikeService {
             } else {
                 end = initialItemIndex + partSize;
             }
-            pool.execute(new LikeTask(accountRepository, likeRepository, account, task.getIdList().subList(begin, end)));
+            pool.execute(new LikeTask(accountRepository, likeRepository, alreadyLikedService, account,
+                    task.getIdList().subList(begin, end)));
             initialItemIndex += (end - begin);
         }
     }

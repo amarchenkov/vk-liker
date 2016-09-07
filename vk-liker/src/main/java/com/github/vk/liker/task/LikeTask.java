@@ -11,6 +11,7 @@ import com.github.vk.liker.model.Account;
 import com.github.vk.liker.model.Like;
 import com.github.vk.liker.repository.AccountRepository;
 import com.github.vk.liker.repository.LikeRepository;
+import com.github.vk.liker.service.AlreadyLikedService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +31,7 @@ public class LikeTask extends RecursiveAction {
 
     private transient LikeRepository likeRepository;
     private transient AccountRepository accountRepository;
+    private transient AlreadyLikedService alreadyLikedService;
     private transient Account account;
     private List<Long> idList;
     private transient VK vk;
@@ -37,14 +39,16 @@ public class LikeTask extends RecursiveAction {
     /**
      * Task initialization
      *
-     * @param accountRepository Account DAO
-     * @param likeRepository    Like DAO
-     * @param account           VK account data
-     * @param idList            id list for processing
+     * @param accountRepository   Account DAO
+     * @param likeRepository      Like DAO
+     * @param alreadyLikedService Service for like by another account
+     * @param account             VK account data
+     * @param idList              id list for processing
      */
-    public LikeTask(AccountRepository accountRepository, LikeRepository likeRepository, Account account, List<Long> idList) {
+    public LikeTask(AccountRepository accountRepository, LikeRepository likeRepository, AlreadyLikedService alreadyLikedService, Account account, List<Long> idList) {
         this.accountRepository = accountRepository;
         this.likeRepository = likeRepository;
+        this.alreadyLikedService = alreadyLikedService;
         this.idList = idList;
         this.account = account;
     }
@@ -64,7 +68,7 @@ public class LikeTask extends RecursiveAction {
                 account.setUserId(Long.valueOf(vk.getAccessToken().getUserId()));
                 accountRepository.save(account);
             } catch (AuthorizeException e) {
-                LOG.error("Authorization failed!", e);
+                LOG.error("Authorization failed! Account[{}]", account, e);
                 return;
             }
         }
@@ -77,7 +81,7 @@ public class LikeTask extends RecursiveAction {
             vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
             vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
         } else {
-            //Already liked
+            alreadyLikedService.likeByAnotherAccount(id, account);
         }
     }
 

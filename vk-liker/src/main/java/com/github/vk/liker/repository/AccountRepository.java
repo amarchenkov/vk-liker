@@ -12,4 +12,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AccountRepository extends MongoRepository<Account, ObjectId> {
+    /**
+     * Get account for already liked id by another account
+     *
+     * @param id another account
+     * @return new account
+     */
+    Account findOneByIdNot(ObjectId id);
 }

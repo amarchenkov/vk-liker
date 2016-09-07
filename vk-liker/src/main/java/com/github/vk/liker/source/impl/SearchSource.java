@@ -54,7 +54,6 @@ public class SearchSource implements SearchSourceMBean {
         this.likeService = likeService;
     }
 
-
     @Override
     @ManagedOperation(description = "Start liking search result")
     public void start() {
