@@ -16,4 +16,11 @@ public class LikesAddResponse {
     public void setLikes(long likes) {
         this.likes = likes;
     }
+
+    @Override
+    public String toString() {
+        return "LikesAddResponse{" +
+                "likes=" + likes +
+                '}';
+    }
 }

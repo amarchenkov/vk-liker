@@ -8,13 +8,13 @@
     <!--=========== APPENDERS =========-->
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern=" [%p] %d{yyyy-mm-dd HH:mm:ss} | %c{1.}:%L | %m%n"/>
+            <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss} [%p] | %c{1.}:%L | %m%n"/>
         </Console>
 
-        <!-- Логгирование JPA -->
+        <!-- Логгирование MongoDB -->
         <RollingFile name="Persistence" fileName="${LogPath}/Persistence.log"
                      filePattern="${LogPath}/$${date:yyyy-MM-dd}/${SqlLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
-            <PatternLayout pattern="[%p] %d{yyyy-mm-dd HH:mm:ss} | %c{1.}:%L | %m%n"/>
+            <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss} [%p] | %c{1.}:%L | %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
@@ -23,8 +23,8 @@
         <!-- Логгирование приложения -->
         <RollingFile name="Application" fileName="${LogPath}/Application.log"
                      filePattern="${LogPath}/$${date:yyyy-MM-dd}/${AppLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
-            <ThresholdFilter level="INFO"/>
-            <PatternLayout pattern="[%p] %d{yyyy-mm-dd HH:mm:ss} | %c{1.}:%L | %m%n"/>
+            <ThresholdFilter level="DEBUG"/>
+            <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss} [%p] | %c{1.}:%L | %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
@@ -34,7 +34,7 @@
         <RollingFile name="Spring" fileName="${LogPath}/Spring.log"
                      filePattern="${LogPath}/$${date:yyyy-MM-dd}/${AppLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
             <ThresholdFilter level="INFO"/>
-            <PatternLayout pattern="[%p] %d{yyyy-mm-dd HH:mm:ss} | %c{1.}:%L | %m%n"/>
+            <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss} [%p] | %c{1.}:%L | %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>

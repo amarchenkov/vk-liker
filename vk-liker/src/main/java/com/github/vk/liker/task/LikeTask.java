@@ -26,7 +26,7 @@ import java.util.concurrent.RecursiveAction;
  */
 public class LikeTask extends RecursiveAction {
 
-    private static final Logger LOG = LogManager.getLogger(RecursiveAction.class);
+    private static final Logger LOG = LogManager.getLogger(LikeTask.class);
     private static final int ITEM_TO_LIKE_COUNT = 3;
 
     private transient LikeRepository likeRepository;
@@ -45,7 +45,8 @@ public class LikeTask extends RecursiveAction {
      * @param account             VK account data
      * @param idList              id list for processing
      */
-    public LikeTask(AccountRepository accountRepository, LikeRepository likeRepository, AlreadyLikedService alreadyLikedService, Account account, List<Long> idList) {
+    public LikeTask(AccountRepository accountRepository, LikeRepository likeRepository,
+                    AlreadyLikedService alreadyLikedService, Account account, List<Long> idList) {
         this.accountRepository = accountRepository;
         this.likeRepository = likeRepository;
         this.alreadyLikedService = alreadyLikedService;
@@ -77,6 +78,7 @@ public class LikeTask extends RecursiveAction {
 
     private void setLike(Long id) {
         if (likeRepository.findByOwnerIdAndAccountId(id, account.getId()) == null) {
+            LOG.debug("Like user[{}] items", id);
             likeRepository.save(new Like(id, account.getId()));
             vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
             vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
@@ -88,7 +90,7 @@ public class LikeTask extends RecursiveAction {
     private void likePost(WallGetResponse wall) {
         wall.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
-                vk.like(ObjectType.POST, p.getOwnerId(), p.getId());
+                vk.like(ObjectType.POST, p.getOwnerId(), p.getId()).ifPresent(LOG::info);
             }
         });
     }
@@ -96,7 +98,7 @@ public class LikeTask extends RecursiveAction {
     private void likePhoto(PhotosGetAllResponse photos) {
         photos.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
-                vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId());
+                vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId()).ifPresent(LOG::info);
             }
         });
     }

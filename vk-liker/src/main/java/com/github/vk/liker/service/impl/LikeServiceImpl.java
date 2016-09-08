@@ -68,8 +68,8 @@ public class LikeServiceImpl implements LikeService {
             int end;
             //TODO Исправить разбиение на подзадачи
             begin = initialItemIndex;
-            if (accountSize - (initialItemIndex + partSize) < partSize) {
-                end = (int) accountSize;
+            if (task.getIdList().size() - (initialItemIndex + partSize) < partSize) {
+                end = task.getIdList().size();
             } else {
                 end = initialItemIndex + partSize;
             }

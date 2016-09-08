@@ -15,17 +15,19 @@ public class SourceTask {
     private List<Long> idList = new ArrayList<>();
 
     /**
+     * Initialize task with UID
      *
-     * @param uuid
+     * @param uuid Unique ID of task
      */
     public SourceTask(UUID uuid) {
         this.uuid = uuid;
     }
 
     /**
+     * Initialize task with UID and owner's list
      *
-     * @param uuid
-     * @param items
+     * @param uuid  Unique ID of task
+     * @param items Owner ID list
      */
     public SourceTask(UUID uuid, List<Long> items) {
         this(uuid);
