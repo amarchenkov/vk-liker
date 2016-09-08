@@ -1,7 +1,6 @@
 package com.github.vk.liker.source.impl;
 
 import com.github.vk.api.VK;
-import com.github.vk.api.exceptions.AuthorizeException;
 import com.github.vk.api.models.AccessToken;
 import com.github.vk.liker.exception.NoAccountException;
 import com.github.vk.liker.jmx.GroupSourceMBean;
@@ -34,17 +33,17 @@ public class SearchSource implements SearchSourceMBean {
 
     private LikeService likeService;
     private AccountRepository accountRepository;
-    private int fromAge = 0;
-    private int toAge = 999;
+    private int fromAge = 18;
+    private int toAge = 35;
     private String city;
     private String country;
 
-    @ManagedAttribute
+    @ManagedAttribute(defaultValue = "18")
     public void setFromAge(int fromAge) {
         this.fromAge = fromAge;
     }
 
-    @ManagedAttribute
+    @ManagedAttribute(defaultValue = "35")
     public void setToAge(int toAge) {
         this.toAge = toAge;
     }

@@ -11,6 +11,7 @@ import com.github.vk.liker.task.SourceTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ForkJoinPool;
@@ -21,6 +22,7 @@ import java.util.concurrent.ForkJoinPool;
  * @author AMarchenkov
  */
 @Service
+@ConfigurationProperties(prefix = "liker.like")
 public class LikeServiceImpl implements LikeService {
 
     private static final Logger LOG = LogManager.getLogger(LikeService.class);
@@ -28,6 +30,11 @@ public class LikeServiceImpl implements LikeService {
     private AccountRepository accountRepository;
     private LikeRepository likeRepository;
     private AlreadyLikedService alreadyLikedService;
+    private int delay;
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
 
     @Autowired
     public void setLikeRepository(LikeRepository likeRepository) {
@@ -72,8 +79,9 @@ public class LikeServiceImpl implements LikeService {
             } else {
                 end = initialItemIndex + partSize;
             }
-            pool.execute(new LikeTask(accountRepository, likeRepository, alreadyLikedService, account,
-                    task.getIdList().subList(begin, end)));
+            LikeTask likeTask = new LikeTask(accountRepository, likeRepository, alreadyLikedService, account, task.getIdList().subList(begin, end));
+            likeTask.setDelay(delay);
+            pool.execute(likeTask);
             initialItemIndex += (end - begin);
         }
     }

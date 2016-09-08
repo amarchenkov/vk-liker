@@ -28,10 +28,10 @@ public class FileSource implements Source, Runnable {
     private static final String FILE_NAME = "data.txt";
     private static final Logger LOG = LogManager.getLogger(Source.class);
 
-    private Integer delay;
+    private int delay;
     private LikeService likeService;
 
-    public void setDelay(Integer delay) {
+    public void setDelay(int delay) {
         this.delay = delay;
     }
 

@@ -35,6 +35,7 @@ public class LikeTask extends RecursiveAction {
     private transient Account account;
     private List<Long> idList;
     private transient VK vk;
+    private int delay = 2500;
 
     /**
      * Task initialization
@@ -52,6 +53,15 @@ public class LikeTask extends RecursiveAction {
         this.alreadyLikedService = alreadyLikedService;
         this.idList = idList;
         this.account = account;
+    }
+
+    /**
+     * Set delay between like action
+     *
+     * @param delay delay in milliseconds
+     */
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 
     @Override
@@ -76,19 +86,12 @@ public class LikeTask extends RecursiveAction {
         this.idList.parallelStream().forEach(this::setLike);
     }
 
-    private void setLike(Long id)  {
+    private void setLike(Long id) {
         if (likeRepository.findByOwnerIdAndAccountId(id, account.getId()) == null) {
-            try {
-                //TODO Сделать задержку межда лайками
-                LOG.debug("Like user[{}] items", id);
-                likeRepository.save(new Like(id, account.getId()));
-                vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
-                Thread.sleep(5000);
-                vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                LOG.error("Account [{}] has been interrupted", account.getLogin());
-            }
+            LOG.debug("Like user[{}] items", id);
+            likeRepository.save(new Like(id, account.getId()));
+            vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
+            vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
         } else {
             alreadyLikedService.likeByAnotherAccount(id, account);
         }
@@ -98,6 +101,12 @@ public class LikeTask extends RecursiveAction {
         wall.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
                 vk.like(ObjectType.POST, p.getOwnerId(), p.getId());
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    LOG.error("Like task has been interrupted");
+                    Thread.currentThread().interrupt();
+                }
             }
         });
     }
@@ -106,6 +115,12 @@ public class LikeTask extends RecursiveAction {
         photos.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
                 vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId());
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    LOG.error("Like task has been interrupted");
+                    Thread.currentThread().interrupt();
+                }
             }
         });
     }

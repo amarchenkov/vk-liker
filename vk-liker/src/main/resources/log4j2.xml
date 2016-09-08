@@ -2,7 +2,7 @@
 <Configuration status="WARN" name="VitaFactoryLogging">
 
     <Properties>
-        <Property name="LogPath">${log.path}</Property>
+        <Property name="LogPath">@log.path@</Property>
     </Properties>
 
     <!--=========== APPENDERS =========-->
