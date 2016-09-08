@@ -73,7 +73,6 @@ public class Application implements CommandLineRunner {
         authorizeData.setResponseType(ResponseType.TOKEN);
         authorizeData.setDisplay(Display.MOBILE);
         authorizeData.setScope("wall,photos");
-        authorizeData.setV(5.33F);
         return authorizeData;
     }
 

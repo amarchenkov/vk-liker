@@ -76,12 +76,19 @@ public class LikeTask extends RecursiveAction {
         this.idList.parallelStream().forEach(this::setLike);
     }
 
-    private void setLike(Long id) {
+    private void setLike(Long id)  {
         if (likeRepository.findByOwnerIdAndAccountId(id, account.getId()) == null) {
-            LOG.debug("Like user[{}] items", id);
-            likeRepository.save(new Like(id, account.getId()));
-            vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
-            vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
+            try {
+                //TODO Сделать задержку межда лайками
+                LOG.debug("Like user[{}] items", id);
+                likeRepository.save(new Like(id, account.getId()));
+                vk.getUserPhotos(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePhoto);
+                Thread.sleep(5000);
+                vk.getWallPosts(id, 0, ITEM_TO_LIKE_COUNT).ifPresent(this::likePost);
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                LOG.error("Account [{}] has been interrupted", account.getLogin());
+            }
         } else {
             alreadyLikedService.likeByAnotherAccount(id, account);
         }
@@ -90,7 +97,7 @@ public class LikeTask extends RecursiveAction {
     private void likePost(WallGetResponse wall) {
         wall.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
-                vk.like(ObjectType.POST, p.getOwnerId(), p.getId()).ifPresent(LOG::info);
+                vk.like(ObjectType.POST, p.getOwnerId(), p.getId());
             }
         });
     }
@@ -98,7 +105,7 @@ public class LikeTask extends RecursiveAction {
     private void likePhoto(PhotosGetAllResponse photos) {
         photos.getItems().forEach(p -> {
             if (!vk.isLiked(ObjectType.POST, p.getOwnerId(), p.getId())) {
-                vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId()).ifPresent(LOG::info);
+                vk.like(ObjectType.PHOTO, p.getOwnerId(), p.getId());
             }
         });
     }

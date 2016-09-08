@@ -42,6 +42,7 @@ public class VK {
     private static final String API_URL = "https://api.vk.com/method/";
     public static final String ACCESS_TOKEN_PARAM = "access_token=";
     public static final String OWNER_ID_PARAM = "owner_id=";
+    private static final float API_VERSION = 5.33F;
 
     private AccessToken accessToken;
     private AuthorizeData authorizeData;
@@ -141,7 +142,7 @@ public class VK {
                 .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
                 .append("type=").append(type.getValue()).append("&")
                 .append(OWNER_ID_PARAM).append(ownerId).append("&")
-                .append("v=").append(authorizeData.getV()).append("&")
+                .append("v=").append(API_VERSION).append("&")
                 .append("item_id=").append(itemId);
         HttpGet get = new HttpGet(sb.toString());
         try {
@@ -169,7 +170,7 @@ public class VK {
                 .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
                 .append("type=").append(type.getValue()).append("&")
                 .append(OWNER_ID_PARAM).append(ownerId).append("&")
-                .append("v=").append(authorizeData.getV()).append("&")
+                .append("v=").append(API_VERSION).append("&")
                 .append("item_id=").append(itemId);
         HttpGet get = new HttpGet(sb.toString());
         try {
@@ -195,7 +196,7 @@ public class VK {
                 .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
                 .append(OWNER_ID_PARAM).append(ownerId).append("&")
                 .append("offset=").append(offset).append("&")
-                .append("v=").append(authorizeData.getV()).append("&")
+                .append("v=").append(API_VERSION).append("&")
                 .append("count=").append(count);
         HttpGet get = new HttpGet(sb.toString());
         try {
@@ -223,7 +224,7 @@ public class VK {
                 .append(ACCESS_TOKEN_PARAM).append(accessToken).append("&")
                 .append(OWNER_ID_PARAM).append(ownerId).append("&")
                 .append("offset=").append(offset).append("&")
-                .append("v=").append(authorizeData.getV()).append("&")
+                .append("v=").append(API_VERSION).append("&")
                 .append("count=").append(count);
         HttpGet get = new HttpGet(sb.toString());
         try {

@@ -27,7 +27,6 @@ public class Test {
         authorizeData.setDisplay(Display.MOBILE);
         authorizeData.setResponseType(ResponseType.TOKEN);
         authorizeData.setScope("wall,photos");
-        authorizeData.setV(5.53F);
         VK vk = new VK(authorizeData);
         vk.updateToken("andrej.marchenkov@gmail.com", "!zsifhgv^FGysehgf7v6");
         System.out.println(vk.isLiked(ObjectType.POST, 36128013, 556));

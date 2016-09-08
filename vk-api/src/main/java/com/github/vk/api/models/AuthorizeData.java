@@ -22,7 +22,6 @@ public class AuthorizeData {
     private Display display;
     private String scope;
     private ResponseType responseType;
-    private float v;
     private String state;
 
     public void setClientId(String clientId) {
@@ -41,16 +40,8 @@ public class AuthorizeData {
         this.responseType = responseType;
     }
 
-    public void setV(float v) {
-        this.v = v;
-    }
-
     public void setState(String state) {
         this.state = state;
-    }
-
-    public float getV() {
-        return v;
     }
 
     @Override

@@ -66,7 +66,6 @@ public class LikeServiceImpl implements LikeService {
         for (Account account : accountRepository.findAll()) {
             int begin;
             int end;
-            //TODO Исправить разбиение на подзадачи
             begin = initialItemIndex;
             if (task.getIdList().size() - (initialItemIndex + partSize) < partSize) {
                 end = task.getIdList().size();
