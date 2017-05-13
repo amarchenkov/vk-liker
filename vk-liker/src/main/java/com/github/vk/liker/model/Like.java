@@ -1,5 +1,7 @@
 package com.github.vk.liker.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,6 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  * @author AMarchenkov
  */
+@Getter
+@Setter
 @Document(collection = Like.LIKES_COLLECTION_NAME)
 public class Like {
 
@@ -35,15 +39,4 @@ public class Like {
         this.accountId = id;
     }
 
-    public ObjectId getId() {
-        return id;
-    }
-
-    public long getOwnerId() {
-        return ownerId;
-    }
-
-    public ObjectId getAccountId() {
-        return accountId;
-    }
 }
