@@ -11,3 +11,5 @@ buildNumber.properties
 *.iml
 /vk-liker/target/
 /vk-api/target/
+/ui/src/main/resources/static/package-lock.json
+/ui/src/main/resources/static/generated/
