@@ -1,26 +1,13 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-/src/main/resources/static/node_modules/
-/src/main/resources/static/generated/app-bundle.js
+/src/main/resources/static/js/bundle.js.map
+/src/main/resources/javascript/package-lock.json
+/src/main/resources/javascript/node_modules/
+/src/main/resources/static/js/bundle.js

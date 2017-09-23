@@ -9,12 +9,15 @@
   "author": "@amarchenkov",
   "license": "MIT",
   "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "requirejs": "^2.3.5",
     "rest": "^2.0.0"
   },
   "devDependencies": {
+    "style-loader": "^0.18.2",
+    "css-loader": "^0.28.7",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-regenerator": "^6.26.0",

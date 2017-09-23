@@ -1,17 +1,18 @@
-var packageJSON = require('./package.json');
-var path = require('path');
-var webpack = require('webpack');
+let path = require('path');
+let webpack = require('webpack');
 
 module.exports = {
     devtool: 'source-map',
-    entry: './index.js',
+    entry: './src/index.js',
     output: {
-        path: path.join(__dirname, 'generated'),
-        filename: 'app-bundle.js'},
-    resolve: {extensions: ['.js', '.jsx']},
+        path: path.join(__dirname, '../static/js'),
+        filename: 'bundle.js'
+    },
+    resolve: {extensions: ['.js', '.jsx', '.css']},
     plugins: [
         new webpack.LoaderOptionsPlugin({
-            debug: true}),
+            debug: true
+        }),
         new webpack.DefinePlugin({
             "process.env": {
                 NODE_ENV: JSON.stringify("development")
