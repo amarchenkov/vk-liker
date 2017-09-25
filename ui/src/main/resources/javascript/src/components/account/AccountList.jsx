@@ -2,6 +2,8 @@ import React from "react"
 
 class AccountList extends React.Component {
     render() {
-        return "";
+        return <div id='account-list'>
+
+        </div>;
     }
 }

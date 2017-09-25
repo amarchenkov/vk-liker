@@ -95,6 +95,12 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>npm run build</id>
                         <goals>
                             <goal>npm</goal>

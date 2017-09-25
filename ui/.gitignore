@@ -8,6 +8,12 @@ target/
 *.ipr
 
 /src/main/resources/static/js/bundle.js.map
+/src/main/resources/static/js/*.woff2
+/src/main/resources/static/js/*.woff
+/src/main/resources/static/js/*.eot
+/src/main/resources/static/js/*.ttf
+/src/main/resources/static/js/*.svg
 /src/main/resources/javascript/package-lock.json
 /src/main/resources/javascript/node_modules/
 /src/main/resources/static/js/bundle.js
+/src/main/resources/javascript/node/

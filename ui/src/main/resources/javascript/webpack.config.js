@@ -22,6 +22,18 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+                loader: 'url-loader?limit=10000',
+            },
+            {
+                test: /\.(eot|ttf|wav|mp3)$/,
+                loader: 'file-loader',
+            },
+            {
+                test: /\.css$/,
+                loaders: 'style-loader!css-loader',
+            },
+            {
                 test: /\.jsx?$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/
@@ -32,6 +44,9 @@ module.exports = {
         noInfo: false,
         quiet: false,
         lazy: false,
+        publicPath: "/js/",
+        filename: "bundle.js",
+        compress: true,
         watchOptions: {
             poll: true
         }

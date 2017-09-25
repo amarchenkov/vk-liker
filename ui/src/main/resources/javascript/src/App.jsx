@@ -7,7 +7,20 @@ import "bootstrap/dist/css/bootstrap.min.css"
 
 class App extends React.Component {
     render() {
-        return <div id='web' className='row'><Menu/><Content/></div>;
+        return <div>
+            <div className='navbar navbar-default navbar-fixed-top' role='navigation'>
+                <div className='container-fluid'>
+                    <div className='navbar-header'>
+                        <a className="navbar-brand" href="#">VK Bot Console</a></div>
+                </div>
+            </div>
+            <div id='web' className='container-fluid'>
+                <div className='row'>
+                    <Menu/>
+                    <Content/>
+                </div>
+            </div>
+        </div>;
     }
 }
 
