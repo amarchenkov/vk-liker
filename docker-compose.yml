@@ -2,4 +2,11 @@ version: '3'
 
 services:
   config-server:
-  ui:
+    build: ./config-server
+    ports:
+      - 8888
+    container_name: config-server
+#  ui:
+#  account-service:
+#  api-gateway:
+#  service-registry:

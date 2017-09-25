@@ -6,7 +6,7 @@
     <artifactId>config-server</artifactId>
     <packaging>jar</packaging>
 
-    <name>config-server</name>
+    <name>Configuration Server</name>
     <description>Configuration server for VK Bot</description>
 
     <parent>
@@ -21,10 +21,5 @@
             <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <finalName>config-server</finalName>
-    </build>
-
 
 </project>

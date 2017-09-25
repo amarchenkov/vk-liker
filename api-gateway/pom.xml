@@ -6,7 +6,7 @@
 	<artifactId>api-gateway</artifactId>
 	<packaging>jar</packaging>
 
-	<name>api-gateway</name>
+	<name>API Gateway on Zuul</name>
 	<description>API Gateway Zuul</description>
 
 	<parent>

@@ -6,8 +6,12 @@
 	<artifactId>service-registry</artifactId>
 	<packaging>jar</packaging>
 
-	<name>service-registry</name>
+	<name>Service Registry on Eureka</name>
 	<description>Eureka service registry</description>
+
+	<properties>
+		<spring-cloud.version>Dalston.SR3</spring-cloud.version>
+	</properties>
 
 	<parent>
 		<groupId>com.github.vk.bot</groupId>
@@ -21,10 +25,5 @@
 			<artifactId>spring-cloud-starter-eureka-server</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<finalName>service-registry</finalName>
-	</build>
-
 
 </project>
