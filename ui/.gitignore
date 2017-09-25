@@ -2,7 +2,6 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### IntelliJ IDEA ###
-.idea
 *.iws
 *.iml
 *.ipr
@@ -14,6 +13,6 @@ target/
 /src/main/resources/static/js/*.ttf
 /src/main/resources/static/js/*.svg
 /src/main/resources/javascript/package-lock.json
-/src/main/resources/javascript/node_modules/
 /src/main/resources/static/js/bundle.js
 /src/main/resources/javascript/node/
+/src/main/resources/javascript/node_modules/*
