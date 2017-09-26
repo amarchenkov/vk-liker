@@ -1,9 +1,12 @@
 package com.github.vk.bot.common.model;
 
 import lombok.Data;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * Created at 25.09.2017 16:31
@@ -11,9 +14,17 @@ import java.util.UUID;
  * @author AMarchenkov
  */
 @Data
+@Document(collection = Account.COLLECTION_NAME)
 public class Account implements Serializable {
-    private UUID id;
+
+    public static final String COLLECTION_NAME = "accounts";
+
+    @Id
+    private ObjectId id;
+    @Field
     private String login;
+    @Field
     private String password;
+    @Field("access_token")
     private AccessToken accessToken;
 }

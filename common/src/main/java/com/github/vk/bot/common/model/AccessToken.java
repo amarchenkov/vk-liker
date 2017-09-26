@@ -1,8 +1,10 @@
 package com.github.vk.bot.common.model;
 
 import lombok.Data;
-
-import java.util.UUID;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * Created at 25.09.2017 16:37
@@ -10,9 +12,25 @@ import java.util.UUID;
  * @author AMarchenkov
  */
 @Data
+@Document(collection = AccessToken.COLLECTION_NAME)
 public class AccessToken {
-    private UUID id;
+
+    public static final String COLLECTION_NAME = "access_tokens";
+
+    @Id
+    private ObjectId id;
+    @Field("access_token")
     private String accessToken;
+    @Field("expires_in")
     private long expiresIn;
+    @Field("user_id")
     private String userId;
+
+    public AccessToken() {
+    }
+
+    public AccessToken(String activeToken, long expiresIn) {
+        this.accessToken = activeToken;
+        this.expiresIn = expiresIn;
+    }
 }
