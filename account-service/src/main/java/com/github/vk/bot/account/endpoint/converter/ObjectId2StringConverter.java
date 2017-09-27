@@ -1,18 +1,19 @@
 package com.github.vk.bot.account.endpoint.converter;
 
+import com.google.gson.*;
 import org.bson.types.ObjectId;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Type;
 
 /**
  * Created at 26.09.2017 17:16
  *
  * @author AMarchenkov
  */
-@Component
-public class ObjectId2StringConverter implements Converter<ObjectId, String> {
+public class ObjectId2StringConverter implements JsonSerializer<ObjectId> {
+
     @Override
-    public String convert(ObjectId id) {
-        return id.toString();
+    public JsonElement serialize(ObjectId id, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(id.toString());
     }
 }

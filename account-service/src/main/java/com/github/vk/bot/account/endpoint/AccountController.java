@@ -30,7 +30,7 @@ public class AccountController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Set<Account> getAllAccounts() {
-        return null;
+        return accountService.getAccounts();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")

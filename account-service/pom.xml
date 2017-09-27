@@ -18,6 +18,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.github.vk.bot</groupId>
 			<artifactId>common</artifactId>
 			<version>${project.version}</version>

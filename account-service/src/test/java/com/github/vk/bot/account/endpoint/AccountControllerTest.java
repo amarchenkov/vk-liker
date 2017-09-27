@@ -19,9 +19,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,5 +92,23 @@ public class AccountControllerTest {
                 get("/account/{id}", ACCOUNT_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldReturnCollectionOfAccounts() throws Exception {
+        Set<Account> accounts = new HashSet<>(3);
+        accounts.add(new Account(TEST_LOGIN, TEST_PASSWORD));
+        accounts.add(new Account(TEST_LOGIN + "1", TEST_PASSWORD));
+        accounts.add(new Account(TEST_LOGIN + "2", TEST_PASSWORD));
+        when(accountService.getAccounts()).thenReturn(accounts);
+        mockMvc.perform(get("/account").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[*].login", containsInAnyOrder(TEST_LOGIN, TEST_LOGIN + "1", TEST_LOGIN + "2")))
+                .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
+    public void shouldReturnNoContentAfterRemoveAccount() throws Exception {
+        mockMvc.perform(delete("/account/{id}", ACCOUNT_ID).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
     }
 }

@@ -27,4 +27,12 @@ public class Account implements Serializable {
     private String password;
     @Field("access_token")
     private AccessToken accessToken;
+
+    public Account() {
+    }
+
+    public Account(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 }
