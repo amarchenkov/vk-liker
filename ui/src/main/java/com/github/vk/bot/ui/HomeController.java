@@ -4,6 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created at 22.09.2017 17:42
  *
@@ -14,5 +17,10 @@ public class HomeController {
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String home() {
         return "index.html";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/configuration")
+    public Map<String, String> getConfiguration() {
+        return new HashMap<>();
     }
 }

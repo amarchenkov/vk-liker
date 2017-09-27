@@ -1,20 +1,19 @@
 import React from "react"
+import Content from "./Content";
 
 export default class Menu extends React.Component {
 
-    navigateTo(to) {
-        alert(to);
+    navigateTo(to, index) {
+        console.log(this.refs.non);
     }
 
     render() {
+        const self = this;
         return <div id='menu' className='col-sm-3 col-md-2 sidebar'>
             <ul className='nav nav-sidebar'>
-                <li><a href='#' onClick={this.navigateTo}>Accounts</a></li>
-                <li><a href='#' onClick={this.navigateTo}>Groups</a></li>
-                <li><a href='#' onClick={this.navigateTo}>Source</a></li>
-                <li><a href='#' onClick={this.navigateTo}>User Base</a></li>
-                <li><a href='#' onClick={this.navigateTo}>Security</a></li>
-                <li><a href='#' onClick={this.navigateTo}>Log Dashboard</a></li>
+                {this.props.items.map(function (m, index) {
+                    return <li key={index}><a href='#' onClick={self.navigateTo.bind({m}, index)}>{m}</a></li>
+                })}
             </ul>
         </div>
     }
