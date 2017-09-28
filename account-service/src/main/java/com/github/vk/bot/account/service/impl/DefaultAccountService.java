@@ -2,8 +2,8 @@ package com.github.vk.bot.account.service.impl;
 
 import com.github.vk.bot.account.repository.AccountRepository;
 import com.github.vk.bot.account.service.AccountService;
-import com.github.vk.bot.common.model.AccessToken;
-import com.github.vk.bot.common.model.Account;
+import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

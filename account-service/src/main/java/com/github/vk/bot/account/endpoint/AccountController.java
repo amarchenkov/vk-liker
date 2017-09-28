@@ -1,7 +1,7 @@
 package com.github.vk.bot.account.endpoint;
 
 import com.github.vk.bot.account.service.AccountService;
-import com.github.vk.bot.common.model.Account;
+import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

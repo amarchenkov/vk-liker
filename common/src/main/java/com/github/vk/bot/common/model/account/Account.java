@@ -1,4 +1,4 @@
-package com.github.vk.bot.common.model;
+package com.github.vk.bot.common.model.account;
 
 import lombok.Data;
 import org.bson.types.ObjectId;

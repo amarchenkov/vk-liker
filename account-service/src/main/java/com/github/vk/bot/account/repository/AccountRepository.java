@@ -1,6 +1,6 @@
 package com.github.vk.bot.account.repository;
 
-import com.github.vk.bot.common.model.Account;
+import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

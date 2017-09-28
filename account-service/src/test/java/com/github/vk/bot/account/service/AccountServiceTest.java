@@ -1,8 +1,8 @@
 package com.github.vk.bot.account.service;
 
 import com.github.vk.bot.account.AbstractMongoTest;
-import com.github.vk.bot.common.model.AccessToken;
-import com.github.vk.bot.common.model.Account;
+import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -147,7 +147,7 @@ public class AccountServiceTest extends AbstractMongoTest {
 
         Set<Account> activeAccounts = accountService.getActiveAccounts();
         assertThat(activeAccounts, hasSize(1));
-        assertThat(activeAccounts.iterator().next().getAccessToken().getAccessToken(), is(equalTo(ACTIVE_TOKEN)));
+        assertThat(activeAccounts.iterator().next().getAccessToken().getToken(), is(equalTo(ACTIVE_TOKEN)));
     }
 
     @Test
@@ -172,7 +172,19 @@ public class AccountServiceTest extends AbstractMongoTest {
 
         Set<Account> activeAccounts = accountService.getAccounts();
         assertThat(activeAccounts, hasSize(2));
+    }
 
+    @Test
+    public void shouldAddObjectIdWhenAddAccessToken() {
+        ObjectId id = new ObjectId();
+        Account account = new Account();
+        AccessToken token = new AccessToken();
+        token.setId(id);
+        accountService.addAccessToken(token, account);
+        List<Account> accounts = getAccounts();
+        assertThat(accounts, hasSize(1));
+        assertThat(accounts.get(0).getAccessToken().getId(), is(not(equalTo(null))));
+        assertThat(accounts.get(0).getAccessToken().getId(), is(equalTo(id)));
     }
 
 }

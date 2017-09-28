@@ -1,10 +1,12 @@
-package com.github.vk.bot.common.model;
+package com.github.vk.bot.common.model.account;
 
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.io.Serializable;
 
 /**
  * Created at 25.09.2017 16:37
@@ -13,14 +15,14 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Data
 @Document(collection = AccessToken.COLLECTION_NAME)
-public class AccessToken {
+public class AccessToken implements Serializable {
 
     public static final String COLLECTION_NAME = "access_tokens";
 
     @Id
     private ObjectId id;
     @Field("access_token")
-    private String accessToken;
+    private String token;
     @Field("expires_in")
     private long expiresIn;
     @Field("user_id")
@@ -30,7 +32,7 @@ public class AccessToken {
     }
 
     public AccessToken(String activeToken, long expiresIn) {
-        this.accessToken = activeToken;
+        this.token = activeToken;
         this.expiresIn = expiresIn;
     }
 }

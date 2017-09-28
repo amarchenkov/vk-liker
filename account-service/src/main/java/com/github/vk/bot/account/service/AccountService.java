@@ -1,7 +1,7 @@
 package com.github.vk.bot.account.service;
 
-import com.github.vk.bot.common.model.AccessToken;
-import com.github.vk.bot.common.model.Account;
+import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 
 import java.util.Set;

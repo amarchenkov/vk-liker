@@ -1,8 +1,8 @@
 package com.github.vk.bot.account.endpoint;
 
 import com.github.vk.bot.account.service.AccountService;
-import com.github.vk.bot.common.model.AccessToken;
-import com.github.vk.bot.common.model.Account;
+import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,7 +79,7 @@ public class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.login", is(equalTo(TEST_LOGIN))))
                 .andExpect(jsonPath("$.password", is(equalTo(TEST_PASSWORD))))
-                .andExpect(jsonPath("$.accessToken.accessToken", is(equalTo(TEST_TOKEN))))
+                .andExpect(jsonPath("$.accessToken.token", is(equalTo(TEST_TOKEN))))
                 .andExpect(jsonPath("$.accessToken.expiresIn", is(equalTo(new Long(TEST_EXPIRES).intValue()))))
                 .andExpect(jsonPath("$.id", is(equalTo("59c239b1a11c1223082555d0"))))
         ;
