@@ -8,7 +8,8 @@ export default class AccountList extends React.Component {
             "id" : 1,
             "login": "login",
             "password": "password",
-            "access"
+            "access_token": "access_token",
+            "expires_in": "expires_in"
         }];
     }
 
