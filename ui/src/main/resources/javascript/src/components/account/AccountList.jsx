@@ -1,11 +1,21 @@
 import React from "react"
+import AccountForm from "./AccountForm";
 
 export default class AccountList extends React.Component {
 
+    componentDidMount() {
+        this.state.accounts = [{
+            "id" : 1,
+            "login": "login",
+            "password": "password",
+            "access"
+        }];
+    }
+
     render() {
-        return <div id='account-list'>
-            <h1>Accounts</h1>
-            <table>
+        return <div id='account-list' className='table-responsive'>
+            <h1 className="page-header">Accounts</h1>
+            <table className='table table-striped'>
                 <thead>
                 <tr>
                     <th>#</th>
@@ -18,7 +28,7 @@ export default class AccountList extends React.Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.props.accounts.map(function (account, index) {
+                {this.state.accounts.map(function (account, index) {
                     return <tr>
                         <td>{index + 1}</td>
                         <td>{account.id}</td>
@@ -31,6 +41,7 @@ export default class AccountList extends React.Component {
                 })}
                 </tbody>
             </table>
+            <AccountForm/>
         </div>;
     }
 }

@@ -1,18 +1,17 @@
 import React from "react"
+import {Route, Switch} from "react-router-dom";
+import AccountList from "./account/AccountList";
 
 export default class Content extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {"header": "Добро пожаловать в VK Bot"};
-    }
-
-    methodOne() {
-        alert("123");
     }
 
     render() {
-        return <div className='col-sm-9 col-md-10' id="content">
-            <h1>{this.state.header}</h1>
+        return <div className="col-sm-9 col-md-10 col-md-offset-2 main">
+            <Switch>
+                <Route exact path='/accounts' component={AccountList}/>
+            </Switch>
         </div>;
     }
 }
