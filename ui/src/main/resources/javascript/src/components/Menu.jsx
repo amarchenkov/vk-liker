@@ -3,10 +3,6 @@ import { Link } from 'react-router-dom'
 
 export default class Menu extends React.Component {
 
-    navigateTo(to, index) {
-        console.log(index)
-    }
-
     render() {
         const self = this;
         return <div className="col-sm-3 col-md-2 sidebar">

@@ -1,5 +1,6 @@
 package com.github.vk.bot.common.model.account;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -21,11 +22,13 @@ public class AccessToken implements Serializable {
 
     @Id
     private ObjectId id;
-    @Field("access_token")
+    @Field("token")
     private String token;
     @Field("expires_in")
+    @SerializedName("expires_in")
     private long expiresIn;
     @Field("user_id")
+    @SerializedName("user_id")
     private String userId;
 
     public AccessToken() {

@@ -1,5 +1,6 @@
 package com.github.vk.bot.common.model.account;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -26,6 +27,7 @@ public class Account implements Serializable {
     @Field
     private String password;
     @Field("access_token")
+    @SerializedName("access_token")
     private AccessToken accessToken;
 
     public Account() {

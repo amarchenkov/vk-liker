@@ -4,6 +4,7 @@ import com.github.vk.bot.account.service.AccountService;
 import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,14 @@ public class AccountController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(account);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Void> addAccount(@RequestBody Account account) {
+        ObjectId id = accountService.save(account);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.LOCATION, id.toString());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

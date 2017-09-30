@@ -1,0 +1,9 @@
+{
+  "_id" : "59c239b1a11c1223082555d0",
+  "login" : "login",
+  "password" : "password",
+  "access_token" : {
+    "token" : "token",
+    "expires_in" : 123456789
+  }
+}

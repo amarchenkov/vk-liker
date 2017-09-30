@@ -1,6 +1,7 @@
 package com.github.vk.bot.account.endpoint;
 
 import com.github.vk.bot.account.service.AccountService;
+import com.github.vk.bot.account.utils.TestUtils;
 import com.github.vk.bot.common.model.account.AccessToken;
 import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
@@ -24,11 +25,14 @@ import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,7 +51,7 @@ public class AccountControllerTest {
     private static final String TEST_PASSWORD = "password";
     private static final String TEST_TOKEN = "token";
     private static final long TEST_EXPIRES = 123456789;
-    private static final String ACCOUNT_ID = "59c239b1a11c1223082555d0";
+    private static final String TEST_ACCOUNT_ID = "59c239b1a11c1223082555d0";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -68,13 +72,13 @@ public class AccountControllerTest {
     public void shouldReturnJsonAccountById() throws Exception {
         Account account = new Account();
         AccessToken accessToken = new AccessToken(TEST_TOKEN, TEST_EXPIRES);
-        account.setId(new ObjectId(ACCOUNT_ID));
+        account.setId(new ObjectId(TEST_ACCOUNT_ID));
         account.setLogin(TEST_LOGIN);
         account.setPassword(TEST_PASSWORD);
         account.setAccessToken(accessToken);
         when(accountService.getAccountById(Mockito.any(ObjectId.class))).thenReturn(account);
         mockMvc.perform(
-                get("/account/{id}", ACCOUNT_ID)
+                get("/account/{id}", TEST_ACCOUNT_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.login", is(equalTo(TEST_LOGIN))))
@@ -89,7 +93,7 @@ public class AccountControllerTest {
     public void shouldReturnNotFound() throws Exception {
         when(accountService.getAccountById(Mockito.any(ObjectId.class))).thenReturn(null);
         mockMvc.perform(
-                get("/account/{id}", ACCOUNT_ID)
+                get("/account/{id}", TEST_ACCOUNT_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -109,6 +113,18 @@ public class AccountControllerTest {
 
     @Test
     public void shouldReturnNoContentAfterRemoveAccount() throws Exception {
-        mockMvc.perform(delete("/account/{id}", ACCOUNT_ID).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/account/{id}", TEST_ACCOUNT_ID).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
     }
+
+    @Test
+    public void shouldAddAccountInDb() throws Exception {
+        when(accountService.save(Mockito.any(Account.class))).thenReturn(new ObjectId(TEST_ACCOUNT_ID));
+        mockMvc.perform(
+                post("/account")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.getResourceAsString("api/request/AccAccount.json")))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", is(not(equalTo(null)))));
+    }
+
 }

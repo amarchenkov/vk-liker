@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
@@ -16,6 +17,10 @@ import java.util.List;
 @EnableDiscoveryClient
 @SpringBootApplication
 public class AccountServiceApplication extends WebMvcConfigurerAdapter {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/account").allowedOrigins("http://localhost:8080");
+    }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
