@@ -1,4 +1,4 @@
-package com.github.vk.bot.userservice;
+package com.github.vk.bot.contentservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,8 +6,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class ContentServiceApplication {
+public class UserServiceApplication {
+
 	public static void main(String[] args) {
-		SpringApplication.run(ContentServiceApplication.class, args);
+		SpringApplication.run(UserServiceApplication.class, args);
 	}
 }

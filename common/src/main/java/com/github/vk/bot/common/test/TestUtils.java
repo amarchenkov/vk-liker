@@ -1,4 +1,4 @@
-package com.github.vk.bot.account.utils;
+package com.github.vk.bot.common.test;
 
 import org.apache.commons.io.IOUtils;
 
@@ -11,7 +11,12 @@ import java.nio.charset.Charset;
  *
  * @author Andrey
  */
+
 public class TestUtils {
+    private TestUtils() {
+        throw new UnsupportedOperationException("Util class");
+    }
+
     public static String getResourceAsString(String filename) throws IOException {
         InputStream is = TestUtils.class.getClassLoader().getResourceAsStream(filename);
         return IOUtils.toString(is, Charset.forName("UTF-8"));

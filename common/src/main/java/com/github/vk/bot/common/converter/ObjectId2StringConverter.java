@@ -1,4 +1,4 @@
-package com.github.vk.bot.account.endpoint.converter;
+package com.github.vk.bot.common.converter;
 
 import com.google.gson.*;
 import org.bson.types.ObjectId;
