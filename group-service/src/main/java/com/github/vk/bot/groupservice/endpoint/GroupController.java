@@ -1,6 +1,6 @@
 package com.github.vk.bot.groupservice.endpoint;
 
-import com.github.vk.bot.common.model.Group;
+import com.github.vk.bot.common.model.group.Group;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

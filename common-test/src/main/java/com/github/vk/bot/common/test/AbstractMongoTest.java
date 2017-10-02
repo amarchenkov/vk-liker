@@ -1,4 +1,4 @@
-package com.github.vk.bot.account;
+package com.github.vk.bot.common.test;
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,8 +1,8 @@
 package com.github.vk.bot.account.service;
 
-import com.github.vk.bot.account.AbstractMongoTest;
 import com.github.vk.bot.common.model.account.AccessToken;
 import com.github.vk.bot.common.model.account.Account;
+import com.github.vk.bot.common.test.AbstractMongoTest;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;

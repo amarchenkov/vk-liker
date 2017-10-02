@@ -1,4 +1,4 @@
-package com.github.vk.bot.common.model.contentsource;
+package com.github.vk.bot.common.model.content;
 
 import com.github.vk.bot.common.enums.SourceType;
 import lombok.Data;

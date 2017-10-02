@@ -1,8 +1,9 @@
 package com.github.vk.bot.groupservice.service.impl;
 
-import com.github.vk.bot.common.model.Group;
+import com.github.vk.bot.common.model.group.Group;
 import com.github.vk.bot.groupservice.repository.GroupRepository;
 import com.github.vk.bot.groupservice.service.GroupService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -16,7 +17,12 @@ import java.util.Set;
 @Service
 public class DbGroupService implements GroupService {
 
-    private GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
+
+    @Autowired
+    public DbGroupService(GroupRepository groupRepository) {
+        this.groupRepository = groupRepository;
+    }
 
     @Override
     public Set<Group> getAllGroups() {

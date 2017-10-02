@@ -1,5 +1,6 @@
-package com.github.vk.bot.common.model.contentsource;
+package com.github.vk.bot.common.model.content;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -21,32 +22,56 @@ public class Photo implements Serializable {
 
     @Id
     private ObjectId id;
+
     @Field("source_id")
+    @SerializedName("source_id")
     private long sourceId;
+
     @Field("album_id")
+    @SerializedName("album_id")
     private long albumId;
+
     @Field("owner_id")
+    @SerializedName("owner_id")
     private long ownerId;
+
     @Field("user_id")
+    @SerializedName("user_id")
     private long userId;
+
     @Field("photo_75")
+    @SerializedName("photo_75")
     private String photo75;
+
     @Field("photo_130")
+    @SerializedName("photo_130")
     private String photo130;
+
     @Field("photo_640")
+    @SerializedName("photo_640")
     private String photo640;
+
     @Field("photo_807")
+    @SerializedName("photo_807")
     private String photo807;
+
     @Field("photo_1280")
+    @SerializedName("photo_1280")
     private String photo1280;
+
     @Field
     private int width;
+
     @Field
     private int height;
+
     @Field
     private String text;
+
     @Field
     private long date;
+
     @Field("access_key")
+    @SerializedName("access_key")
     private String accessKey;
 }

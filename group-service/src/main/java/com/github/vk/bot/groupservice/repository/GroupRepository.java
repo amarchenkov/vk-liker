@@ -1,6 +1,6 @@
 package com.github.vk.bot.groupservice.repository;
 
-import com.github.vk.bot.common.model.Group;
+import com.github.vk.bot.common.model.group.Group;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

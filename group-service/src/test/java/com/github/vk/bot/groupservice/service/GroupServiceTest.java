@@ -1,6 +1,8 @@
 package com.github.vk.bot.groupservice.service;
 
-import com.github.vk.bot.common.model.Group;
+import com.github.vk.bot.common.model.group.Group;
+import com.github.vk.bot.common.test.AbstractMongoTest;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
@@ -23,16 +28,25 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:application-test.properties")
-public class GroupServiceTest {
+public class GroupServiceTest extends AbstractMongoTest {
 
     @Autowired
     private GroupService groupService;
 
     @Test
     public void shouldReturnAllGroups() {
+        ObjectId objectId1 = new ObjectId();
+        ObjectId objectId2 = new ObjectId();
+        Group group1 = new Group(objectId1, "fuck_humor", "123486874");
+        Group group2 = new Group(objectId2, "fuck_humor1", "11111111");
+        List<Group> groupsBefore = new ArrayList<>();
+        groupsBefore.add(group1);
+        groupsBefore.add(group2);
+        mongoTemplate.insert(groupsBefore, Group.COLLECTION_NAME);
+
         Set<Group> groups = groupService.getAllGroups();
-        assertThat(groups.size(), is(equalTo(3)));
-//        assertThat(groups, containsInAnyOrder());
+        assertThat(groups.size(), is(equalTo(2)));
+        assertThat(groups.stream().map(Group::getId).collect(Collectors.toList()), containsInAnyOrder(objectId1, objectId2));
     }
 
 }

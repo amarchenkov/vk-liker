@@ -1,6 +1,6 @@
 package com.github.vk.bot.groupservice.service;
 
-import com.github.vk.bot.common.model.Group;
+import com.github.vk.bot.common.model.group.Group;
 
 import java.util.Set;
 

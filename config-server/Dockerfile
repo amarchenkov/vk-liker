@@ -1,5 +1,8 @@
 FROM java:8-jre
-WORKDIR /opt/configserver
-ADD target/config-server.jar /opt/configserver/config-server.jar
+WORKDIR /opt/config-server
+ADD target/config-server.jar /opt/config-server/config-server.jar
 EXPOSE 8888
-ENTRYPOINT ["java", "-jar", "config-server.jar"]
+ENV GIT_LOGIN ""
+ENV GIT_PASSWORD ""
+ENV GIT_URI ""
+ENTRYPOINT ["java", "-jar", "config-server.jar --spring.profiles.active=production"]

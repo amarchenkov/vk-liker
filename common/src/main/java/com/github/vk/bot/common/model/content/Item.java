@@ -1,6 +1,7 @@
-package com.github.vk.bot.common.model.contentsource;
+package com.github.vk.bot.common.model.content;
 
 import com.github.vk.bot.common.enums.PostType;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -24,22 +25,41 @@ public class Item implements Serializable {
 
     @Id
     private ObjectId id;
+
     @Field("source_id")
+    @SerializedName("source_id")
     private long sourceId;
+
     @Field("from_id")
+    @SerializedName("from_id")
     private long fromId;
+
     @Field("owner_id")
+    @SerializedName("owner_id")
     private long ownerId;
+
     @Field
     private long date;
+
     @Field("mark_as_ads")
+    @SerializedName("mark_as_ads")
     private boolean markedAsAds;
+
     @Field("post_type")
+    @SerializedName("post_type")
     private PostType postType;
+
     @Field
     private String text;
+
     @Field("can_pin")
+    @SerializedName("can_pin")
     private boolean canPin;
+
     @Field
     private Set<Attachment> attachments = new HashSet<>();
+
+    @Field("content_source_id")
+    @SerializedName("content_source_id")
+    private ObjectId contentSourceId;
 }

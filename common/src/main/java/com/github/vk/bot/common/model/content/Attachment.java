@@ -1,6 +1,7 @@
-package com.github.vk.bot.common.model.contentsource;
+package com.github.vk.bot.common.model.content;
 
 import com.github.vk.bot.common.enums.AttachmentType;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -23,6 +24,7 @@ public class Attachment implements Serializable {
     @Id
     private ObjectId id;
     @Field("attachment_type")
+    @SerializedName("attachment_type")
     private AttachmentType attachmentType;
     @Field
     private Photo photo;
