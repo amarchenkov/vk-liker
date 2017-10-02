@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,17 +22,21 @@ import java.util.Set;
 @Document(collection = Group.COLLECTION_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Group implements Serializable {
 
     public static final String COLLECTION_NAME = "groups";
 
     @Id
+    @NonNull
     private ObjectId id;
 
+    @NonNull
     @SerializedName("group_id")
     @Field("group_id")
     private String groupId;
 
+    @NonNull
     @SerializedName("group_name")
     @Field("group_name")
     private String groupName;

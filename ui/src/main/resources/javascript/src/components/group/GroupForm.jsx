@@ -1,9 +1,8 @@
 import React from "react"
 import rest from "rest"
 import mime from "rest/interceptor/mime"
-import AccountList from "./AccountList";
 
-export default class AccountForm extends React.Component {
+export default class GroupForm extends React.Component {
 
     constructor() {
         super();
@@ -14,40 +13,40 @@ export default class AccountForm extends React.Component {
         e.preventDefault();
         const client = rest.wrap(mime, {mime: 'application/json'});
         let data = {
-            "login": this.loginInput.value,
-            "password": this.passwordInput.value
+            "group_name": this.nameInput.value,
+            "group_id": this.idInput.value
         };
         client({
             method: 'POST',
-            headers: {'Content-Type': 'application/json'}, entity: data, path: 'http://localhost:8095/api/account'
+            headers: {'Content-Type': 'application/json'}, entity: data, path: 'http://localhost:8095/api/group'
         }).then(response => {
             if (response.status.code === 201) {
-                this.loginInput.value = '';
-                this.passwordInput.value = '';
+                this.nameInput.value = '';
+                this.idInput.value = '';
                 this.props.onUpdate();
             }
         })
     }
 
     render() {
-        return <div id='account-form' className="col-sm-5 list-form">
-            <h3>Add Account</h3>
+        return <div id='group-form' className="col-sm-5 list-form">
+            <h3>Add Group</h3>
             <form className="form-horizontal">
                 <div className="form-group">
-                    <label htmlFor="login" className="col-sm-2 control-label">Login</label>
+                    <label htmlFor="login" className="col-sm-2 control-label">Name</label>
                     <div className="col-sm-10">
-                        <input type='text' className="form-control" placeholder='Login' id='login' name='login'
+                        <input type='text' className="form-control" placeholder='Name' id='name' name='name'
                                ref={(input) => {
-                                   this.loginInput = input;
+                                   this.nameInput = input;
                                }}/>
                     </div>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="password" className="col-sm-2 control-label">Password</label>
+                    <label htmlFor="password" className="col-sm-2 control-label">VK ID</label>
                     <div className="col-sm-10">
-                        <input type='text' className="form-control" id="password" name='password' placeholder="Password"
+                        <input type='text' className="form-control" id="id" name='id' placeholder="ID"
                                ref={(input) => {
-                                   this.passwordInput = input;
+                                   this.idInput = input;
                                }}/>
                     </div>
                 </div>

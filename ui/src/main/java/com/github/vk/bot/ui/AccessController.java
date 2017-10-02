@@ -1,5 +1,7 @@
 package com.github.vk.bot.ui;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -8,5 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Andrey
  */
 @RestController
+@RequestMapping(value = "response", method = RequestMethod.GET)
 public class AccessController {
 }

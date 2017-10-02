@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 export default class Menu extends React.Component {
 
@@ -9,7 +9,7 @@ export default class Menu extends React.Component {
             <ul className="nav nav-sidebar">
                 {this.props.items.map(function (m, index) {
                     return <li key={index}>
-                        <Link to='/accounts'>{m}</Link>
+                        <NavLink activeClassName='active' to={'/' + m}>{m}</NavLink>
                     </li>
                 })}
             </ul>

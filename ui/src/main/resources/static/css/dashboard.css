@@ -53,9 +53,9 @@
     padding-left: 20px;
 }
 
-.nav-sidebar > .active > a {
-    color: #fff;
-    background-color: #428bca;
+.nav-sidebar > li > a.active {
+    color: #fff !important;
+    background-color: #428bca !important;
 }
 
 /*

@@ -3,6 +3,7 @@ package com.github.vk.bot.groupservice.service.impl;
 import com.github.vk.bot.common.model.group.Group;
 import com.github.vk.bot.groupservice.repository.GroupRepository;
 import com.github.vk.bot.groupservice.service.GroupService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,12 @@ public class DbGroupService implements GroupService {
     @Override
     public Set<Group> getAllGroups() {
         return new HashSet<>(groupRepository.findAll());
+    }
+
+    @Override
+    public ObjectId save(Group group) {
+        Group saved = groupRepository.save(group);
+        return saved.getId();
     }
 
 }

@@ -14,7 +14,7 @@ export default class AccountList extends React.Component {
         const client = rest.wrap(mime);
         const self = this;
         client({
-            path: 'http://localhost:8095/api/account',
+            path: 'http://localhost:8095/account-service/account',
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         }).then(function (response) {
@@ -52,7 +52,7 @@ export default class AccountList extends React.Component {
                         <td>{(account.access_token !== null) ? account.access_token.token : ''}</td>
                         <td>{(account.access_token !== null) ? account.access_token.expires_in : ''}</td>
                         <td><a
-                            href="https://oauth.vk.com/authorize?client_id=1&display=page&redirect_uri=http://example.com/callback&scope=friends&response_type=code&v=5.68">Получить
+                            href={"https://oauth.vk.com/authorize?client_id=6194447&display=page&redirect_uri=http://" + window.location.host + "/response&scope=friends&response_type=code&v=5.68"}>Получить
                             Access Token</a></td>
                     </tr>;
                 })}

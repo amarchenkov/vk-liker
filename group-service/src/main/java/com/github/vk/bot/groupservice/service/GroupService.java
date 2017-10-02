@@ -1,6 +1,7 @@
 package com.github.vk.bot.groupservice.service;
 
 import com.github.vk.bot.common.model.group.Group;
+import org.bson.types.ObjectId;
 
 import java.util.Set;
 
@@ -11,4 +12,5 @@ import java.util.Set;
  */
 public interface GroupService {
     Set<Group> getAllGroups();
+    ObjectId save(Group group);
 }
