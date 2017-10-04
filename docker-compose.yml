@@ -4,8 +4,9 @@ services:
   config-server:
     build: ./config-server
     ports:
-      - 8888
-    container_name: config-server
+      - 8888:8888
+    container_name: config-server:latest
+
 #  ui:
 #  account-service:
 #  api-gateway:

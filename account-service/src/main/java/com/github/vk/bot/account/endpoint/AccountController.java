@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @author AMarchenkov
  */
 @RestController
-@RequestMapping(value = "/account", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/*", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 public class AccountController {
 
     private final AccountService accountService;

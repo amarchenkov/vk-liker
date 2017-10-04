@@ -1,7 +1,6 @@
 package com.github.vk.bot.groupservice.endpoint;
 
 import com.github.vk.bot.common.model.group.Group;
-import com.github.vk.bot.groupservice.repository.GroupRepository;
 import com.github.vk.bot.groupservice.service.GroupService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import java.util.Set;
  * @author Andrey
  */
 @RestController
-@RequestMapping(value = "/group", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/*", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupController {
 
     private final GroupService groupService;
