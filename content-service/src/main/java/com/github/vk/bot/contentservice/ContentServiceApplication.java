@@ -7,6 +7,7 @@ import com.vk.api.sdk.httpclient.HttpTransportClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 import java.util.concurrent.ForkJoinPool;
@@ -14,6 +15,7 @@ import java.util.concurrent.ForkJoinWorkerThread;
 
 @EnableDiscoveryClient
 @SpringBootApplication
+@EnableFeignClients
 public class ContentServiceApplication extends AbstractMicroServiceApplication {
 
     @Bean
