@@ -17,6 +17,7 @@ import java.util.List;
  * @author Andrey
  */
 public abstract class AbstractMicroServiceApplication extends WebMvcConfigurerAdapter {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/account").allowedOrigins("http://localhost:8080");
