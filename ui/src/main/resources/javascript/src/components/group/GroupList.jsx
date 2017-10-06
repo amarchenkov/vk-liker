@@ -14,7 +14,7 @@ export default class GroupList extends React.Component {
         const client = rest.wrap(mime);
         const self = this;
         client({
-            path: 'http://localhost:8095/api/group',
+            path: 'http://localhost:8095/group',
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         }).then(function (response) {

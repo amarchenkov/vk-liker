@@ -20,8 +20,7 @@ public abstract class AbstractMicroServiceApplication extends WebMvcConfigurerAd
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/account").allowedOrigins("http://localhost:8080");
-        registry.addMapping("/group").allowedOrigins("http://localhost:8080");
+        registry.addMapping("/*").allowedOrigins("http://localhost:8080");
     }
 
     @Override

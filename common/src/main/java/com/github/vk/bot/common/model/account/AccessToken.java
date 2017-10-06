@@ -1,7 +1,9 @@
 package com.github.vk.bot.common.model.account;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,23 +18,26 @@ import java.io.Serializable;
  */
 @Data
 @Document(collection = AccessToken.COLLECTION_NAME)
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccessToken implements Serializable {
 
     public static final String COLLECTION_NAME = "access_tokens";
 
     @Id
     private ObjectId id;
-    @Field("token")
+
+    @Field("access_token")
+    @SerializedName("access_token")
     private String token;
+
     @Field("expires_in")
     @SerializedName("expires_in")
     private long expiresIn;
+
     @Field("user_id")
     @SerializedName("user_id")
-    private String userId;
-
-    public AccessToken() {
-    }
+    private int userId;
 
     public AccessToken(String activeToken, long expiresIn) {
         this.token = activeToken;

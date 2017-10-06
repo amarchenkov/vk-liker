@@ -15,7 +15,7 @@ import java.util.concurrent.ForkJoinWorkerThread;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"com.github.vk.bot.common.client",})
 public class ContentServiceApplication extends AbstractMicroServiceApplication {
 
     @Bean

@@ -28,7 +28,8 @@ public class DefaultAccountService implements AccountService {
 
     @Override
     public Set<Account> getActiveAccounts() {
-        return new HashSet<>(accountRepository.findActiveAccount(System.currentTimeMillis() / 1000L));
+//        return new HashSet<>(accountRepository.findActiveAccount(System.currentTimeMillis() / 1000L));
+        return new HashSet<>(accountRepository.findAll());
     }
 
     @Override

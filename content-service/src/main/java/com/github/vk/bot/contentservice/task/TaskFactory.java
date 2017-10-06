@@ -1,10 +1,10 @@
 package com.github.vk.bot.contentservice.task;
 
 import com.github.vk.bot.common.model.content.ContentSource;
-import com.github.vk.bot.contentservice.client.AccountClient;
+import com.github.vk.bot.common.client.AccountClient;
+import com.github.vk.bot.contentservice.repository.ContentSourceRepository;
 import com.vk.api.sdk.client.VkApiClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
@@ -21,22 +21,17 @@ public class TaskFactory {
 
     private final VkApiClient vkApiClient;
     private final AccountClient accountClient;
-
-    @Value("${vk.bot.client_id}")
-    private int clientId;
-    @Value("${vk.bot.client_secret}")
-    private String clientSecret;
-    @Value("${vk.bot.redirect_url}")
-    private String redirectUrl;
+    private final ContentSourceRepository contentSourceRepository;
 
     @Autowired
-    public TaskFactory(VkApiClient vkApiClient, AccountClient accountClient) {
+    public TaskFactory(VkApiClient vkApiClient, AccountClient accountClient, ContentSourceRepository contentSourceRepository) {
         this.vkApiClient = vkApiClient;
         this.accountClient = accountClient;
+        this.contentSourceRepository = contentSourceRepository;
     }
 
     public ParseGroupContentTask createParseGroupContentTask(List<ContentSource> sources) {
-        return new ParseGroupContentTask(sources, vkApiClient, clientId, clientSecret, redirectUrl, accountClient);
+        return new ParseGroupContentTask(sources, vkApiClient, accountClient, contentSourceRepository);
     }
 
 }

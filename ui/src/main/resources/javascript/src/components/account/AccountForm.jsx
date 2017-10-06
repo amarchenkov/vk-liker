@@ -19,7 +19,7 @@ export default class AccountForm extends React.Component {
         };
         client({
             method: 'POST',
-            headers: {'Content-Type': 'application/json'}, entity: data, path: 'http://localhost:8095/api/account'
+            headers: {'Content-Type': 'application/json'}, entity: data, path: 'http://localhost:8095/account'
         }).then(response => {
             if (response.status.code === 201) {
                 this.loginInput.value = '';

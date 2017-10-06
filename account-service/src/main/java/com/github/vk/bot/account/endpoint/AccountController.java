@@ -1,6 +1,7 @@
 package com.github.vk.bot.account.endpoint;
 
 import com.github.vk.bot.account.service.AccountService;
+import com.github.vk.bot.common.model.account.AccessToken;
 import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -34,6 +36,11 @@ public class AccountController {
         return accountService.getAccounts();
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/actual")
+    public Optional<Set<Account>> getActualAccounts() {
+        return Optional.of(accountService.getActiveAccounts());
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<Account> getAccountById(@PathVariable("id") ObjectId id) {
         Account account = accountService.getAccountById(id);
@@ -41,6 +48,12 @@ public class AccountController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(account);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/account/{account_id}/access_token")
+    public ResponseEntity<Void> attachAccessToken(@PathVariable("account_id") String accountId, @RequestBody AccessToken accessToken) {
+        accountService.addAccessToken(accessToken, new ObjectId(accountId));
+        return ResponseEntity.ok().header(HttpHeaders.LOCATION, "/account/" + accountId).build();
     }
 
     @RequestMapping(method = RequestMethod.POST)
