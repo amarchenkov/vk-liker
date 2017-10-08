@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,8 +38,8 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/actual")
-    public Optional<Set<Account>> getActualAccounts() {
-        return Optional.of(accountService.getActiveAccounts());
+    public ResponseEntity<List<Account>> getActualAccounts() {
+        return ResponseEntity.ok().body(accountService.getActiveAccounts());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
@@ -50,7 +51,7 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/account/{account_id}/access_token")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{account_id}/access_token")
     public ResponseEntity<Void> attachAccessToken(@PathVariable("account_id") String accountId, @RequestBody AccessToken accessToken) {
         accountService.addAccessToken(accessToken, new ObjectId(accountId));
         return ResponseEntity.ok().header(HttpHeaders.LOCATION, "/account/" + accountId).build();

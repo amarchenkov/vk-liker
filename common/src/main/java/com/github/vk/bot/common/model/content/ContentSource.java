@@ -25,14 +25,19 @@ public class ContentSource implements Serializable {
 
     @Id
     private ObjectId id;
+
     @Field
     private String url;
+
     @Field("source_id")
     private int sourceId;
+
     @Field("source_type")
     private SourceType sourceType;
+
     @Field("last_check")
     private LocalDateTime lastCheck;
+
     @Field("items")
     private Set<Item> items = new HashSet<>();
 }

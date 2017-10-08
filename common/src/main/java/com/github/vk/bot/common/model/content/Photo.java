@@ -27,10 +27,6 @@ public class Photo implements Serializable {
     @SerializedName("source_id")
     private long sourceId;
 
-    @Field("album_id")
-    @SerializedName("album_id")
-    private long albumId;
-
     @Field("owner_id")
     @SerializedName("owner_id")
     private long ownerId;
@@ -47,9 +43,9 @@ public class Photo implements Serializable {
     @SerializedName("photo_130")
     private String photo130;
 
-    @Field("photo_640")
-    @SerializedName("photo_640")
-    private String photo640;
+    @Field("photo_604")
+    @SerializedName("photo_604")
+    private String photo604;
 
     @Field("photo_807")
     @SerializedName("photo_807")

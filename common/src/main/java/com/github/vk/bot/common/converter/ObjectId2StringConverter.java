@@ -10,10 +10,15 @@ import java.lang.reflect.Type;
  *
  * @author AMarchenkov
  */
-public class ObjectId2StringConverter implements JsonSerializer<ObjectId> {
+public class ObjectId2StringConverter implements JsonSerializer<ObjectId>, JsonDeserializer<ObjectId> {
 
     @Override
     public JsonElement serialize(ObjectId id, Type type, JsonSerializationContext jsonSerializationContext) {
         return new JsonPrimitive(id.toString());
+    }
+
+    @Override
+    public ObjectId deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        return new ObjectId(jsonElement.getAsString());
     }
 }

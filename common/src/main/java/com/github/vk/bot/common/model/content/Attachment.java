@@ -23,9 +23,11 @@ public class Attachment implements Serializable {
 
     @Id
     private ObjectId id;
+
     @Field("attachment_type")
     @SerializedName("attachment_type")
     private AttachmentType attachmentType;
+
     @Field
     private Photo photo;
 }

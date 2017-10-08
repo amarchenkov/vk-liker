@@ -2,11 +2,15 @@ package com.github.vk.bot.ui;
 
 import com.github.vk.bot.common.client.AccountClient;
 import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.account.Account;
 import com.github.vk.bot.ui.client.VkClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created at 23.09.2017 12:21
@@ -14,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Andrey
  */
 @RefreshScope
-@RestController
+@Controller
 public class AccessController {
 
     private final VkClient client;

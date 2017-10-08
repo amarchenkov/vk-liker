@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,9 +28,9 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
-    public Set<Account> getActiveAccounts() {
+    public List<Account> getActiveAccounts() {
 //        return new HashSet<>(accountRepository.findActiveAccount(System.currentTimeMillis() / 1000L));
-        return new HashSet<>(accountRepository.findAll());
+        return accountRepository.findAll();
     }
 
     @Override

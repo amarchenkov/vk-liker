@@ -53,7 +53,7 @@ export default class AccountList extends React.Component {
                         <td>{account.id}</td>
                         <td>{account.login}</td>
                         <td>{account.password}</td>
-                        <td>{(account.access_token !== null) ? account.access_token['token'] : ''}</td>
+                        <td>{(account.access_token !== null) ? account.access_token['access_token'] : ''}</td>
                         <td>{(account.access_token !== null) ? account.access_token.expires_in : ''}</td>
                     </tr>;
                 })}

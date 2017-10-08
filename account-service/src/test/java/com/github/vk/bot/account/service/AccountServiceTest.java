@@ -145,7 +145,7 @@ public class AccountServiceTest extends AbstractMongoTest {
         mongoTemplate.insert(account1, Account.COLLECTION_NAME);
         mongoTemplate.insert(account2, Account.COLLECTION_NAME);
 
-        Set<Account> activeAccounts = accountService.getActiveAccounts();
+        List<Account> activeAccounts = accountService.getActiveAccounts();
         assertThat(activeAccounts, hasSize(1));
         assertThat(activeAccounts.iterator().next().getAccessToken().getToken(), is(equalTo(ACTIVE_TOKEN)));
     }

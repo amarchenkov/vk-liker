@@ -4,6 +4,7 @@ import com.github.vk.bot.common.model.account.AccessToken;
 import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Set;
  */
 public interface AccountService {
 
-    Set<Account> getActiveAccounts();
+    List<Account> getActiveAccounts();
 
     void addAccessToken(AccessToken token, Account account);
 

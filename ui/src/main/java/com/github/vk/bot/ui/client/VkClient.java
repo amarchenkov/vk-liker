@@ -1,5 +1,6 @@
 package com.github.vk.bot.ui.client;
 
+import com.github.vk.bot.common.client.FeignConfiguration;
 import com.github.vk.bot.common.model.account.AccessToken;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -11,11 +11,10 @@ import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
+import feign.codec.DecodeException;
 import lombok.extern.apachecommons.CommonsLog;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.RecursiveAction;
 
 /**
@@ -32,11 +31,14 @@ public class ParseGroupContentTask extends RecursiveAction {
     private ContentSourceRepository contentSourceRepository;
     private ModelConverter modelConverter;
 
-    public ParseGroupContentTask(List<ContentSource> allBySourceType, VkApiClient vkApiClient, AccountClient accountClient, ContentSourceRepository contentSourceRepository) {
+    public ParseGroupContentTask(List<ContentSource> allBySourceType, VkApiClient vkApiClient,
+                                 AccountClient accountClient, ContentSourceRepository contentSourceRepository,
+                                 ModelConverter modelConverter) {
         this.allBySourceType = allBySourceType;
         this.vkApiClient = vkApiClient;
         this.accountClient = accountClient;
         this.contentSourceRepository = contentSourceRepository;
+        this.modelConverter = modelConverter;
     }
 
     @Override
@@ -48,16 +50,21 @@ public class ParseGroupContentTask extends RecursiveAction {
         if (allBySourceType.size() > 1) {
             LOG.debug("Fork task. Too much sources");
             ParseGroupContentTask subTask = new ParseGroupContentTask(allBySourceType.subList(1, allBySourceType.size()),
-                    vkApiClient, accountClient, contentSourceRepository);
+                    vkApiClient, accountClient, contentSourceRepository, modelConverter);
             subTask.fork();
         }
         process(allBySourceType.iterator().next());
     }
 
     private void process(ContentSource contentSource) {
-        Optional<Set<Account>> actualAccounts = accountClient.getActualAccounts();
-        if (actualAccounts.isPresent() && !actualAccounts.get().isEmpty()) {
-            Account account = actualAccounts.get().iterator().next();
+        List<Account> actualAccounts = null;
+        try {
+            actualAccounts = accountClient.getActualAccounts();
+        } catch (DecodeException e) {
+            e.printStackTrace();
+        }
+        if (actualAccounts != null && !actualAccounts.isEmpty()) {
+            Account account = actualAccounts.iterator().next();
             LOG.debug("Start processing content source " + contentSource);
             try {
                 UserActor actor = new UserActor(account.getAccessToken().getUserId(), account.getAccessToken().getToken());
@@ -67,8 +74,8 @@ public class ParseGroupContentTask extends RecursiveAction {
                         .forEach(wallPostFull -> {
                             Item item = modelConverter.fromVkItemToMongoItem(wallPostFull);
                             contentSource.getItems().add(item);
-                            contentSourceRepository.save(contentSource);
                         });
+                contentSourceRepository.save(contentSource);
             } catch (ApiException | ClientException e) {
                 LOG.error("API error", e);
             }

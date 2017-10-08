@@ -41,10 +41,6 @@ public class Item implements Serializable {
     @Field
     private long date;
 
-    @Field("mark_as_ads")
-    @SerializedName("mark_as_ads")
-    private boolean markedAsAds;
-
     @Field("post_type")
     @SerializedName("post_type")
     private PostType postType;
@@ -52,14 +48,6 @@ public class Item implements Serializable {
     @Field
     private String text;
 
-    @Field("can_pin")
-    @SerializedName("can_pin")
-    private boolean canPin;
-
     @Field
     private Set<Attachment> attachments = new HashSet<>();
-
-    @Field("content_source_id")
-    @SerializedName("content_source_id")
-    private ObjectId contentSourceId;
 }
