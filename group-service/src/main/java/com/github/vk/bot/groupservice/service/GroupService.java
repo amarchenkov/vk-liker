@@ -13,4 +13,6 @@ import java.util.Set;
 public interface GroupService {
     Set<Group> getAllGroups();
     ObjectId save(Group group);
+
+    void removeById(ObjectId id);
 }

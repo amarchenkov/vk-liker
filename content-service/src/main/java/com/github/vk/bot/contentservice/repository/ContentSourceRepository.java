@@ -17,5 +17,4 @@ import java.util.Optional;
 @Repository
 public interface ContentSourceRepository extends MongoRepository<ContentSource, ObjectId> {
     Optional<List<ContentSource>> findAllBySourceType(SourceType sourceType);
-    Optional<List<ContentSource>> findAllByItems_SourceId(long sourceId);
 }

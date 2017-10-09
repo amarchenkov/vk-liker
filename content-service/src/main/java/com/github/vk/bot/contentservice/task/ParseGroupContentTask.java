@@ -5,17 +5,22 @@ import com.github.vk.bot.common.model.account.Account;
 import com.github.vk.bot.common.model.content.ContentSource;
 import com.github.vk.bot.common.model.content.Item;
 import com.github.vk.bot.contentservice.repository.ContentSourceRepository;
+import com.github.vk.bot.contentservice.repository.ItemRepository;
 import com.github.vk.bot.contentservice.service.impl.ModelConverter;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.objects.wall.PostType;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
-import feign.codec.DecodeException;
 import lombok.extern.apachecommons.CommonsLog;
 
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.RecursiveAction;
+import java.util.stream.Collectors;
 
 /**
  * Created at 05.10.2017 14:24
@@ -25,59 +30,71 @@ import java.util.concurrent.RecursiveAction;
 @CommonsLog
 public class ParseGroupContentTask extends RecursiveAction {
 
-    private List<ContentSource> allBySourceType;
+    private List<ContentSource> contentSources;
     private VkApiClient vkApiClient;
     private AccountClient accountClient;
     private ContentSourceRepository contentSourceRepository;
+    private ItemRepository itemRepository;
     private ModelConverter modelConverter;
 
-    public ParseGroupContentTask(List<ContentSource> allBySourceType, VkApiClient vkApiClient,
+    public ParseGroupContentTask(VkApiClient vkApiClient,
                                  AccountClient accountClient, ContentSourceRepository contentSourceRepository,
-                                 ModelConverter modelConverter) {
-        this.allBySourceType = allBySourceType;
+                                 ItemRepository itemRepository, ModelConverter modelConverter) {
         this.vkApiClient = vkApiClient;
         this.accountClient = accountClient;
         this.contentSourceRepository = contentSourceRepository;
+        this.itemRepository = itemRepository;
         this.modelConverter = modelConverter;
+    }
+
+    void setContentSources(List<ContentSource> contentSources) {
+        this.contentSources = contentSources;
     }
 
     @Override
     protected void compute() {
-        if (allBySourceType == null || allBySourceType.isEmpty()) {
+        if (contentSources == null || contentSources.isEmpty()) {
             LOG.debug("Nothing to get. No sources detected");
             return;
         }
-        if (allBySourceType.size() > 1) {
+        if (contentSources.size() > 1) {
             LOG.debug("Fork task. Too much sources");
-            ParseGroupContentTask subTask = new ParseGroupContentTask(allBySourceType.subList(1, allBySourceType.size()),
-                    vkApiClient, accountClient, contentSourceRepository, modelConverter);
+            ParseGroupContentTask subTask = new ParseGroupContentTask(vkApiClient, accountClient,
+                    contentSourceRepository, itemRepository, modelConverter);
+            subTask.setContentSources(contentSources.subList(1, contentSources.size()));
             subTask.fork();
         }
-        process(allBySourceType.iterator().next());
+        process(contentSources.iterator().next());
     }
 
     private void process(ContentSource contentSource) {
-        List<Account> actualAccounts = null;
-        try {
-            actualAccounts = accountClient.getActualAccounts();
-        } catch (DecodeException e) {
-            e.printStackTrace();
-        }
+        Set<Account> actualAccounts = accountClient.getActualAccounts();
         if (actualAccounts != null && !actualAccounts.isEmpty()) {
             Account account = actualAccounts.iterator().next();
             LOG.debug("Start processing content source " + contentSource);
             try {
                 UserActor actor = new UserActor(account.getAccessToken().getUserId(), account.getAccessToken().getToken());
                 GetResponse execute = vkApiClient.wall().get(actor).ownerId(contentSource.getSourceId()).count(100).execute();
-                execute.getItems().stream()
-                        .filter(item -> contentSourceRepository.findAllByItems_SourceId(item.getId()).isPresent())
-                        .forEach(wallPostFull -> {
+                LocalDateTime checkDateTime = LocalDateTime.now();
+                Set<Item> items = execute.getItems().stream()
+                        .filter(wallPostFull -> wallPostFull.getPostType().equals(PostType.POST))
+                        .filter(wallPostFull -> wallPostFull.getAttachments() != null && !wallPostFull.getAttachments().isEmpty())
+                        .filter(item -> !itemRepository.findAllBySourceId(item.getId()).isPresent()
+                                || itemRepository.findAllBySourceId(item.getId()).get().isEmpty())
+                        .map(wallPostFull -> {
                             Item item = modelConverter.fromVkItemToMongoItem(wallPostFull);
-                            contentSource.getItems().add(item);
-                        });
+                            item.setContentSourceId(contentSource.getId());
+                            return item;
+                        })
+                        .collect(Collectors.toSet());
+                itemRepository.save(items);
+                LOG.info(MessageFormat.format("[{0}] items have been saved in database", items.size()));
+                contentSource.setLastCheck(checkDateTime);
                 contentSourceRepository.save(contentSource);
             } catch (ApiException | ClientException e) {
                 LOG.error("API error", e);
+            } catch (Exception e) {
+                LOG.error("General exception", e);
             }
         } else {
             LOG.info("NO Actual Account");

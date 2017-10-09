@@ -6,6 +6,14 @@ package com.github.vk.bot.common.enums;
  * @author AMarchenkov
  */
 public enum AttachmentType {
-    PHOTO
+    PHOTO,
+    VIDEO,
+    AUDIO,
+    DOC,
+    LINK,
+    NOTE,
+    POLL,
+    ALBUM,
+    PHOTO_LIST,
     ;
 }

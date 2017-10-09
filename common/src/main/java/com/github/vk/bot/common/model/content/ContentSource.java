@@ -9,8 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created at 28.09.2017 15:34
@@ -27,7 +25,7 @@ public class ContentSource implements Serializable {
     private ObjectId id;
 
     @Field
-    private String url;
+    private String name;
 
     @Field("source_id")
     private int sourceId;
@@ -38,6 +36,4 @@ public class ContentSource implements Serializable {
     @Field("last_check")
     private LocalDateTime lastCheck;
 
-    @Field("items")
-    private Set<Item> items = new HashSet<>();
 }

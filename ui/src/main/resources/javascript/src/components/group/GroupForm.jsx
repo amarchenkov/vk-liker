@@ -1,6 +1,7 @@
 import React from "react"
 import rest from "rest"
 import mime from "rest/interceptor/mime"
+import {NotificationManager} from 'react-notifications';
 
 export default class GroupForm extends React.Component {
 
@@ -18,12 +19,15 @@ export default class GroupForm extends React.Component {
         };
         client({
             method: 'POST',
-            headers: {'Content-Type': 'application/json'}, entity: data, path: 'http://localhost:8095/api/group'
+            headers: {'Content-Type': 'application/json'}, entity: data, path: 'http://localhost:8095/group'
         }).then(response => {
             if (response.status.code === 201) {
+                NotificationManager.success("Group have been successfully saved", "Groups");
                 this.nameInput.value = '';
                 this.idInput.value = '';
                 this.props.onUpdate();
+            } else {
+                NotificationManager.error("Group save failed" + response.error, "Groups");
             }
         })
     }

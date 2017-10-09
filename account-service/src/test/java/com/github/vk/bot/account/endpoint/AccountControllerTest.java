@@ -78,12 +78,12 @@ public class AccountControllerTest {
         account.setAccessToken(accessToken);
         when(accountService.getAccountById(Mockito.any(ObjectId.class))).thenReturn(account);
         mockMvc.perform(
-                get("/account/{id}", TEST_ACCOUNT_ID)
+                get("/{id}", TEST_ACCOUNT_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.login", is(equalTo(TEST_LOGIN))))
                 .andExpect(jsonPath("$.password", is(equalTo(TEST_PASSWORD))))
-                .andExpect(jsonPath("$.access_token.token", is(equalTo(TEST_TOKEN))))
+                .andExpect(jsonPath("$.access_token.access_token", is(equalTo(TEST_TOKEN))))
                 .andExpect(jsonPath("$.access_token.expires_in", is(equalTo(new Long(TEST_EXPIRES).intValue()))))
                 .andExpect(jsonPath("$.id", is(equalTo("59c239b1a11c1223082555d0"))))
         ;
@@ -105,7 +105,7 @@ public class AccountControllerTest {
         accounts.add(new Account(TEST_LOGIN + "1", TEST_PASSWORD));
         accounts.add(new Account(TEST_LOGIN + "2", TEST_PASSWORD));
         when(accountService.getAccounts()).thenReturn(accounts);
-        mockMvc.perform(get("/account").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[*].login", containsInAnyOrder(TEST_LOGIN, TEST_LOGIN + "1", TEST_LOGIN + "2")))
                 .andExpect(jsonPath("$", hasSize(3)));
@@ -113,7 +113,7 @@ public class AccountControllerTest {
 
     @Test
     public void shouldReturnNoContentAfterRemoveAccount() throws Exception {
-        mockMvc.perform(delete("/account/{id}", TEST_ACCOUNT_ID).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/{id}", TEST_ACCOUNT_ID).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
     }
 
     @Test

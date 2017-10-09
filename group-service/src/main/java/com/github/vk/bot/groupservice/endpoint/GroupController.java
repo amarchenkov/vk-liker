@@ -8,10 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -21,7 +18,7 @@ import java.util.Set;
  * @author Andrey
  */
 @RestController
-@RequestMapping(value = "/*", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/*", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupController {
 
     private final GroupService groupService;
@@ -31,7 +28,7 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addGroup(@RequestBody Group group) {
         ObjectId id = groupService.save(group);
         HttpHeaders headers = new HttpHeaders();
@@ -43,4 +40,11 @@ public class GroupController {
     public ResponseEntity<Set<Group>> getAllGroups() {
         return ResponseEntity.ok(groupService.getAllGroups());
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> removeAccountById(@PathVariable("id") ObjectId id) {
+        groupService.removeById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

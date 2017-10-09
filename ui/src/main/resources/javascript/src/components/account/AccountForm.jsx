@@ -1,7 +1,8 @@
 import React from "react"
 import rest from "rest"
 import mime from "rest/interceptor/mime"
-import AccountList from "./AccountList";
+import 'react-notifications/lib/notifications.css';
+import {NotificationManager} from 'react-notifications';
 
 export default class AccountForm extends React.Component {
 
@@ -22,9 +23,12 @@ export default class AccountForm extends React.Component {
             headers: {'Content-Type': 'application/json'}, entity: data, path: 'http://localhost:8095/account'
         }).then(response => {
             if (response.status.code === 201) {
+                NotificationManager.success("Account have been successfully saved", "Accounts");
                 this.loginInput.value = '';
                 this.passwordInput.value = '';
                 this.props.onUpdate();
+            } else {
+                NotificationManager.error("Account save failed" + response.error, "Accounts");
             }
         })
     }

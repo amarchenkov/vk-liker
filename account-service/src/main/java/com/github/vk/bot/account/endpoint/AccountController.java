@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -22,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @author AMarchenkov
  */
 @RestController
-@RequestMapping(value = "/*", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/*", produces = APPLICATION_JSON_VALUE)
 public class AccountController {
 
     private final AccountService accountService;
@@ -38,7 +36,7 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/actual")
-    public ResponseEntity<List<Account>> getActualAccounts() {
+    public ResponseEntity<Set<Account>> getActualAccounts() {
         return ResponseEntity.ok().body(accountService.getActiveAccounts());
     }
 
@@ -51,13 +49,13 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{account_id}/access_token")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{account_id}/access_token", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> attachAccessToken(@PathVariable("account_id") String accountId, @RequestBody AccessToken accessToken) {
         accountService.addAccessToken(accessToken, new ObjectId(accountId));
         return ResponseEntity.ok().header(HttpHeaders.LOCATION, "/account/" + accountId).build();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addAccount(@RequestBody Account account) {
         ObjectId id = accountService.save(account);
         HttpHeaders headers = new HttpHeaders();

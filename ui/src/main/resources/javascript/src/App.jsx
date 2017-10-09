@@ -3,7 +3,9 @@ import ReactDom from "react-dom"
 import Menu from "./components/Menu"
 import Content from "./components/Content"
 import "bootstrap/dist/css/bootstrap.min.css"
+import 'bootstrap/dist/css/bootstrap-theme.min.css';
 import {HashRouter} from 'react-router-dom';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 class App extends React.Component {
     render() {
@@ -25,6 +27,7 @@ class App extends React.Component {
                     <Content/>
                 </div>
             </div>
+            <NotificationContainer/>
         </div>;
     }
 }

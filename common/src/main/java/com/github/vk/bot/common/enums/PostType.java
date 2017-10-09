@@ -6,6 +6,9 @@ package com.github.vk.bot.common.enums;
  * @author AMarchenkov
  */
 public enum PostType {
-    POST
-    ;
+    POST,
+    COPY,
+    REPLY,
+    POSTPONE,
+    SUGGEST
 }

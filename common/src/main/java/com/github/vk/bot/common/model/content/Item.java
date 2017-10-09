@@ -26,28 +26,35 @@ public class Item implements Serializable {
     @Id
     private ObjectId id;
 
+    /**
+     * Идентификатор записи по ВК
+     */
     @Field("source_id")
     @SerializedName("source_id")
     private long sourceId;
 
-    @Field("from_id")
-    @SerializedName("from_id")
-    private long fromId;
-
-    @Field("owner_id")
-    @SerializedName("owner_id")
-    private long ownerId;
-
+    /**
+     * время публикации записи в формате unix-time.
+     */
     @Field
     private long date;
 
+    /**
+     * тип записи, может принимать следующие значения: post, copy, reply, postpone, suggest.
+     */
     @Field("post_type")
     @SerializedName("post_type")
     private PostType postType;
 
+    /**
+     * текст записи.
+     */
     @Field
     private String text;
 
     @Field
     private Set<Attachment> attachments = new HashSet<>();
+
+    @Field("content_source_id")
+    private ObjectId contentSourceId;
 }

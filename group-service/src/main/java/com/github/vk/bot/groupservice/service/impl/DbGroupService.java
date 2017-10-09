@@ -36,4 +36,9 @@ public class DbGroupService implements GroupService {
         return saved.getId();
     }
 
+    @Override
+    public void removeById(ObjectId id) {
+        groupRepository.delete(id);
+    }
+
 }
