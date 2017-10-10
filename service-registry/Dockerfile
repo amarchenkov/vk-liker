@@ -1,5 +1,5 @@
 FROM java:8-jre
 WORKDIR /opt/service-registry
-ADD target/service-registry.jar /opt/service-registry/config-server.jar
+ADD target/service-registry.jar /opt/service-registry/service-registry.jar
 EXPOSE 8761
 ENTRYPOINT ["java", "-jar", "service-registry.jar"]

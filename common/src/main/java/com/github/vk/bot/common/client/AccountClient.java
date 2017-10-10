@@ -1,6 +1,6 @@
 package com.github.vk.bot.common.client;
 
-import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.AccessTokenResponse;
 import com.github.vk.bot.common.model.account.Account;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -25,7 +25,7 @@ public interface AccountClient {
     List<Account> getAllAccounts();
 
     @RequestMapping(method = RequestMethod.PUT, value = "/account/{account_id}/access_token", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    void attachAccessToken(@PathVariable("account_id") String accountId, @RequestBody AccessToken accessToken);
+    void attachAccessToken(@PathVariable("account_id") String accountId, @RequestBody AccessTokenResponse accessTokenResponse);
 
     @RequestMapping(value = "/account/actual", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     Set<Account> getActualAccounts();

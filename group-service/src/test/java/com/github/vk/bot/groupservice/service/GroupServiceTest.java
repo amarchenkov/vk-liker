@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -30,8 +31,19 @@ import static org.junit.Assert.assertThat;
 @TestPropertySource("classpath:application-test.properties")
 public class GroupServiceTest extends AbstractMongoTest {
 
+    private static final String TEST_GROUP_NAME = "test_group";
+
     @Autowired
     private GroupService groupService;
+
+    @Test
+    public void shouldSaveGroupAndReturnId() {
+        Group group = new Group();
+        group.setGroupName(TEST_GROUP_NAME);
+        group.setGroupId("-11234567");
+        ObjectId save = groupService.save(group);
+        assertThat(save, is(not(equalTo(null))));
+    }
 
     @Test
     public void shouldReturnAllGroups() {
@@ -47,6 +59,23 @@ public class GroupServiceTest extends AbstractMongoTest {
         Set<Group> groups = groupService.getAllGroups();
         assertThat(groups.size(), is(equalTo(2)));
         assertThat(groups.stream().map(Group::getId).collect(Collectors.toList()), containsInAnyOrder(objectId1, objectId2));
+    }
+
+    @Test
+    public void shouldRemoveGroupById() {
+        ObjectId objectId1 = new ObjectId();
+        ObjectId objectId2 = new ObjectId();
+        Group group1 = new Group(objectId1, "fuck_humor", "123486874");
+        Group group2 = new Group(objectId2, "fuck_humor1", "11111111");
+        List<Group> groupsBefore = new ArrayList<>();
+        groupsBefore.add(group1);
+        groupsBefore.add(group2);
+        mongoTemplate.insert(groupsBefore, Group.COLLECTION_NAME);
+
+        groupService.removeById(objectId2);
+        Set<Group> groups = groupService.getAllGroups();
+        assertThat(groups.size(), is(equalTo(1)));
+        assertThat(groups.iterator().next().getId(), is(equalTo(objectId1)));
     }
 
 }

@@ -18,7 +18,7 @@ public class ObjectId2StringConverter implements JsonSerializer<ObjectId>, JsonD
     }
 
     @Override
-    public ObjectId deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public ObjectId deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
         return new ObjectId(jsonElement.getAsString());
     }
 }

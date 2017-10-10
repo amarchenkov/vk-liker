@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -15,6 +16,6 @@ import java.util.List;
  */
 @Repository
 public interface AccountRepository extends MongoRepository<Account, ObjectId> {
-    @Query("{'access_token.expires_in': {'$gt': ?0}}")
-    List<Account> findActiveAccount(long timestamp);
+    @Query("{'expiration_time': {'$gt': ?0}}")
+    List<Account> findActiveAccount(LocalDateTime time);
 }

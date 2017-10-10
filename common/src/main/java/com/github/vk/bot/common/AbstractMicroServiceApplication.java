@@ -1,5 +1,6 @@
 package com.github.vk.bot.common;
 
+import com.github.vk.bot.common.converter.LocalDateTimeConverter;
 import com.github.vk.bot.common.converter.ObjectId2StringConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,6 +10,7 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,6 +31,7 @@ public abstract class AbstractMicroServiceApplication extends WebMvcConfigurerAd
         Gson gson = new GsonBuilder()
                 .serializeNulls()
                 .registerTypeAdapter(ObjectId.class, new ObjectId2StringConverter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeConverter())
                 .create();
         GsonHttpMessageConverter converter = new GsonHttpMessageConverter();
         converter.setGson(gson);

@@ -31,6 +31,9 @@
 
     <properties>
         <sonar.jacoco.reportPath>${project.build.directory}/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
+        <sonar.coverage.exclusions>**Application.java,AbstractMongoTest.java,**Configuration.java,**/com/github/vk/bot/common/test/**/*</sonar.coverage.exclusions>
+
         <config.server.uri>http://localhost:8888</config.server.uri>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

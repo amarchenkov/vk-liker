@@ -5,4 +5,5 @@ EXPOSE 8888
 ENV GIT_LOGIN ""
 ENV GIT_PASSWORD ""
 ENV GIT_URI ""
-ENTRYPOINT ["java", "-jar", "config-server.jar --spring.profiles.active=production"]
+ENV SPRING_PROFILES_ACTIVE "production"
+ENTRYPOINT ["java", "-jar", "config-server.jar"]

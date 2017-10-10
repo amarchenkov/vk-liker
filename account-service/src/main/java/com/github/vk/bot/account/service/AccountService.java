@@ -1,6 +1,6 @@
 package com.github.vk.bot.account.service;
 
-import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.AccessTokenResponse;
 import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 
@@ -15,9 +15,7 @@ public interface AccountService {
 
     Set<Account> getActiveAccounts();
 
-    void addAccessToken(AccessToken token, Account account);
-
-    void addAccessToken(AccessToken token, ObjectId accountId);
+    void addAccessToken(AccessTokenResponse token, ObjectId accountId);
 
     Set<Account> getAccounts();
 

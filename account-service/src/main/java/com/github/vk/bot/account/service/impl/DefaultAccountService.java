@@ -2,12 +2,13 @@ package com.github.vk.bot.account.service.impl;
 
 import com.github.vk.bot.account.repository.AccountRepository;
 import com.github.vk.bot.account.service.AccountService;
-import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.AccessTokenResponse;
 import com.github.vk.bot.common.model.account.Account;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,24 +29,16 @@ public class DefaultAccountService implements AccountService {
 
     @Override
     public Set<Account> getActiveAccounts() {
-        return new HashSet<>(accountRepository.findAll());
-//        return new HashSet<>(accountRepository.findActiveAccount(System.currentTimeMillis() / 1000L));
-//        return accountRepository.findAll();
+        return new HashSet<>(accountRepository.findActiveAccount(LocalDateTime.now()));
     }
 
     @Override
-    public void addAccessToken(AccessToken token, Account account) {
-        if (token.getId() == null) {
-            token.setId(new ObjectId());
-        }
-        account.setAccessToken(token);
-        save(account);
-    }
-
-    @Override
-    public void addAccessToken(AccessToken token, ObjectId accountId) {
+    public void addAccessToken(AccessTokenResponse token, ObjectId accountId) {
         Account account = getAccountById(accountId);
-        addAccessToken(token, account);
+        account.setAccessToken(token.getAccessToken());
+        account.setUserId(token.getUserId());
+        account.setExpirationTime(LocalDateTime.now().plusSeconds(token.getExpiresIn()));
+        save(account);
     }
 
     @Override

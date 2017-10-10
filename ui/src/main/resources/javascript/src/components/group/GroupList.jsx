@@ -12,6 +12,10 @@ export default class GroupList extends React.Component {
     }
 
     componentDidMount() {
+        this.getGroupList();
+    }
+
+    getGroupList() {
         const client = rest.wrap(mime);
         const self = this;
         client({
@@ -38,6 +42,7 @@ export default class GroupList extends React.Component {
         }).then(function (response) {
             if (response.status.code === 204) {
                 NotificationManager.success("Group \"" + group_name + "\" removed", "Groups");
+                self.getGroupList()
             } else {
                 NotificationManager.error("Remove group failed. " + response.error, "Groups");
             }
@@ -45,7 +50,7 @@ export default class GroupList extends React.Component {
     }
 
     onUpdate() {
-        this.forceUpdate();
+        this.getGroupList();
     }
 
     render() {

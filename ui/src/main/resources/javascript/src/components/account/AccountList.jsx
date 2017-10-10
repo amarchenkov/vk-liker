@@ -12,6 +12,10 @@ export default class AccountList extends React.Component {
     }
 
     componentDidMount() {
+        this.getAccountList();
+    }
+
+    getAccountList() {
         const client = rest.wrap(mime);
         const self = this;
         client({
@@ -19,7 +23,6 @@ export default class AccountList extends React.Component {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         }).then(function (response) {
-            console.log(response);
             if (response.status.code === 200) {
                 self.setState({"accounts": response.entity});
                 NotificationManager.info("Account list received", "Accounts");
@@ -39,6 +42,7 @@ export default class AccountList extends React.Component {
         }).then(function (response) {
             if (response.status.code === 204) {
                 NotificationManager.success("Account " + id + " removed", "Accounts");
+                self.getAccountList();
             } else {
                 NotificationManager.error("Remove account failed. " + response.error, "Accounts");
             }
@@ -46,7 +50,7 @@ export default class AccountList extends React.Component {
     }
 
     onUpdate() {
-        this.forceUpdate();
+        this.getAccountList()
     }
 
     render() {
@@ -62,9 +66,9 @@ export default class AccountList extends React.Component {
                     <th>#</th>
                     <th>ID</th>
                     <th>Login</th>
-                    <th>Password</th>
                     <th>Access Token</th>
                     <th>Expiration Time</th>
+                    <th>User ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -78,9 +82,9 @@ export default class AccountList extends React.Component {
                         <td>{index + 1}</td>
                         <td>{account.id}</td>
                         <td>{account.login}</td>
-                        <td>{account.password}</td>
-                        <td>{(account.access_token !== null) ? account.access_token['access_token'] : ''}</td>
-                        <td>{(account.access_token !== null) ? account.access_token.expires_in : ''}</td>
+                        <td><span title={account.access_token}>{account.access_token !== null ? account.access_token.substr(0, 10) : ""}...</span></td>
+                        <td>{account.expiration_time}</td>
+                        <td>{account.user_id}</td>
                     </tr>;
                 })}
                 </tbody>

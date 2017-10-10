@@ -34,6 +34,6 @@ public class ContentSource implements Serializable {
     private SourceType sourceType;
 
     @Field("last_check")
-    private LocalDateTime lastCheck;
+    private LocalDateTime lastCheck; //NOSONAR
 
 }

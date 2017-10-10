@@ -31,11 +31,11 @@ import java.util.stream.Collectors;
 public class ParseGroupContentTask extends RecursiveAction {
 
     private List<ContentSource> contentSources;
-    private VkApiClient vkApiClient;
-    private AccountClient accountClient;
-    private ContentSourceRepository contentSourceRepository;
-    private ItemRepository itemRepository;
-    private ModelConverter modelConverter;
+    private transient VkApiClient vkApiClient;
+    private transient AccountClient accountClient;
+    private transient ContentSourceRepository contentSourceRepository;
+    private transient ItemRepository itemRepository;
+    private transient ModelConverter modelConverter;
 
     public ParseGroupContentTask(VkApiClient vkApiClient,
                                  AccountClient accountClient, ContentSourceRepository contentSourceRepository,
@@ -73,7 +73,7 @@ public class ParseGroupContentTask extends RecursiveAction {
             Account account = actualAccounts.iterator().next();
             LOG.debug("Start processing content source " + contentSource);
             try {
-                UserActor actor = new UserActor(account.getAccessToken().getUserId(), account.getAccessToken().getToken());
+                UserActor actor = new UserActor(account.getUserId(), account.getAccessToken());
                 GetResponse execute = vkApiClient.wall().get(actor).ownerId(contentSource.getSourceId()).count(100).execute();
                 LocalDateTime checkDateTime = LocalDateTime.now();
                 Set<Item> items = execute.getItems().stream()

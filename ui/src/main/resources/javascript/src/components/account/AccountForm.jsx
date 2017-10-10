@@ -16,7 +16,6 @@ export default class AccountForm extends React.Component {
         const client = rest.wrap(mime, {mime: 'application/json'});
         let data = {
             "login": this.loginInput.value,
-            "password": this.passwordInput.value
         };
         client({
             method: 'POST',
@@ -25,7 +24,6 @@ export default class AccountForm extends React.Component {
             if (response.status.code === 201) {
                 NotificationManager.success("Account have been successfully saved", "Accounts");
                 this.loginInput.value = '';
-                this.passwordInput.value = '';
                 this.props.onUpdate();
             } else {
                 NotificationManager.error("Account save failed" + response.error, "Accounts");
@@ -43,15 +41,6 @@ export default class AccountForm extends React.Component {
                         <input type='text' className="form-control" placeholder='Login' id='login' name='login'
                                ref={(input) => {
                                    this.loginInput = input;
-                               }}/>
-                    </div>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password" className="col-sm-2 control-label">Password</label>
-                    <div className="col-sm-10">
-                        <input type='text' className="form-control" id="password" name='password' placeholder="Password"
-                               ref={(input) => {
-                                   this.passwordInput = input;
                                }}/>
                     </div>
                 </div>

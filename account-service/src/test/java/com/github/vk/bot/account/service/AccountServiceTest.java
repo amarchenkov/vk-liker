@@ -1,6 +1,6 @@
 package com.github.vk.bot.account.service;
 
-import com.github.vk.bot.common.model.account.AccessToken;
+import com.github.vk.bot.common.model.AccessTokenResponse;
 import com.github.vk.bot.common.model.account.Account;
 import com.github.vk.bot.common.test.AbstractMongoTest;
 import org.bson.types.ObjectId;
@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -33,10 +34,13 @@ import static org.junit.Assert.assertThat;
 @TestPropertySource("classpath:application-test.properties")
 public class AccountServiceTest extends AbstractMongoTest {
 
-    private static final String TEST_PASSWORD = "password";
     private static final String TEST_LOGIN = "login";
     private static final String ACTIVE_TOKEN = "bla-bla-token";
     private static final String INACTIVE_TOKEN = "bad-bad-token";
+    private static final String TEST_TOKEN = "token";
+    private static final LocalDateTime TEST_EXPIRATION_TIME = LocalDateTime.now().plusSeconds(3600L);
+    private static final long TEST_EXPIRES_IN = 123456780;
+    private static final int TEST_USER_ID = 12345678;
 
     @Autowired
     private AccountService accountService;
@@ -45,12 +49,11 @@ public class AccountServiceTest extends AbstractMongoTest {
     public void shouldSaveAccountModelInMongoDb() {
         Account account = new Account();
         account.setLogin(TEST_LOGIN);
-        account.setPassword(TEST_PASSWORD);
         ObjectId id = accountService.save(account);
         assertNotNull(id);
         List<Account> accounts = getAccountsByLogin(TEST_LOGIN);
         assertThat(accounts, hasSize((1)));
-        assertThat(accounts.get(0).getPassword(), is(equalTo(TEST_PASSWORD)));
+        assertThat(accounts.get(0).getLogin(), is(equalTo(TEST_LOGIN)));
     }
 
     private List<Account> getAccountsByLogin(String login) {
@@ -67,13 +70,11 @@ public class AccountServiceTest extends AbstractMongoTest {
     public void shouldRemoveOnlyOneAccountById() {
         ObjectId objectId1 = new ObjectId();
         Account account1 = new Account();
-        account1.setPassword(TEST_PASSWORD);
         account1.setLogin(TEST_LOGIN);
         account1.setId(objectId1);
 
         ObjectId objectId2 = new ObjectId();
         Account account2 = new Account();
-        account2.setPassword(TEST_PASSWORD);
         account2.setLogin(TEST_LOGIN);
         account2.setId(objectId2);
         mongoTemplate.insert(account1, Account.COLLECTION_NAME);
@@ -89,7 +90,6 @@ public class AccountServiceTest extends AbstractMongoTest {
     @Test
     public void shouldRemoveAccountFromDb() {
         Account account = new Account();
-        account.setPassword(TEST_PASSWORD);
         account.setLogin(TEST_LOGIN);
 
         mongoTemplate.insert(account, Account.COLLECTION_NAME);
@@ -101,90 +101,70 @@ public class AccountServiceTest extends AbstractMongoTest {
     }
 
     @Test
-    public void shouldAddAccessTokenToAccount() {
-        Account account = new Account();
-        AccessToken token = new AccessToken();
-        accountService.addAccessToken(token, account);
-        List<Account> accounts = getAccounts();
-        assertThat(accounts, hasSize(1));
-        assertThat(accounts.get(0).getAccessToken().getId(), is(not(equalTo(null))));
-    }
-
-    @Test
     public void shouldAddAccessTokenToAccountByObjectId() {
         ObjectId objectId = new ObjectId();
         Account account = new Account();
         account.setId(objectId);
         mongoTemplate.insert(account, Account.COLLECTION_NAME);
 
-        AccessToken token = new AccessToken();
+        AccessTokenResponse token = new AccessTokenResponse(TEST_TOKEN, TEST_EXPIRES_IN, TEST_USER_ID);
         accountService.addAccessToken(token, objectId);
 
         List<Account> accounts = getAccounts();
         assertThat(accounts, hasSize(1));
-        assertThat(accounts.get(0).getAccessToken().getId(), is(not(equalTo(null))));
+        assertThat(accounts.get(0).getAccessToken(), is(not(equalTo(null))));
+        assertThat(accounts.get(0).getExpirationTime(), is(not(equalTo(null))));
+        assertThat(accounts.get(0).getUserId(), is(not(equalTo(null))));
     }
 
     @Test
     public void shouldReturnAccountsWithNonExpiredToken() {
-        AccessToken activeToken = new AccessToken(ACTIVE_TOKEN, (System.currentTimeMillis() / 1000L) + 200000);
-        AccessToken inactiveToken = new AccessToken(INACTIVE_TOKEN, (System.currentTimeMillis() / 1000L) - 20000);
         ObjectId objectId1 = new ObjectId();
         Account account1 = new Account();
-        account1.setPassword(TEST_PASSWORD);
         account1.setLogin(TEST_LOGIN);
         account1.setId(objectId1);
-        account1.setAccessToken(activeToken);
+        account1.setAccessToken(ACTIVE_TOKEN);
+        account1.setUserId(TEST_USER_ID);
+        account1.setExpirationTime(LocalDateTime.now().plusSeconds(3600));
 
         ObjectId objectId2 = new ObjectId();
         Account account2 = new Account();
-        account2.setPassword(TEST_PASSWORD);
         account2.setLogin(TEST_LOGIN);
         account2.setId(objectId2);
-        account2.setAccessToken(inactiveToken);
+        account2.setAccessToken(INACTIVE_TOKEN);
+        account2.setUserId(TEST_USER_ID);
+        account2.setExpirationTime(LocalDateTime.now().minusSeconds(3600));
+
         mongoTemplate.insert(account1, Account.COLLECTION_NAME);
         mongoTemplate.insert(account2, Account.COLLECTION_NAME);
 
         Set<Account> activeAccounts = accountService.getActiveAccounts();
         assertThat(activeAccounts, hasSize(1));
-        assertThat(activeAccounts.iterator().next().getAccessToken().getToken(), is(equalTo(ACTIVE_TOKEN)));
+        assertThat(activeAccounts.iterator().next().getAccessToken(), is(equalTo(ACTIVE_TOKEN)));
     }
 
     @Test
     public void shouldReturnCollectionOfAccounts() {
-        AccessToken activeToken = new AccessToken(ACTIVE_TOKEN, (System.currentTimeMillis() / 1000L) + 200000);
-        AccessToken inactiveToken = new AccessToken(INACTIVE_TOKEN, (System.currentTimeMillis() / 1000L) - 20000);
         ObjectId objectId1 = new ObjectId();
         Account account1 = new Account();
-        account1.setPassword(TEST_PASSWORD);
         account1.setLogin(TEST_LOGIN);
         account1.setId(objectId1);
-        account1.setAccessToken(activeToken);
+        account1.setAccessToken(ACTIVE_TOKEN);
+        account1.setExpirationTime(TEST_EXPIRATION_TIME);
+        account1.setUserId(TEST_USER_ID);
 
         ObjectId objectId2 = new ObjectId();
         Account account2 = new Account();
-        account2.setPassword(TEST_PASSWORD);
         account2.setLogin(TEST_LOGIN);
         account2.setId(objectId2);
-        account2.setAccessToken(inactiveToken);
+        account2.setAccessToken(INACTIVE_TOKEN);
+        account2.setExpirationTime(TEST_EXPIRATION_TIME);
+        account2.setUserId(TEST_USER_ID);
         mongoTemplate.insert(account1, Account.COLLECTION_NAME);
         mongoTemplate.insert(account2, Account.COLLECTION_NAME);
 
         Set<Account> activeAccounts = accountService.getAccounts();
         assertThat(activeAccounts, hasSize(2));
-    }
-
-    @Test
-    public void shouldAddObjectIdWhenAddAccessToken() {
-        ObjectId id = new ObjectId();
-        Account account = new Account();
-        AccessToken token = new AccessToken();
-        token.setId(id);
-        accountService.addAccessToken(token, account);
-        List<Account> accounts = getAccounts();
-        assertThat(accounts, hasSize(1));
-        assertThat(accounts.get(0).getAccessToken().getId(), is(not(equalTo(null))));
-        assertThat(accounts.get(0).getAccessToken().getId(), is(equalTo(id)));
     }
 
 }

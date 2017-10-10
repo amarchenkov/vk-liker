@@ -1,9 +1,8 @@
 {
-  "_id" : "59c239b1a11c1223082555d0",
-  "login" : "login",
-  "password" : "password",
-  "access_token" : {
-    "token" : "token",
-    "expires_in" : 123456789
-  }
+  "_id": "59c239b1a11c1223082555d0",
+  "login": "login",
+  "password": "password",
+  "access_token": "token",
+  "expiration_time": "2017-10-10 23:59:59",
+  "user_id": 111
 }

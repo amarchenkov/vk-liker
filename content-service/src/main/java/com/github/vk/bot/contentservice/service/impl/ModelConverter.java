@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Component
 public class ModelConverter {
 
-    //TODO NullPointerException Fix
     public Item fromVkItemToMongoItem(WallPostFull wallPostFull) {
         Item result = new Item();
         result.setDate(wallPostFull.getDate());
