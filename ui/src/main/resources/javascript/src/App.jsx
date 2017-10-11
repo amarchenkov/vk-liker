@@ -23,7 +23,7 @@ class App extends React.Component {
             </div>
             <div id='web' className='container-fluid'>
                 <div className='row'>
-                    <Menu items={['Accounts', 'Groups', 'Source', 'User Base', 'Security', 'Log Dashboard']}/>
+                    <Menu items={['Accounts', 'Groups', 'Content', 'User Base', 'Security', 'Log Dashboard']}/>
                     <Content/>
                 </div>
             </div>

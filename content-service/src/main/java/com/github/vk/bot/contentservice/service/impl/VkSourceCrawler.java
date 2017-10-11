@@ -8,7 +8,6 @@ import com.github.vk.bot.contentservice.task.ParseGroupContentTask;
 import com.github.vk.bot.contentservice.task.TaskFactory;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,14 +35,13 @@ public class VkSourceCrawler implements SourceCrawler {
     }
 
     @Override
-    @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     public void crawl() {
-        LOG.info("**** Parsing started *****");
+        LOG.info("VK Crawler started");
         List<ContentSource> contentSources = sourceRepository.findAllBySourceType(SourceType.VK_GROUP).orElse(new ArrayList<>());
         ParseGroupContentTask task = taskFactory.createParseGroupContentTask(contentSources);
-        LOG.info("** First task execute begin **");
         pool.execute(task);
-        LOG.info("*** Crawl method finished ***");
+        LOG.info("VK Crawler finished");
     }
 
 }

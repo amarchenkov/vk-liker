@@ -2,7 +2,7 @@ import React from "react"
 import {Route, Switch} from "react-router-dom";
 import AccountList from "./account/AccountList";
 import GroupList from "./group/GroupList";
-import SourceList from "./source/SourceList";
+import ContentList from "./content/ContentList";
 
 export default class Content extends React.Component {
     constructor(props) {
@@ -14,7 +14,7 @@ export default class Content extends React.Component {
             <Switch>
                 <Route exact path='/Accounts' component={AccountList}/>
                 <Route exact path='/Groups' component={GroupList}/>
-                <Route exact path='/Source' component={SourceList}/>
+                <Route exact path='/Content' component={ContentList}/>
             </Switch>
         </div>;
     }

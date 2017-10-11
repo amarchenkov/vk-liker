@@ -1,6 +1,7 @@
 package com.github.vk.bot.common.model.content;
 
 import com.github.vk.bot.common.enums.SourceType;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -28,12 +29,15 @@ public class ContentSource implements Serializable {
     private String name;
 
     @Field("source_id")
+    @SerializedName("source_id")
     private int sourceId;
 
     @Field("source_type")
+    @SerializedName("source_type")
     private SourceType sourceType;
 
     @Field("last_check")
+    @SerializedName("last_check")
     private LocalDateTime lastCheck; //NOSONAR
 
 }
