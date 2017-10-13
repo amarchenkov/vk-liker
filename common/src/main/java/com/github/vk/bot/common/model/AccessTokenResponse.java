@@ -18,7 +18,7 @@ public class AccessTokenResponse {
     @SerializedName("access_token")
     private String accessToken;
 
-    @SerializedName("expires_id")
+    @SerializedName("expires_in")
     private long expiresIn;
 
     @SerializedName("user_id")

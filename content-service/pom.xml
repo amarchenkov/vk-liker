@@ -17,10 +17,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.vk.api</groupId>
-            <artifactId>sdk</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>

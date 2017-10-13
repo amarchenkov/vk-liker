@@ -1,5 +1,6 @@
 package com.github.vk.bot.common.client;
 
+import com.github.vk.bot.common.converter.LocalDateTimeConverter;
 import com.github.vk.bot.common.converter.ObjectId2StringConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 
+import java.time.LocalDateTime;
+
 /**
  * Created at 06.10.2017 14:43
  *
@@ -22,11 +25,13 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
  */
 @Configuration
 public class FeignConfiguration {
+
     @Bean
     public Decoder feignDecoder() {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
                 .registerTypeAdapter(ObjectId.class, new ObjectId2StringConverter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeConverter())
                 .create();
         GsonHttpMessageConverter converter = new GsonHttpMessageConverter();
         converter.setGson(gson);
@@ -39,6 +44,7 @@ public class FeignConfiguration {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
                 .registerTypeAdapter(ObjectId.class, new ObjectId2StringConverter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeConverter())
                 .create();
         GsonHttpMessageConverter converter = new GsonHttpMessageConverter();
         converter.setGson(gson);

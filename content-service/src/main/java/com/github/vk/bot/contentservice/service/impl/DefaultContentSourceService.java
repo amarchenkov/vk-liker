@@ -3,6 +3,7 @@ package com.github.vk.bot.contentservice.service.impl;
 import com.github.vk.bot.common.enums.SourceType;
 import com.github.vk.bot.common.model.content.ContentSource;
 import com.github.vk.bot.contentservice.repository.ContentSourceRepository;
+import com.github.vk.bot.contentservice.repository.ItemRepository;
 import com.github.vk.bot.contentservice.service.ContentSourceService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import java.util.Set;
 public class DefaultContentSourceService implements ContentSourceService {
 
     private final ContentSourceRepository contentSourceRepository;
+    private final ItemRepository itemRepository;
 
     @Autowired
-    public DefaultContentSourceService(ContentSourceRepository contentSourceRepository) {
+    public DefaultContentSourceService(ContentSourceRepository contentSourceRepository, ItemRepository itemRepository) {
         this.contentSourceRepository = contentSourceRepository;
+        this.itemRepository = itemRepository;
     }
 
     @Override
@@ -42,6 +45,7 @@ public class DefaultContentSourceService implements ContentSourceService {
 
     @Override
     public void removeContentSource(ObjectId id) {
+        itemRepository.deleteByContentSourceId(id);
         contentSourceRepository.delete(id);
     }
 }

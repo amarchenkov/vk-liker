@@ -42,7 +42,7 @@ public class Photo implements Serializable {
      */
     @Field("user_id")
     @SerializedName("user_id")
-    private long userId;
+    private int userId;
 
     /**
      * URL копии фотографии с максимальным размером 75x75px.

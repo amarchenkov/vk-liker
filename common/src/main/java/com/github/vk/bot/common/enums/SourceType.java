@@ -7,6 +7,7 @@ package com.github.vk.bot.common.enums;
  */
 public enum SourceType {
     VK_GROUP,
-    FB_GROUP
-    ;
+    FB_GROUP,
+    VK,
+    FACEBOOK
 }

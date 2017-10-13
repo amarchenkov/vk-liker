@@ -6,7 +6,7 @@ import com.github.vk.bot.common.model.content.ContentSource;
 import com.github.vk.bot.common.model.content.Item;
 import com.github.vk.bot.contentservice.repository.ContentSourceRepository;
 import com.github.vk.bot.contentservice.repository.ItemRepository;
-import com.github.vk.bot.contentservice.service.impl.ModelConverter;
+import com.github.vk.bot.common.converter.ModelConverter;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
@@ -32,10 +32,10 @@ public class ParseGroupContentTask extends RecursiveAction {
 
     private List<ContentSource> contentSources;
     private transient VkApiClient vkApiClient;
+    private transient ModelConverter modelConverter;
     private transient AccountClient accountClient;
     private transient ContentSourceRepository contentSourceRepository;
     private transient ItemRepository itemRepository;
-    private transient ModelConverter modelConverter;
 
     public ParseGroupContentTask(VkApiClient vkApiClient,
                                  AccountClient accountClient, ContentSourceRepository contentSourceRepository,

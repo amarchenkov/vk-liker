@@ -19,7 +19,7 @@ import java.util.Set;
  * @author Andrey
  */
 @RefreshScope
-@FeignClient(value = "account", url = "${vk.bot.account-url}", configuration = FeignConfiguration.class)
+@FeignClient(value = "account", url = "${vk.bot.account-url:http://localhost:8095}", configuration = FeignConfiguration.class)
 public interface AccountClient {
     @RequestMapping(value = "/account", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     List<Account> getAllAccounts();

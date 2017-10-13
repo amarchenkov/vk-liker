@@ -1,10 +1,14 @@
-package com.github.vk.bot.contentservice.service.impl;
+package com.github.vk.bot.common.converter;
 
 import com.github.vk.bot.common.enums.AttachmentType;
+import com.github.vk.bot.common.enums.Gender;
 import com.github.vk.bot.common.enums.PostType;
 import com.github.vk.bot.common.model.content.Attachment;
 import com.github.vk.bot.common.model.content.Item;
+import com.github.vk.bot.common.model.user.GroupUser;
+import com.vk.api.sdk.objects.base.Sex;
 import com.vk.api.sdk.objects.photos.Photo;
+import com.vk.api.sdk.objects.users.UserXtrCounters;
 import com.vk.api.sdk.objects.wall.WallPostFull;
 import com.vk.api.sdk.objects.wall.WallpostAttachment;
 import com.vk.api.sdk.objects.wall.WallpostAttachmentType;
@@ -23,6 +27,23 @@ import java.util.stream.Collectors;
 @Component
 public class ModelConverter {
 
+    public GroupUser convertToMongoUser(UserXtrCounters user) {
+        GroupUser groupUser = new GroupUser();
+        if (user.getCountry() != null) {
+            groupUser.setCountry(user.getCountry().getTitle());
+        }
+        groupUser.setFirstName(user.getFirstName());
+        groupUser.setLastName(user.getLastName());
+        if (user.getSex() != null && !Sex.UNKNOWN.equals(user.getSex())) {
+            groupUser.setGender(Sex.FEMALE.equals(user.getSex()) ? Gender.FEMALE : Gender.MALE);
+        }
+        groupUser.setSourceUserId(user.getId());
+        if (user.getCity() != null) {
+            groupUser.setState(user.getCity().getTitle());
+        }
+        return groupUser;
+    }
+
     public Item fromVkItemToMongoItem(WallPostFull wallPostFull) {
         Item result = new Item();
         result.setDate(wallPostFull.getDate());
@@ -39,6 +60,7 @@ public class ModelConverter {
     private Set<Attachment> convertAttachments(List<WallpostAttachment> attachments) {
         return attachments.stream()
                 .filter(wallPostAttachment -> wallPostAttachment.getType().equals(WallpostAttachmentType.PHOTO))
+                .filter(wallPostAttachment -> wallPostAttachment.getPhoto().getUserId() != null)
                 .map(wallPostAttachment -> {
                     Attachment attachment = new Attachment();
                     attachment.setId(new ObjectId());
