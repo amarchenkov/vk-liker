@@ -16,7 +16,6 @@
     </parent>
 
     <dependencies>
-
         <dependency>
             <groupId>com.github.vk.bot</groupId>
             <artifactId>common</artifactId>

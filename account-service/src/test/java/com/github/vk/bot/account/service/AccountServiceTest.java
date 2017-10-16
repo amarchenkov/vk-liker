@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
@@ -138,7 +137,7 @@ public class AccountServiceTest extends AbstractMongoTest {
         mongoTemplate.insert(account1, Account.COLLECTION_NAME);
         mongoTemplate.insert(account2, Account.COLLECTION_NAME);
 
-        Set<Account> activeAccounts = accountService.getActiveAccounts();
+        List<Account> activeAccounts = accountService.getActiveAccounts();
         assertThat(activeAccounts, hasSize(1));
         assertThat(activeAccounts.iterator().next().getAccessToken(), is(equalTo(ACTIVE_TOKEN)));
     }
@@ -163,7 +162,7 @@ public class AccountServiceTest extends AbstractMongoTest {
         mongoTemplate.insert(account1, Account.COLLECTION_NAME);
         mongoTemplate.insert(account2, Account.COLLECTION_NAME);
 
-        Set<Account> activeAccounts = accountService.getAccounts();
+        List<Account> activeAccounts = accountService.getAccounts();
         assertThat(activeAccounts, hasSize(2));
     }
 

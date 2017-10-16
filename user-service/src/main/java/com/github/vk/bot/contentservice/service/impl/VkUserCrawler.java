@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 /**
@@ -31,9 +31,9 @@ public class VkUserCrawler implements UserCrawler {
     }
 
     @Override
-    @Scheduled(cron = "0 23 11 * * *")
+    @Scheduled(cron = "0 6 18 * * *")
     public void crawl() {
-        Set<ContentSource> allContentSource = contentSourceClient.getAllContentSource();
+        List<ContentSource> allContentSource = contentSourceClient.getAllContentSource();
         allContentSource.forEach(contentSource -> forkJoinPool.execute(taskFactory.createStoreUserTask(contentSource)));
     }
 

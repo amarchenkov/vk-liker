@@ -22,9 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -103,7 +101,7 @@ public class AccountControllerTest {
 
     @Test
     public void shouldReturnCollectionOfAccounts() throws Exception {
-        Set<Account> accounts = new HashSet<>(3);
+        List<Account> accounts = new ArrayList<>(3);
         accounts.add(new Account(TEST_LOGIN));
         accounts.add(new Account(TEST_LOGIN + "1"));
         accounts.add(new Account(TEST_LOGIN + "2"));
@@ -133,9 +131,9 @@ public class AccountControllerTest {
     @Test
     public void shouldReturn200AndActiveAccountsAndThenNotFoundCode() throws Exception {
         Account account = new Account(TEST_LOGIN);
-        Set<Account> accounts = new HashSet<>();
+        List<Account> accounts = new ArrayList<>();
         accounts.add(account);
-        when(accountService.getActiveAccounts()).thenReturn(accounts).thenReturn(Collections.emptySet());
+        when(accountService.getActiveAccounts()).thenReturn(accounts).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/actual"))
                 .andExpect(status().isOk())

@@ -6,7 +6,7 @@ import com.github.vk.bot.contentservice.repository.ContentSourceRepository;
 import com.github.vk.bot.contentservice.service.SourceCrawler;
 import com.github.vk.bot.contentservice.task.ParseGroupContentTask;
 import com.github.vk.bot.contentservice.task.TaskFactory;
-import lombok.extern.apachecommons.CommonsLog;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.concurrent.ForkJoinPool;
  * @author AMarchenkov
  */
 @Service
-@CommonsLog
+@Slf4j
 public class VkSourceCrawler implements SourceCrawler {
 
     private final ForkJoinPool pool;

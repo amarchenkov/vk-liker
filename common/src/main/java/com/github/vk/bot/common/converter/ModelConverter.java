@@ -16,7 +16,6 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +56,7 @@ public class ModelConverter {
         return result;
     }
 
-    private Set<Attachment> convertAttachments(List<WallpostAttachment> attachments) {
+    private List<Attachment> convertAttachments(List<WallpostAttachment> attachments) {
         return attachments.stream()
                 .filter(wallPostAttachment -> wallPostAttachment.getType().equals(WallpostAttachmentType.PHOTO))
                 .filter(wallPostAttachment -> wallPostAttachment.getPhoto().getUserId() != null)
@@ -68,7 +67,7 @@ public class ModelConverter {
                     attachment.setPhoto(convertPhoto(wallPostAttachment.getPhoto()));
                     return attachment;
                 })
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     private com.github.vk.bot.common.model.content.Photo convertPhoto(Photo photo) {

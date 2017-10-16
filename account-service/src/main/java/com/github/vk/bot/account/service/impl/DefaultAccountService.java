@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created at 26.09.2017 11:49
@@ -28,8 +27,8 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
-    public Set<Account> getActiveAccounts() {
-        return new HashSet<>(accountRepository.findActiveAccount(LocalDateTime.now()));
+    public List<Account> getActiveAccounts() {
+        return accountRepository.findActiveAccount(LocalDateTime.now());
     }
 
     @Override
@@ -42,8 +41,8 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
-    public Set<Account> getAccounts() {
-        return new HashSet<>(accountRepository.findAll());
+    public List<Account> getAccounts() {
+        return accountRepository.findAll();
     }
 
     @Override

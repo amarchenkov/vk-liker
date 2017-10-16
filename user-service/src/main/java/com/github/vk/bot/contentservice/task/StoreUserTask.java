@@ -14,11 +14,10 @@ import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.groups.responses.GetMembersResponse;
 import com.vk.api.sdk.objects.users.UserXtrCounters;
 import com.vk.api.sdk.queries.users.UserField;
-import lombok.extern.apachecommons.CommonsLog;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.RecursiveAction;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author AMarchenkov
  */
-@CommonsLog
+@Slf4j
 public class StoreUserTask extends RecursiveAction {
 
     private static final int MAX_MEMBERS = 1000;
@@ -63,7 +62,7 @@ public class StoreUserTask extends RecursiveAction {
     @Override
     protected void compute() {
         try {
-            Set<Account> actualAccounts = accountClient.getActualAccounts();
+            List<Account> actualAccounts = accountClient.getActualAccounts();
             if (actualAccounts.isEmpty()) {
                 LOG.info("NO Actual accounts");
                 return;

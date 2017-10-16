@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created at 01.10.2017 17:31
@@ -37,7 +37,7 @@ public class GroupController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Set<Group>> getAllGroups() {
+    public ResponseEntity<List<Group>> getAllGroups() {
         return ResponseEntity.ok(groupService.getAllGroups());
     }
 

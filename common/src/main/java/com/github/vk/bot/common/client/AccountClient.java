@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created at 05.10.2017 22:06
@@ -28,5 +27,5 @@ public interface AccountClient {
     void attachAccessToken(@PathVariable("account_id") String accountId, @RequestBody AccessTokenResponse accessTokenResponse);
 
     @RequestMapping(value = "/account/actual", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<Account> getActualAccounts();
+    List<Account> getActualAccounts();
 }

@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.not;
@@ -56,7 +55,7 @@ public class GroupServiceTest extends AbstractMongoTest {
         groupsBefore.add(group2);
         mongoTemplate.insert(groupsBefore, Group.COLLECTION_NAME);
 
-        Set<Group> groups = groupService.getAllGroups();
+        List<Group> groups = groupService.getAllGroups();
         assertThat(groups.size(), is(equalTo(2)));
         assertThat(groups.stream().map(Group::getId).collect(Collectors.toList()), containsInAnyOrder(objectId1, objectId2));
     }
@@ -73,7 +72,7 @@ public class GroupServiceTest extends AbstractMongoTest {
         mongoTemplate.insert(groupsBefore, Group.COLLECTION_NAME);
 
         groupService.removeById(objectId2);
-        Set<Group> groups = groupService.getAllGroups();
+        List<Group> groups = groupService.getAllGroups();
         assertThat(groups.size(), is(equalTo(1)));
         assertThat(groups.iterator().next().getId(), is(equalTo(objectId1)));
     }

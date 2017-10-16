@@ -1,0 +1,12 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<included>-->
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+    <!--<property name="spring.application.name" value="default"/>-->
+
+    <!--<appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+        <!--<destination>localhost:4560</destination>-->
+        <!--<encoder class="net.logstash.logback.encoder.LogstashEncoder">-->
+            <!--<customFields>{"service_name":"${spring.application.name}"}</customFields>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+<!--</included>-->

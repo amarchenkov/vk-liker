@@ -19,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.not;
@@ -69,7 +71,7 @@ public class GroupControllerTest {
 
     @Test
     public void shouldReturn200AndArrayOfGroups() throws Exception {
-        Set<Group> groups = new HashSet<>();
+        List<Group> groups = new ArrayList<>();
         Group group1 = new Group();
         group1.setGroupName(TEST_GROUP_NAME);
         groups.add(group1);

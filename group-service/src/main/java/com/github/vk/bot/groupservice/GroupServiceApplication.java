@@ -11,9 +11,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  * @author Andrey
  */
+@EnableScheduling
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableScheduling
 public class GroupServiceApplication extends AbstractMicroServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(GroupServiceApplication.class, args);

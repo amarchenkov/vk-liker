@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -31,13 +31,13 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Set<Account> getAllAccounts() {
+    public List<Account> getAllAccounts() {
         return accountService.getAccounts();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/actual")
-    public ResponseEntity<Set<Account>> getActualAccounts() {
-        Set<Account> activeAccounts = accountService.getActiveAccounts();
+    public ResponseEntity<List<Account>> getActualAccounts() {
+        List<Account> activeAccounts = accountService.getActiveAccounts();
         if (activeAccounts == null || activeAccounts.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

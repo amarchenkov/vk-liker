@@ -19,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
@@ -62,7 +64,7 @@ public class SourceControllerTest {
         contentSource1.setName(TEST_SOURCE_NAME);
         ContentSource contentSource2 = new ContentSource();
         contentSource2.setName(TEST_SOURCE_NAME + "1");
-        Set<ContentSource> sources = new HashSet<>();
+        List<ContentSource> sources = new ArrayList<>();
         sources.add(contentSource1);
         sources.add(contentSource2);
         when(contentSourceService.getAllSources()).thenReturn(sources);

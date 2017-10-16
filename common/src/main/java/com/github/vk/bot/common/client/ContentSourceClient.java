@@ -5,7 +5,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created at 12.10.2017 11:39
@@ -15,5 +15,5 @@ import java.util.Set;
 @FeignClient(configuration = FeignConfiguration.class, name = "content-source-client", url = "${vk.bot.content-url:http://localhost:8095}")
 public interface ContentSourceClient {
     @RequestMapping(value = "/content", method = RequestMethod.GET)
-    Set<ContentSource> getAllContentSource();
+    List<ContentSource> getAllContentSource();
 }

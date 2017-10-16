@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created at 01.10.2017 17:45
@@ -42,5 +42,5 @@ public class Group implements Serializable {
 
     @Field("posted_items")
     @SerializedName("posted_items")
-    private Set<Item> postedItems = new HashSet<>();
+    private List<Item> postedItems = new ArrayList<>();
 }

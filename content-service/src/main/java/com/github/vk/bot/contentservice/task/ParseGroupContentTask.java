@@ -1,24 +1,23 @@
 package com.github.vk.bot.contentservice.task;
 
 import com.github.vk.bot.common.client.AccountClient;
+import com.github.vk.bot.common.converter.ModelConverter;
 import com.github.vk.bot.common.model.account.Account;
 import com.github.vk.bot.common.model.content.ContentSource;
 import com.github.vk.bot.common.model.content.Item;
 import com.github.vk.bot.contentservice.repository.ContentSourceRepository;
 import com.github.vk.bot.contentservice.repository.ItemRepository;
-import com.github.vk.bot.common.converter.ModelConverter;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.wall.PostType;
 import com.vk.api.sdk.objects.wall.responses.GetResponse;
-import lombok.extern.apachecommons.CommonsLog;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.RecursiveAction;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author AMarchenkov
  */
-@CommonsLog
+@Slf4j
 public class ParseGroupContentTask extends RecursiveAction {
 
     private List<ContentSource> contentSources;
@@ -68,7 +67,7 @@ public class ParseGroupContentTask extends RecursiveAction {
     }
 
     private void process(ContentSource contentSource) {
-        Set<Account> actualAccounts = accountClient.getActualAccounts();
+        List<Account> actualAccounts = accountClient.getActualAccounts();
         if (actualAccounts != null && !actualAccounts.isEmpty()) {
             Account account = actualAccounts.iterator().next();
             LOG.debug("Start processing content source " + contentSource);
@@ -76,7 +75,7 @@ public class ParseGroupContentTask extends RecursiveAction {
                 UserActor actor = new UserActor(account.getUserId(), account.getAccessToken());
                 GetResponse execute = vkApiClient.wall().get(actor).ownerId(contentSource.getSourceId()).count(100).execute();
                 LocalDateTime checkDateTime = LocalDateTime.now();
-                Set<Item> items = execute.getItems().stream()
+                List<Item> items = execute.getItems().stream()
                         .filter(wallPostFull -> wallPostFull.getPostType().equals(PostType.POST))
                         .filter(wallPostFull -> wallPostFull.getAttachments() != null && !wallPostFull.getAttachments().isEmpty())
                         .filter(item -> !itemRepository.findAllBySourceId(item.getId()).isPresent()
@@ -86,7 +85,7 @@ public class ParseGroupContentTask extends RecursiveAction {
                             item.setContentSourceId(contentSource.getId());
                             return item;
                         })
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.toList());
                 itemRepository.save(items);
                 LOG.info(MessageFormat.format("[{0}] items have been saved in database", items.size()));
                 contentSource.setLastCheck(checkDateTime);

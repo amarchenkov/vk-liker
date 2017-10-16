@@ -9,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created at 11.10.2017 10:34
@@ -30,9 +28,9 @@ public class ContentController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Set<ContentSource>> getContentSourceList() {
-        Set<ContentSource> sources = contentSourceService.getAllSources();
-        return ResponseEntity.ok(Optional.of(sources).orElse(new HashSet<>()));
+    public ResponseEntity<List<ContentSource>> getContentSourceList() {
+        List<ContentSource> sources = contentSourceService.getAllSources();
+        return ResponseEntity.ok(Optional.of(sources).orElse(new ArrayList<>()));
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

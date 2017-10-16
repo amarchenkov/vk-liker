@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created at 28.09.2017 15:50
@@ -53,7 +53,7 @@ public class Item implements Serializable {
     private String text;
 
     @Field
-    private Set<Attachment> attachments = new HashSet<>();
+    private List<Attachment> attachments = new ArrayList<>();
 
     @Field("content_source_id")
     private ObjectId contentSourceId;

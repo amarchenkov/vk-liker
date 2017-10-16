@@ -7,8 +7,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created at 01.10.2017 21:27
@@ -26,8 +25,8 @@ public class DbGroupService implements GroupService {
     }
 
     @Override
-    public Set<Group> getAllGroups() {
-        return new HashSet<>(groupRepository.findAll());
+    public List<Group> getAllGroups() {
+        return groupRepository.findAll();
     }
 
     @Override

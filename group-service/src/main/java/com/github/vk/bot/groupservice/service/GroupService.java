@@ -3,7 +3,7 @@ package com.github.vk.bot.groupservice.service;
 import com.github.vk.bot.common.model.group.Group;
 import org.bson.types.ObjectId;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created at 01.10.2017 21:26
@@ -11,7 +11,7 @@ import java.util.Set;
  * @author Andrey
  */
 public interface GroupService {
-    Set<Group> getAllGroups();
+    List<Group> getAllGroups();
     ObjectId save(Group group);
     void removeById(ObjectId id);
 }

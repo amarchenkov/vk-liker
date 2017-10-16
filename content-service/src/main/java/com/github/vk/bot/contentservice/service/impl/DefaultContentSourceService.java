@@ -9,8 +9,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created at 11.10.2017 10:43
@@ -30,8 +29,8 @@ public class DefaultContentSourceService implements ContentSourceService {
     }
 
     @Override
-    public Set<ContentSource> getAllSources() {
-        return new HashSet<>(contentSourceRepository.findAll());
+    public List<ContentSource> getAllSources() {
+        return contentSourceRepository.findAll();
     }
 
     @Override
