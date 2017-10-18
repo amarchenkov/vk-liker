@@ -33,7 +33,7 @@ public class Group implements Serializable {
     @NonNull
     @SerializedName("group_id")
     @Field("group_id")
-    private String groupId;
+    private int groupId;
 
     @NonNull
     @SerializedName("group_name")

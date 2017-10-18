@@ -6,4 +6,4 @@ ENV GIT_LOGIN ""
 ENV GIT_PASSWORD ""
 ENV GIT_URI ""
 ENV SPRING_PROFILES_ACTIVE "production"
-ENTRYPOINT ["java", "-jar", "config-server.jar"]
+ENTRYPOINT ["java", "-jar", "config-server.jar", "-Xms128m", "-Xmx256m"]

@@ -1,0 +1,14 @@
+{
+  "id": 172823,
+  "first_name": "Andrey",
+  "last_name": "Melnik",
+  "domain": "a.melnik",
+  "city": {
+    "id": 2,
+    "title": "Sankt-Peterburg"
+  },
+  "country": {
+    "title": "Russia"
+  },
+  "sex": 2
+}

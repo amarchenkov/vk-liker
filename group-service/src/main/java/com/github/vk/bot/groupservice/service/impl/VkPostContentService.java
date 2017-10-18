@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * Created at 16.10.2017 15:51
@@ -18,18 +19,21 @@ import java.util.List;
 public class VkPostContentService implements PostContentService {
 
     private final GroupService groupService;
+    private final ForkJoinPool forkJoinPool;
+    private final TaskFactory taskFactory;
 
     @Autowired
-    public VkPostContentService(GroupService groupService) {
+    public VkPostContentService(GroupService groupService, ForkJoinPool forkJoinPool, TaskFactory taskFactory) {
         this.groupService = groupService;
+        this.forkJoinPool = forkJoinPool;
+        this.taskFactory = taskFactory;
     }
 
     @Override
     @Scheduled(cron = "0 0 0/2 * * *")
     public void post() {
         List<Group> groups = groupService.getAllGroups();
-        groups.forEach(group -> {
-        });
+        groups.forEach(group -> forkJoinPool.execute(taskFactory.getPostContentTask(group)));
     }
 
 }

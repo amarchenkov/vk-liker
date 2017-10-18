@@ -39,7 +39,7 @@ public class GroupServiceTest extends AbstractMongoTest {
     public void shouldSaveGroupAndReturnId() {
         Group group = new Group();
         group.setGroupName(TEST_GROUP_NAME);
-        group.setGroupId("-11234567");
+        group.setGroupId(-11234567);
         ObjectId save = groupService.save(group);
         assertThat(save, is(not(equalTo(null))));
     }
@@ -48,8 +48,8 @@ public class GroupServiceTest extends AbstractMongoTest {
     public void shouldReturnAllGroups() {
         ObjectId objectId1 = new ObjectId();
         ObjectId objectId2 = new ObjectId();
-        Group group1 = new Group(objectId1, "fuck_humor", "123486874");
-        Group group2 = new Group(objectId2, "fuck_humor1", "11111111");
+        Group group1 = new Group(objectId1, 123486874,"fuck_humor");
+        Group group2 = new Group(objectId2, 11111111, "fuck_humor1");
         List<Group> groupsBefore = new ArrayList<>();
         groupsBefore.add(group1);
         groupsBefore.add(group2);
@@ -64,8 +64,8 @@ public class GroupServiceTest extends AbstractMongoTest {
     public void shouldRemoveGroupById() {
         ObjectId objectId1 = new ObjectId();
         ObjectId objectId2 = new ObjectId();
-        Group group1 = new Group(objectId1, "fuck_humor", "123486874");
-        Group group2 = new Group(objectId2, "fuck_humor1", "11111111");
+        Group group1 = new Group(objectId1, 123486874,"fuck_humor");
+        Group group2 = new Group(objectId2, 11111111, "fuck_humor1");
         List<Group> groupsBefore = new ArrayList<>();
         groupsBefore.add(group1);
         groupsBefore.add(group2);

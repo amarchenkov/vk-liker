@@ -140,5 +140,4 @@ public class StoreUserTask extends RecursiveAction {
         LOG.info("[" + collect.size() + "] user saved in storage from [" + contentSource.getName() + "]");
     }
 
-
 }
