@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3'
 
 services:
 
@@ -9,10 +9,14 @@ services:
     container_name: "logstash"
     volumes:
       - ./config:/config-dir
+    networks:
+      - vkbot
     command: logstash -f /config-dir/logstash.conf
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:latest
+    networks:
+      - vkbot
     container_name: "elasticsearch"
 
   kibana:
@@ -22,10 +26,14 @@ services:
     ports:
       - 5601:5601
     image: docker.elastic.co/kibana/kibana:latest
+    networks:
+      - vkbot
     container_name: "kibana"
 
   mongodb:
     image: mongo:latest
+    networks:
+      - vkbot
     container_name: "mongodb"
     environment:
       - MONGO_DATA_DIR=/data/db
@@ -38,6 +46,8 @@ services:
 
   config-server:
     build: ./config-server
+    networks:
+      - vkbot
     environment:
       - GIT_URI=https://github.com/amarchenkov/vk-bot-config-repo.git
       - GIT_PASSWORD=1
@@ -52,6 +62,8 @@ services:
       - config-server
     ports:
       - 8761:8761
+    networks:
+      - vkbot
     container_name: "service-registry"
 
   api-gateway:
@@ -61,6 +73,8 @@ services:
       - config-server
     ports:
       - 8095:8095
+    networks:
+      - vkbot
     container_name: "api-gateway"
 
   account-service:
@@ -72,6 +86,8 @@ services:
       - mongodb
     ports:
       - 8091:8091
+    networks:
+      - vkbot
     container_name: "account-service"
 
   group-service:
@@ -83,6 +99,8 @@ services:
       - mongodb
     ports:
       - 8092:8092
+    networks:
+      - vkbot
     container_name: "group-service"
 
   content-service:
@@ -95,6 +113,8 @@ services:
       - mongodb
     ports:
       - 8093:8093
+    networks:
+      - vkbot
     container_name: "content-service"
 
   ui:
@@ -108,8 +128,10 @@ services:
       - content-service
     ports:
       - 8080:8080
+    networks:
+      - vkbot
     container_name: "UI"
 
 networks:
   vkbot:
-    drive: bridge
+    driver: bridge
