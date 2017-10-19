@@ -76,8 +76,11 @@ export default class AccountList extends React.Component {
                     return <tr key={index}>
                         <td><a onClick={(e) => self.deleteAccount(e, account.id)} href="#"><span
                             className="glyphicon glyphicon-trash">&nbsp;</span></a></td>
+                        {/*<td><a*/}
+                            {/*href={"https://oauth.vk.com/authorize?client_id=6194447&display=page&redirect_uri=http://" + window.location.host + "/response/" + account.id + "&scope=friends,photos,wall&response_type=code&v=5.68"}>Получить*/}
+                            {/*Access Token</a></td>*/}
                         <td><a
-                            href={"https://oauth.vk.com/authorize?client_id=6194447&display=page&redirect_uri=http://" + window.location.host + "/response/" + account.id + "&scope=friends&response_type=code&v=5.68"}>Получить
+                            href={"https://oauth.vk.com/authorize?client_id=6226171&display=page&redirect_uri=http://" + window.location.host + "/response/" + account.id + "&scope=friends,photos,wall&response_type=code&v=5.68"}>Получить
                             Access Token</a></td>
                         <td>{index + 1}</td>
                         <td>{account.id}</td>

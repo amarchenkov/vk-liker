@@ -1,6 +1,7 @@
 package com.github.vk.bot.common.client;
 
 import com.github.vk.bot.common.model.content.ContentSource;
+import com.github.vk.bot.common.model.content.Item;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,4 +17,7 @@ import java.util.List;
 public interface ContentSourceClient {
     @RequestMapping(value = "/content", method = RequestMethod.GET)
     List<ContentSource> getAllContentSource();
+
+    @RequestMapping(value = "/content/item", method = RequestMethod.GET)
+    List<Item> getAllContentItems();
 }

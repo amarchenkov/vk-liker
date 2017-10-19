@@ -30,7 +30,7 @@ public class VkPostContentService implements PostContentService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0/2 * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void post() {
         List<Group> groups = groupService.getAllGroups();
         groups.forEach(group -> forkJoinPool.execute(taskFactory.getPostContentTask(group)));

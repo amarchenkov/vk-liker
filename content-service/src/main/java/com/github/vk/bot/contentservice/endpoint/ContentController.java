@@ -1,6 +1,7 @@
 package com.github.vk.bot.contentservice.endpoint;
 
 import com.github.vk.bot.common.model.content.ContentSource;
+import com.github.vk.bot.common.model.content.Item;
 import com.github.vk.bot.contentservice.service.ContentSourceService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class ContentController {
     @Autowired
     public ContentController(ContentSourceService contentSourceService) {
         this.contentSourceService = contentSourceService;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/item")
+    public ResponseEntity<List<Item>> getItems() {
+        return ResponseEntity.ok(contentSourceService.getItems());
     }
 
     @RequestMapping(method = RequestMethod.GET)

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,4 +44,12 @@ public class Group implements Serializable {
     @Field("posted_items")
     @SerializedName("posted_items")
     private List<Item> postedItems = new ArrayList<>();
+
+    @Field("access_token")
+    @SerializedName("access_token")
+    private String accessToken;
+
+    @Field("expiration_time")
+    @SerializedName("expiration_time")
+    private LocalDateTime expirationTime;
 }

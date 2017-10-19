@@ -1,6 +1,7 @@
 package com.github.vk.bot.contentservice.service;
 
 import com.github.vk.bot.common.model.content.ContentSource;
+import com.github.vk.bot.common.model.content.Item;
 import org.bson.types.ObjectId;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface ContentSourceService {
     List<ContentSource> getAllSources();
     ObjectId saveSource(ContentSource contentSource);
     void removeContentSource(ObjectId id);
+    List<Item> getItems();
 }

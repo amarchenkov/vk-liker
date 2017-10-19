@@ -2,6 +2,7 @@ package com.github.vk.bot.contentservice.service.impl;
 
 import com.github.vk.bot.common.enums.SourceType;
 import com.github.vk.bot.common.model.content.ContentSource;
+import com.github.vk.bot.common.model.content.Item;
 import com.github.vk.bot.contentservice.repository.ContentSourceRepository;
 import com.github.vk.bot.contentservice.repository.ItemRepository;
 import com.github.vk.bot.contentservice.service.ContentSourceService;
@@ -46,5 +47,10 @@ public class DefaultContentSourceService implements ContentSourceService {
     public void removeContentSource(ObjectId id) {
         itemRepository.deleteByContentSourceId(id);
         contentSourceRepository.delete(id);
+    }
+
+    @Override
+    public List<Item> getItems() {
+        return itemRepository.findAll();
     }
 }
