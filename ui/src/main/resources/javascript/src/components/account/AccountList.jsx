@@ -32,6 +32,29 @@ export default class AccountList extends React.Component {
         });
     }
 
+    updateAccessToken(e, id, index) {
+        e.preventDefault();
+        const data = {
+            id: id,
+            access_token: this.access_token_input
+        };
+        const client = rest.wrap(mime);
+        const self = this;
+        client({
+            path: "http://localhost:8095/account/" + id,
+            headers: {'Content-Type': 'application/json'},
+            entity: data,
+            method: "PUT"
+        }).then(response => {
+            if (response.status.code >= 200) {
+                NotificationManager.success("Access Token saved", "Accounts");
+                self.getAccountList();
+            } else {
+                NotificationManager.error("Save token failed", "Accounts");
+            }
+        })
+    }
+
     deleteAccount(e, id) {
         e.preventDefault();
         const client = rest.wrap(mime);
@@ -63,6 +86,7 @@ export default class AccountList extends React.Component {
                 <tr>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                     <th>#</th>
                     <th>ID</th>
                     <th>Login</th>
@@ -74,18 +98,24 @@ export default class AccountList extends React.Component {
                 <tbody>
                 {this.state.accounts.map(function (account, index) {
                     return <tr key={index}>
-                        <td><a onClick={(e) => self.deleteAccount(e, account.id)} href="#"><span
-                            className="glyphicon glyphicon-trash">&nbsp;</span></a></td>
-                        {/*<td><a*/}
-                            {/*href={"https://oauth.vk.com/authorize?client_id=6194447&display=page&redirect_uri=http://" + window.location.host + "/response/" + account.id + "&scope=friends,photos,wall&response_type=code&v=5.68"}>Получить*/}
-                            {/*Access Token</a></td>*/}
+                        <td>
+                            <a onClick={(e) => self.updateAccessToken(e, account.id, index)} href="#"><span
+                                className="glyphicon glyphicon-floppy-save">&nbsp;</span></a>
+                        </td>
+                        <td>
+                            <a onClick={(e) => self.deleteAccount(e, account.id)} href="#"><span
+                                className="glyphicon glyphicon-trash">&nbsp;</span></a>
+                        </td>
                         <td><a
-                            href={"https://oauth.vk.com/authorize?client_id=6226171&display=page&redirect_uri=http://" + window.location.host + "/response/" + account.id + "&scope=friends,photos,wall&response_type=code&v=5.68"}>Получить
-                            Access Token</a></td>
+                            href={"https://oauth.vk.com/authorize?client_id=6226171&display=page&redirect_uri=http://" + window.location.host + "/response/" + account.id + "&scope=friends,photos,wall&response_type=code&v=5.68"}>Access
+                            Token</a></td>
                         <td>{index + 1}</td>
                         <td>{account.id}</td>
                         <td>{account.login}</td>
-                        <td><span title={account.access_token}>{account.access_token !== null ? account.access_token.substr(0, 10) : ""}...</span></td>
+                        <td><input readOnly={false} name={'access_token' + index} type='text' className='form-control'
+                                   value={account.access_token} ref={(input) => {
+                            self.access_token_input = input;
+                        }}/></td>
                         <td>{account.expiration_time}</td>
                         <td>{account.user_id}</td>
                     </tr>;
