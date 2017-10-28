@@ -36,7 +36,8 @@ public class VkSourceCrawler implements SourceCrawler {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0/3 * * *")
+//    @Scheduled(cron = "0 0 0/3 * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void crawl() {
         LOG.info("VK Crawler started");
         List<ContentSource> contentSources = sourceRepository.findAllBySourceType(SourceType.VK_GROUP).orElse(new ArrayList<>());

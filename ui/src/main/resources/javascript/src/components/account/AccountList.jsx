@@ -32,21 +32,23 @@ export default class AccountList extends React.Component {
         });
     }
 
-    updateAccessToken(e, id, index) {
+    updateAccessToken(e, id, index, user_id) {
         e.preventDefault();
         const data = {
-            id: id,
-            access_token: this.access_token_input
+            expires_in: 86400,
+            user_id: user_id,
+            access_token: this['access_token_input' + index].value
         };
+        console.log(data);
         const client = rest.wrap(mime);
         const self = this;
         client({
-            path: "http://localhost:8095/account/" + id,
+            path: "http://localhost:8095/account/" + id + '/access_token',
             headers: {'Content-Type': 'application/json'},
             entity: data,
             method: "PUT"
         }).then(response => {
-            if (response.status.code >= 200) {
+            if (response.status.code >= 200 && response.status.code < 300) {
                 NotificationManager.success("Access Token saved", "Accounts");
                 self.getAccountList();
             } else {
@@ -99,22 +101,23 @@ export default class AccountList extends React.Component {
                 {this.state.accounts.map(function (account, index) {
                     return <tr key={index}>
                         <td>
-                            <a onClick={(e) => self.updateAccessToken(e, account.id, index)} href="#"><span
+                            <a onClick={(e) => self.updateAccessToken(e, account.id, index, account.user_id)}
+                               href="#"><span
                                 className="glyphicon glyphicon-floppy-save">&nbsp;</span></a>
                         </td>
                         <td>
                             <a onClick={(e) => self.deleteAccount(e, account.id)} href="#"><span
                                 className="glyphicon glyphicon-trash">&nbsp;</span></a>
                         </td>
-                        <td><a
-                            href={"https://oauth.vk.com/authorize?client_id=6226171&display=page&redirect_uri=http://" + window.location.host + "/response/" + account.id + "&scope=friends,photos,wall&response_type=code&v=5.68"}>Access
+                        <td><a target="_blank"
+                               href={"https://oauth.vk.com/authorize?client_id=6226171&display=page&redirect_uri=http://oauth.vk.com/blank.html&scope=friends,photos,wall&response_type=token&v=5.68"}>Access
                             Token</a></td>
                         <td>{index + 1}</td>
                         <td>{account.id}</td>
                         <td>{account.login}</td>
-                        <td><input readOnly={false} name={'access_token' + index} type='text' className='form-control'
-                                   value={account.access_token} ref={(input) => {
-                            self.access_token_input = input;
+                        <td><input name={'access_token' + index} type='text' defaultValue={account.access_token}
+                                   className='form-control' ref={(input) => {
+                            self['access_token_input' + index] = input;
                         }}/></td>
                         <td>{account.expiration_time}</td>
                         <td>{account.user_id}</td>

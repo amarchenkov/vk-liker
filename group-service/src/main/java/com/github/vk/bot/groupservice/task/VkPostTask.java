@@ -3,6 +3,7 @@ package com.github.vk.bot.groupservice.task;
 import com.github.vk.bot.common.client.AccountClient;
 import com.github.vk.bot.common.client.ContentSourceClient;
 import com.github.vk.bot.common.model.account.Account;
+import com.github.vk.bot.common.model.content.Attachment;
 import com.github.vk.bot.common.model.group.Group;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
@@ -45,6 +46,7 @@ public class VkPostTask extends RecursiveAction {
         this.contentSourceClient = contentSourceClient;
     }
 
+    //TODO Задержки для API
     @Override
     protected void compute() {
         List<Account> actualAccounts = accountClient.getActualAccounts();
@@ -58,69 +60,52 @@ public class VkPostTask extends RecursiveAction {
                 }
                 try {
                     List<String> photoToPost = new ArrayList<>();
+
+                    PhotoUpload photoUpload = vkApiClient.photos().getWallUploadServer(userActor)
+                            .groupId(group.getGroupId())
+                            .execute();
+
                     item.getAttachments().forEach(attachment -> {
-                        if (attachment.getPhoto() == null) {
+                        String attachmentUrl = getAttachmentUrl(attachment);
+                        if (attachmentUrl == null) {
                             return;
                         }
-                        if (attachment.getPhoto().getPhoto2560() != null) {
-                            photoToPost.add(attachment.getPhoto().getPhoto2560());
-                            return;
-                        }
-                        if (attachment.getPhoto().getPhoto1280() != null) {
-                            photoToPost.add(attachment.getPhoto().getPhoto1280());
-                            return;
-                        }
-                        if (attachment.getPhoto().getPhoto807() != null) {
-                            photoToPost.add(attachment.getPhoto().getPhoto807());
-                            return;
-                        }
-                        if (attachment.getPhoto().getPhoto604() != null) {
-                            photoToPost.add(attachment.getPhoto().getPhoto604());
-                            return;
-                        }
-                        if (attachment.getPhoto().getPhoto130() != null) {
-                            photoToPost.add(attachment.getPhoto().getPhoto130());
-                            return;
-                        }
-                        if (attachment.getPhoto().getPhoto75() != null) {
-                            photoToPost.add(attachment.getPhoto().getPhoto75());
-                        }
-                    });
-                    photoToPost.forEach(photoLink -> {
                         URL url;
                         try {
-                            url = new URL(photoLink);
+                            url = new URL(attachmentUrl);
                         } catch (MalformedURLException e) {
                             LOG.error("Incorrect url", e);
                             return;
                         }
                         try (ReadableByteChannel channel = Channels.newChannel(url.openStream());
-                             FileOutputStream fileOutputStream = new FileOutputStream(photoLink)) {
+                             FileOutputStream fileOutputStream = new FileOutputStream(attachment.getId().toString())) {
+
                             fileOutputStream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
+                            WallUploadResponse uploadResponse = vkApiClient.upload()
+                                    .photoWall(photoUpload.getUploadUrl(), new File(attachment.getId().toString()))
+                                    .execute();
+                            List<Photo> photos = vkApiClient.photos().saveWallPhoto(userActor, uploadResponse.getPhoto())
+                                    .groupId(group.getGroupId())
+                                    .hash(uploadResponse.getHash())
+                                    .server(uploadResponse.getServer()).execute();
+                            if (photos.isEmpty()) {
+                                LOG.error("File upload failed");
+                            }
+                            photos.forEach(photo -> photoToPost.add(photo.getOwnerId() + "_" + photo.getId()));
+                            Thread.sleep(2000);
                         } catch (IOException e) {
                             LOG.error("Saving photo failed", e);
+                        } catch (ApiException | ClientException e) {
+                            LOG.error("Api exception", e);
+                        } catch (InterruptedException e) {
+                            LOG.error("Thread interrupted");
                         }
                     });
 
-                    PhotoUpload photoUpload = vkApiClient.photos().getWallUploadServer(userActor)
-                            .groupId(group.getGroupId())
-                            .execute();
-                    WallUploadResponse uploadResponse = vkApiClient.upload()
-                            .photoWall(photoUpload.getUploadUrl(), new File(photoToPost.get(0)))
-                            .execute();
-
-                    List<Photo> photos = vkApiClient.photos().saveWallPhoto(userActor, uploadResponse.getPhoto())
-                            .groupId(group.getGroupId())
-                            .hash(uploadResponse.getHash())
-                            .server(uploadResponse.getServer()).execute();
-                    if (photos.isEmpty()) {
-                        LOG.error("File upload failed");
-                    }
-
                     PostResponse postResponse = vkApiClient.wall()
                             .post(userActor)
-                            .message("test")
-                            .attachments("photo" + photos.get(0).getOwnerId() + "_" + photos.get(0).getId())
+                            .message(item.getText())
+                            .attachments(photoToPost)
                             .ownerId(group.getGroupId() * -1)
                             .execute();
                     if (postResponse.getPostId() == null || postResponse.getPostId() < 0) {
@@ -128,7 +113,8 @@ public class VkPostTask extends RecursiveAction {
                     } else {
                         LOG.info("Successfully posted");
                     }
-                    Thread.sleep(1234);
+
+                    Thread.sleep(4000);
                 } catch (ApiException | ClientException e) {
                     LOG.error("API exception", e);
                 } catch (InterruptedException e) {
@@ -138,6 +124,31 @@ public class VkPostTask extends RecursiveAction {
         } else {
             LOG.info("NO actual accounts");
         }
+    }
+
+    private String getAttachmentUrl(Attachment attachment) {
+        if (attachment.getPhoto() == null) {
+            return null;
+        }
+        if (attachment.getPhoto().getPhoto2560() != null) {
+            return attachment.getPhoto().getPhoto2560();
+        }
+        if (attachment.getPhoto().getPhoto1280() != null) {
+            return attachment.getPhoto().getPhoto1280();
+        }
+        if (attachment.getPhoto().getPhoto807() != null) {
+            return attachment.getPhoto().getPhoto807();
+        }
+        if (attachment.getPhoto().getPhoto604() != null) {
+            return attachment.getPhoto().getPhoto604();
+        }
+        if (attachment.getPhoto().getPhoto130() != null) {
+            return attachment.getPhoto().getPhoto130();
+        }
+        if (attachment.getPhoto().getPhoto75() != null) {
+            return attachment.getPhoto().getPhoto75();
+        }
+        return null;
     }
 
 }

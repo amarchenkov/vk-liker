@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.RecursiveAction;
 import java.util.stream.Collectors;
 
@@ -78,8 +79,10 @@ public class ParseGroupContentTask extends RecursiveAction {
                 List<Item> items = execute.getItems().stream()
                         .filter(wallPostFull -> wallPostFull.getPostType().equals(PostType.POST))
                         .filter(wallPostFull -> wallPostFull.getAttachments() != null && !wallPostFull.getAttachments().isEmpty())
-                        .filter(item -> !itemRepository.findAllBySourceId(item.getId()).isPresent()
-                                || itemRepository.findAllBySourceId(item.getId()).get().isEmpty())
+                        .filter(item -> {
+                            Optional<List<Item>> itemsInDb = itemRepository.findAllBySourceId(item.getId());
+                            return !itemsInDb.isPresent() || itemsInDb.get().isEmpty();
+                        })
                         .map(wallPostFull -> {
                             Item item = modelConverter.fromVkItemToMongoItem(wallPostFull);
                             item.setContentSourceId(contentSource.getId());
