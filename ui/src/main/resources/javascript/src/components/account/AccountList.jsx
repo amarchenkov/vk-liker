@@ -32,14 +32,13 @@ export default class AccountList extends React.Component {
         });
     }
 
-    updateAccessToken(e, id, index, user_id) {
+    updateAccount(e, id, index, user_id) {
         e.preventDefault();
         const data = {
-            expires_in: 86400,
-            user_id: user_id,
-            access_token: this['access_token_input' + index].value
+            access_token: this['access_token_input' + index].value,
+            expiration_time: this['expiration_time_input' + index].value,
+            user_id: this['user_id_input' + index].value
         };
-        console.log(data);
         const client = rest.wrap(mime);
         const self = this;
         client({
@@ -101,7 +100,7 @@ export default class AccountList extends React.Component {
                 {this.state.accounts.map(function (account, index) {
                     return <tr key={index}>
                         <td>
-                            <a onClick={(e) => self.updateAccessToken(e, account.id, index, account.user_id)}
+                            <a onClick={(e) => self.updateAccount(e, account.id, index, account.user_id)}
                                href="#"><span
                                 className="glyphicon glyphicon-floppy-save">&nbsp;</span></a>
                         </td>
@@ -119,8 +118,14 @@ export default class AccountList extends React.Component {
                                    className='form-control' ref={(input) => {
                             self['access_token_input' + index] = input;
                         }}/></td>
-                        <td>{account.expiration_time}</td>
-                        <td>{account.user_id}</td>
+                        <td><input name={'expiration_time' + index} type='text' className='form-control'
+                                   defaultValue={account.expiration_time} ref={(input) => {
+                            self['expiration_time_input' + index] = input
+                        }}/></td>
+                        <td><input name={'user_id' + index} type='text' className='form-control'
+                                   defaultValue={account.user_id} ref={(input) => {
+                            self['user_id_input' + index] = input
+                        }}/></td>
                     </tr>;
                 })}
                 </tbody>

@@ -4,7 +4,9 @@ import com.github.vk.bot.common.client.AccountClient;
 import com.github.vk.bot.common.client.ContentSourceClient;
 import com.github.vk.bot.common.model.account.Account;
 import com.github.vk.bot.common.model.content.Attachment;
+import com.github.vk.bot.common.model.content.Item;
 import com.github.vk.bot.common.model.group.Group;
+import com.github.vk.bot.groupservice.exception.NoActiveAccountException;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
@@ -13,6 +15,7 @@ import com.vk.api.sdk.objects.photos.Photo;
 import com.vk.api.sdk.objects.photos.PhotoUpload;
 import com.vk.api.sdk.objects.photos.responses.WallUploadResponse;
 import com.vk.api.sdk.objects.wall.responses.PostResponse;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -49,81 +52,113 @@ public class VkPostTask extends RecursiveAction {
     //TODO Задержки для API
     @Override
     protected void compute() {
-        List<Account> actualAccounts = accountClient.getActualAccounts();
-        if (actualAccounts != null && !actualAccounts.isEmpty()) {
-            Account account = actualAccounts.get(0);
-            UserActor userActor = new UserActor(account.getUserId(), account.getAccessToken());
+        UserActor actor = getActor();
 
-            contentSourceClient.getAllContentItems().parallelStream().forEach(item -> {
-                if (item.getAttachments() == null || item.getAttachments().isEmpty()) {
-                    return;
-                }
-                try {
-                    List<String> photoToPost = new ArrayList<>();
+        contentSourceClient.getAllContentItems().parallelStream().forEach(item -> {
+            if (item.getAttachments() == null || item.getAttachments().isEmpty()) {
+                return;
+            }
+            try {
+                List<String> photoToPost = new ArrayList<>();
 
-                    PhotoUpload photoUpload = vkApiClient.photos().getWallUploadServer(userActor)
-                            .groupId(group.getGroupId())
-                            .execute();
+                PhotoUpload photoUpload = vkApiClient.photos().getWallUploadServer(actor)
+                        .groupId(group.getGroupId())
+                        .execute();
+                Thread.sleep(4500);
 
-                    item.getAttachments().forEach(attachment -> {
-                        String attachmentUrl = getAttachmentUrl(attachment);
-                        if (attachmentUrl == null) {
+                item.getAttachments().forEach(attachment -> {
+                    try {
+                        File downloadedFile = downloadAttachment(attachment);
+                        if (downloadedFile == null) {
                             return;
                         }
-                        URL url;
-                        try {
-                            url = new URL(attachmentUrl);
-                        } catch (MalformedURLException e) {
-                            LOG.error("Incorrect url", e);
-                            return;
-                        }
-                        try (ReadableByteChannel channel = Channels.newChannel(url.openStream());
-                             FileOutputStream fileOutputStream = new FileOutputStream(attachment.getId().toString())) {
 
-                            fileOutputStream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
-                            WallUploadResponse uploadResponse = vkApiClient.upload()
-                                    .photoWall(photoUpload.getUploadUrl(), new File(attachment.getId().toString()))
-                                    .execute();
-                            List<Photo> photos = vkApiClient.photos().saveWallPhoto(userActor, uploadResponse.getPhoto())
-                                    .groupId(group.getGroupId())
-                                    .hash(uploadResponse.getHash())
-                                    .server(uploadResponse.getServer()).execute();
-                            if (photos.isEmpty()) {
-                                LOG.error("File upload failed");
-                            }
-                            photos.forEach(photo -> photoToPost.add(photo.getOwnerId() + "_" + photo.getId()));
-                            Thread.sleep(2000);
-                        } catch (IOException e) {
-                            LOG.error("Saving photo failed", e);
-                        } catch (ApiException | ClientException e) {
-                            LOG.error("Api exception", e);
-                        } catch (InterruptedException e) {
-                            LOG.error("Thread interrupted");
-                        }
-                    });
+                        WallUploadResponse uploadResponse = vkApiClient.upload()
+                                .photoWall(photoUpload.getUploadUrl(), downloadedFile)
+                                .execute();
+                        Thread.sleep(2500);
 
-                    PostResponse postResponse = vkApiClient.wall()
-                            .post(userActor)
-                            .message(item.getText())
-                            .attachments(photoToPost)
-                            .ownerId(group.getGroupId() * -1)
-                            .execute();
-                    if (postResponse.getPostId() == null || postResponse.getPostId() < 0) {
-                        LOG.error("Post failed");
-                    } else {
-                        LOG.info("Successfully posted");
+                        List<Photo> photos = vkApiClient.photos().saveWallPhoto(actor, uploadResponse.getPhoto())
+                                .groupId(group.getGroupId())
+                                .hash(uploadResponse.getHash())
+                                .server(uploadResponse.getServer()).execute();
+                        Thread.sleep(3500);
+
+                        if (photos.isEmpty()) {
+                            LOG.error("File upload failed");
+                        }
+                        photos.forEach(photo -> photoToPost.add(photo.getOwnerId() + "_" + photo.getId()));
+                        Thread.sleep(2000);
+                    } catch (ApiException | ClientException e) {
+                        LOG.error("Api exception", e);
+                    } catch (InterruptedException e) {
+                        LOG.error("Thread interrupted");
                     }
+                });
 
-                    Thread.sleep(4000);
-                } catch (ApiException | ClientException e) {
-                    LOG.error("API exception", e);
-                } catch (InterruptedException e) {
-                    LOG.error("Thread interrupt", e);
-                }
-            });
-        } else {
-            LOG.info("NO actual accounts");
+                postSavedPhoto(actor, item, photoToPost);
+            } catch (ApiException | ClientException e) {
+                LOG.error("API exception", e);
+            } catch (InterruptedException e) {
+                LOG.error("Thread interrupt", e);
+            }
+        });
+    }
+
+    private File downloadAttachment(Attachment attachment) {
+        String attachmentUrl = getAttachmentUrl(attachment);
+        if (attachmentUrl == null) {
+            return null;
         }
+        try {
+            URL url = new URL(attachmentUrl);
+            File attachmentFile = new File(attachment.getId().toString());
+            boolean newFile = attachmentFile.createNewFile();
+            LOG.debug(newFile ? "File created -> " + attachment.getId().toString() : "File already exists -> " + attachment.getId().toString());
+            try (ReadableByteChannel channel = Channels.newChannel(url.openStream());
+                 FileOutputStream fileOutputStream = new FileOutputStream(attachment.getId().toString())) {
+                fileOutputStream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
+                return attachmentFile;
+            }
+        } catch (MalformedURLException e) {
+            LOG.error("Incorrect url", e);
+            return null;
+        } catch (IOException e) {
+            LOG.error("Download failed", e);
+            return null;
+        }
+    }
+
+    private UserActor getActor() {
+        try {
+            List<Account> actualAccounts = accountClient.getActualAccounts();
+            if (actualAccounts != null && !actualAccounts.isEmpty()) {
+                Account account = actualAccounts.get(0);
+                return new UserActor(account.getUserId(), account.getAccessToken());
+            } else {
+                LOG.info("NO actual accounts");
+                throw new NoActiveAccountException();
+            }
+        } catch (FeignException e) {
+            LOG.error("Communication exception with Account Service", e);
+            throw new NoActiveAccountException(e);
+        }
+    }
+
+    private void postSavedPhoto(UserActor userActor, Item item, List<String> photoToPost) throws ApiException, ClientException, InterruptedException {
+        PostResponse postResponse = vkApiClient.wall()
+                .post(userActor)
+                .message(item.getText())
+                .attachments(photoToPost)
+                .ownerId(group.getGroupId() * -1)
+                .fromGroup(true)
+                .execute();
+        if (postResponse.getPostId() == null || postResponse.getPostId() < 0) {
+            LOG.error("Post failed");
+        } else {
+            LOG.info("Successfully posted");
+        }
+        Thread.sleep(5000);
     }
 
     private String getAttachmentUrl(Attachment attachment) {

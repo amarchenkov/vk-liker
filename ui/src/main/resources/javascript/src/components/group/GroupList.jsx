@@ -62,10 +62,12 @@ export default class GroupList extends React.Component {
                 <thead>
                 <tr>
                     <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                     <th>#</th>
                     <th>ID</th>
                     <th>Group Name</th>
                     <th>Group ID</th>
+                    <th>Access Token</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -73,10 +75,20 @@ export default class GroupList extends React.Component {
                     return <tr key={index}>
                         <td><a onClick={(e) => self.deleteGroup(e, group.id, group.group_name)} href="#"><span
                             className="glyphicon glyphicon-trash">&nbsp;</span></a></td>
+                        <td><a target="_blank"
+                               href={"https://oauth.vk.com/authorize?" +
+                               "client_id=6226171" +
+                               "&display=page" +
+                               "&redirect_uri=http://oauth.vk.com/blank.html" +
+                               "&scope=photos,docs,manage" +
+                               "&response_type=token" +
+                               "&v=5.68" +
+                               "&group_ids=" + group.group_id}>Access Token</a></td>
                         <td>{index + 1}</td>
                         <td>{group.id}</td>
                         <td>{group.group_name}</td>
                         <td>{group.group_id}</td>
+                        <td>{group.access_token}</td>
                     </tr>;
                 })}
                 </tbody>
