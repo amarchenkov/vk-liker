@@ -4,7 +4,8 @@
     <property name="application.name" value="${application.name:-default}"/>
 
     <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>localhost:4560</destination>
+        <!--<destination>localhost:4560</destination>-->
+        <destination>95.213.187.50:5044</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"service_name":"${application.name}"}</customFields>
         </encoder>
